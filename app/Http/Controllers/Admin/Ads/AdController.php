@@ -26,13 +26,17 @@ class AdController extends AdminController{
         $image_new_name = $image_id.'.'.$image_format;
         $ad = new Ad();
         $ad->image = $image_new_name;
-        $ad->content = $request->content;
-        $ad->place = $request->place;
-        if ($request->input('type') == 1) {
-            $ad->type = "link";
-        }else {
-            $ad->type = "id";
-        }
+        $ad->title_ar = $request->title_ar;
+        $ad->title_en = $request->title_en;
+        $ad->desc_ar = $request->desc_ar;
+        $ad->desc_en = $request->desc_en;
+//        $ad->content = $request->content;
+//        $ad->place = $request->place;
+//        if ($request->input('type') == 1) {
+//            $ad->type = "link";
+//        }else {
+//            $ad->type = "id";
+//        }
         $ad->save();
         session()->flash('success', trans('messages.added_s'));
         return redirect('admin-panel/ads/show');
@@ -72,13 +76,17 @@ class AdController extends AdminController{
             $image_new_name = $image_id.'.'.$image_format;
             $ad->image = $image_new_name;
         }
-        if ($request->input('type') == 1) {
-            $ad->type = "link";
-        }else {
-            $ad->type = "id";
-        }
-        $ad->content = $request->content;
-        $ad->place = $request->place;
+        $ad->title_ar = $request->title_ar;
+        $ad->title_en = $request->title_en;
+        $ad->desc_ar = $request->desc_ar;
+        $ad->desc_en = $request->desc_en;
+//        if ($request->input('type') == 1) {
+//            $ad->type = "link";
+//        }else {
+//            $ad->type = "id";
+//        }
+//        $ad->content = $request->content;
+//        $ad->place = $request->place;
         // dd($ad);
         $ad->save();
         session()->flash('success', trans('messages.updated_s'));

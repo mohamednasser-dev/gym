@@ -28,6 +28,7 @@
                             <th class="text-center">{{ __('messages.email') }}</th>
                             <th class="text-center">{{ __('messages.phone') }}</th>
                             <th class="text-center">{{ __('messages.status') }}</th>
+                            <th class="text-center">{{ __('messages.famous_holes') }}</th>
                             <th class="text-center">{{ __('messages.details') }}</th>
                             @if(Auth::user()->update_data)
                                 <th class="text-center">{{ __('messages.edit') }}</th>
@@ -45,17 +46,28 @@
                                 <td class="text-center">{{ $row->phone }}</td>
                                 <td class="text-center">
                                     @if($row->status == 'active')
-                                        <a href="/admin-panel/holes/block/{{$row->id}}">
+                                        <a href="/admin-panel/holes/change_status/unactive/{{$row->id}}">
                                             <span class="badge badge-danger">{{ __('messages.block') }}</span>
                                         </a>
                                     @else
-                                        <a href="/admin-panel/holes/active/{{$row->id}}">
+                                        <a href="/admin-panel/holes/change_status/active/{{$row->id}}">
                                             <span class="badge badge-success">{{ __('messages.active') }}</span>
                                         </a>
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">
-                                    <a href="/admin-panel/users/details/{{ $row->id }}"><i class="far fa-eye"></i></a>
+                                    @if($row->famous == '1' )
+                                        <a href="{{route('holes.make_famous',$row->id)}}" class="btn btn-danger  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                            <i class="far fa-heart"></i>
+                                        </a>
+                                    @else
+                                        <a href="{{route('holes.make_famous',$row->id)}}" class="btn btn-dark  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                            <i class="far fa-heart"></i>
+                                        </a>
+                                    @endif
+                                </td>
+                                <td class="text-center blue-color">
+                                    <a href="{{route('holes.details',$row->id)}}"><i class="far fa-eye"></i></a>
                                 </td>
                                 @if(Auth::user()->update_data)
                                     <td class="text-center blue-color">

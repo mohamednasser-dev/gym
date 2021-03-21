@@ -18,7 +18,12 @@ class AdminController extends Controller{
 
     // get login page
     public function getlogin(){
-        return view('admin.login');
+        if (\Auth::guard('admin')->check()) {
+            return redirect('/admin-panel');
+        } else {
+            return view('admin.login');
+        }
+
     }
 
     // post login
@@ -27,10 +32,7 @@ class AdminController extends Controller{
         if (Auth::guard('admin')->attempt($credentials)) {
             $user = Auth::guard('admin')->user();
             return redirect('/admin-panel');
-        }else if (Auth::guard('hole')->attempt($credentials)) {
-            $user = Auth::guard('hole')->user();
-            return redirect('/admin-panel/hole/home');
-        } else {
+        }else {
             return view('admin.login');
         }
     }

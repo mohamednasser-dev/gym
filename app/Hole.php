@@ -19,6 +19,7 @@ class Hole extends Authenticatable
         'status',
         'deleted',
         'cover',
+        'famous',
         'about_hole',
     ];
 }

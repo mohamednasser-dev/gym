@@ -8,11 +8,7 @@ use Illuminate\Http\Request;
 
 class PaymentsController extends AdminController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $data = WalletTransaction::where('type','payed')->orderBy('id','desc')->get();

@@ -1,112 +1,82 @@
 @extends('hole.app')
 
-@section('title' , __('messages.user_details'))
+@section('title' , __('messages.hole_details'))
 
 @section('content')
 
-        <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
+    <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
             <div class="widget-header">
 
-            <div class="row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>{{ __('messages.user_details') }}</h4>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <h4>{{ __('messages.hole_details') }}</h4>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="widget-content widget-content-area">
-            <div class="table-responsive">
-                <table class="table table-bordered mb-4">
-                    <tbody>
+            <div class="widget-content widget-content-area">
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-4">
+                        <tbody>
+                        <tr>
+                            <td class="label-table"> {{ __('messages.hole_name') }}</td>
+                            <td>{{ $data->name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-table"> {{ __('messages.email') }} </td>
+                            <td>{{ $data->email }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-table"> {{ __('messages.phone') }} </td>
+                            <td> {{ $data->phone }} </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <h4>{{ __('messages.appointment') }}</h4>
+                    @php $time_works = \App\Hole_time_work::where('hole_id',$data->id)->get(); @endphp
+                    <table class="table table-bordered mb-4">
+                        <thead>
                             <tr>
-                                <td class="label-table" > {{ __('messages.user_name') }}</td>
-                                <td>{{ $data['user']['name'] }}</td>
+                                <th class="text-center">{{ __('messages.type') }}</th>
+                                <th class="text-center">{{ __('messages.from') }}</th>
+                                <th class="text-center">{{ __('messages.to') }}</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($time_works as $row)
                             <tr>
-                                <td class="label-table" > {{ __('messages.user_phone') }} </td>
-                                <td>{{ $data['user']['phone'] }}</td>
-                            </tr>
-                            <tr>
-                                <td class="label-table" > {{ __('messages.user_email') }} </td>
-                                <td> {{ $data['user']['email'] }} </td>
-                            </tr>
-
-                            <tr>
-                                <td class="label-table" > {{ __('messages.walllet_balance') }} </td>
-
-                                <td>{{ $data['user']['my_wallet'] }}</td>
-                            </tr>
-
-                            <tr>
-                                <td class="label-table" > {{ __('messages.created_at') }} </td>
-                                <td> {{ $data['user']['created_at'] }} </td>
-                            </tr>
-
-                            <tr>
-                                <td class="label-table" > {{ __('messages.status') }} </td>
-                                <td>
-                                    @if($data['user']['active'])
-                                        <span class="text-success margin-15" >
-                                            {{ __('messages.actived') }}
-                                        </span>
-                                        <a href="/admin-panel/users/block/{{$data['user']['id']}}">
-                                            <span class="badge badge-danger">{{ __('messages.block') }}</span>
-                                        </a>
-                                    @else
-                                        <span class="text-danger margin-15" >
-                                            {{ __('messages.blocked') }}
-                                        </span>
-                                        <a href="/admin-panel/users/active/{{$data['user']['id']}}">
-                                            <span class="badge badge-success">{{ __('messages.active') }}</span>
-                                        </a>
+                                <td class="text-center">
+                                    @if($row->type == 'male')
+                                        {{ __('messages.male_hole') }}
+                                    @elseif($row->type == 'female')
+                                        {{ __('messages.female_hole') }}
+                                    @elseif($row->type == 'mix')
+                                        {{ __('messages.mix_hole') }}
                                     @endif
                                 </td>
+                                <td class="text-center">{{ date('g:i a', strtotime($row->time_from )) }}</td>
+                                <td class="text-center">{{ date('g:i a', strtotime($row->time_to )) }}</td>
                             </tr>
-
-                    </tbody>
-                </table>
-            </div>
-
-
-                @if (session('error'))
-                    <div class="alert alert-danger mb-4" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
-                        <strong>Error!</strong> {{ session('error') }} </button>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <label for="">{{ __('messages.logo') }}</label><br>
+                    <div class="row">
+                        <div class="col-md-2 product_image">
+                            <img style="width: 100%"
+                                 src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $data->logo }}"/>
+                        </div>
                     </div>
-                @endif
-
-                @if (session('status'))
-                    <div class="alert alert-success mb-4" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
-                        <strong>Success!</strong> {{ session('status') }} </button>
+                    <label style="margin-top: 20px" for="">{{ __('messages.cover') }}</label><br>
+                    <div class="row">
+                        <div style="position : relative" class="col-md-2 product_image">
+                            <img width="100%"
+                                 src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $data->cover }}"/>
+                        </div>
                     </div>
-                @endif
-
-                <div class="">
-                     <h4>{{ __('messages.send_notification_to_user') }}</h4>
                 </div>
-                <br>
-                <form action="/admin-panel/users/send_notifications/{{ $data['user']['id'] }}" method="post" enctype="multipart/form-data" >
-                    @csrf
-                    <div class="form-group mb-4">
-                        <label for="image">{{ __('messages.image') }}</label>
-                        <input type="file" name="image" class="form-control" id="image" placeholder="{{ __('messages.image') }}" value="" >
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="title">{{ __('messages.notification_title') }}</label>
-                        <input required type="text" name="title" class="form-control" id="title" placeholder="{{ __('messages.notification_title') }}" value="" >
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="body">{{ __('messages.notification_body') }}</label>
-                        <input required type="text" name="body" class="form-control" id="body" placeholder="{{ __('messages.notification_body') }}" value="" >
-                    </div>
-                    <input type="submit" value="{{ __('messages.submit') }}" class="btn btn-primary">
-                </form>
-
-
-
+            </div>
         </div>
-    </div>
 
 @endsection
 

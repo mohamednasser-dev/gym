@@ -14,14 +14,20 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            $uri =  $request->getRequestUri();
+                    if (! $request->expectsJson()) {
+                        $uri =  $request->getRequestUri();
 
-            if (strpos($uri, 'admin-panel') !== false) {
-                return route('adminlogin');
-            }else{
-                return route('invalid' , [1,2]);   
-            }
-        }
+                        if (strpos($uri, 'admin-panel') !== false) {
+                            return route('adminlogin');
+                        }elseif (strpos($uri, 'hole-panel') !== false){
+
+                            return route('hole.home');
+                        }else{
+                            return route('invalid' , [1,2]);
+                        }
+                    }
+//        if (! $request->expectsJson()) {
+//            return redirect()->back();
+//        }
     }
 }

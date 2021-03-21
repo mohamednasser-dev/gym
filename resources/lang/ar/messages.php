@@ -12,7 +12,18 @@
             'add_new_hole' => "اضافة صالة رياضية جديدة",
             'email_pass_invalied' => "البريد الالكترونى او الرقم السرى خطأ ... !",
             'unauth' => "غير مصرح لك الدخول",
-            'appointment' => "مواعيد الصالة",
+            'appointment' => "مواعيد العمل",
+            'branches' => "الفروع",
+            'male_hole' => "رجالى",
+            'female_hole' => "نسائى",
+            'mix_hole' => "مختلط",
+            'from' => "من",
+            'to' => "الى",
+            'about_hole' => "نبذة عن الصالة",
+            'hole_details' => "تفاصيل الصالة",
+            'famous_holes' => "اشهر الصالات",
+            'famous_removed_done' => "تم حذف الصالة من اشهر الصالات",
+            'famous_done' => "تم اضافة الصالة الى اشهر الصالات",
 
 
 
@@ -81,21 +92,12 @@
             'sub_category_fiveth' => "القسم الفرعى الخامس",
             'main_ads_second' => "اعلانات الصفحة الرئيسية",
             'categories_ads' => "اعلانات الاقسام",
-            'show_ads' => "الاعلانات",
             'mandatory' => "اجبارى",
             'choice' => "اختيارى",
             'type' => "النوع",
             'total_with_delivery' => "الاجمالى : ",
             'on_the_bottom' => "فى الاسفل",
             'add_cat_options' => "اضافة خيارات القسم",
-
-
-
-
-
-
-
-
             'not_publish_yet' => "لم ينشر بعد",
             'plane_name' => "اسم الباقة",
             'features' => "الخصائص",
@@ -144,7 +146,6 @@
             'sub_category_fifth' => "القسم الفرعى الخامس",
             'are_you_sure_delete' => "هل أنت متأكد أنك تريد حذف هذا البند؟",
             'users' => "المستخدمين",
-            'add' => "إضافة",
             "show" => "عرض",
             "show_users" => "عرض المستخدمين",
             "dashboard" => "لوحة التحكم",
@@ -274,7 +275,6 @@
             "user" => "المستخدم",
             "category" => "القسم",
             "product_description" => "وصف اعلان المستخدم",
-            "select" => "إختر",
             "productType" => "نوع اعلان المستخدم",
             "used" => "مستعمل",
             "new" => "جديد",
@@ -287,7 +287,6 @@
             "are_you_sure" => "هل أنت متأكد ؟",
             "plan_price" => "سعر الباقة",
             "plans" => "باقات الاعلانات",
-            "ads_count" => "عدد الإعلانات",
             "add_plan" => "إضافة باقة",
             "plan_edit" => "تعديل الباقة",
             "product_edit" => "تعديل اعلان المستخدم",

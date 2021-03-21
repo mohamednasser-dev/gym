@@ -88,45 +88,61 @@
                 </label>
                 <div class="custom-file-container__image-preview"></div>
             </div>
-            <div class="form-group">
-                <label for="sel1">{{ __('messages.ad_place') }}</label>
-                <select class="form-control" name="place" id="sel1">
-                    <option selected>{{ __('messages.select') }}</option>
-                    <option {{ $data['ad']['place'] == 1 ? 'selected' : '' }} value="1">{{ __('messages.on_the_top') }}</option>
-                    <option {{ $data['ad']['place'] == 2 ? 'selected' : '' }} value="2">{{ __('messages.on_the_middle') }}</option>
-                </select>
+            <div class="form-group mb-4">
+                <label for="title_ar">{{ __('messages.title_ar') }}</label>
+                <input  type="text" value="{{ $data['ad']['title_ar'] }}" name="title_ar" class="form-control" id="title_ar">
             </div>
+            <div class="form-group mb-4">
+                <label for="title_en">{{ __('messages.title_en') }}</label>
+                <input  type="text" name="title_en" value="{{ $data['ad']['title_en'] }}" class="form-control" id="title_en">
+            </div>
+            <div class="form-group mb-4">
+                <label for="exampleFormControlTextarea1">{{ __('messages.desc_ar') }}</label>
+                <textarea class="form-control" name="desc_ar" id="exampleFormControlTextarea1" rows="3">{{ $data['ad']['desc_ar'] }}</textarea>
+            </div>
+            <div class="form-group mb-4">
+                <label for="exampleFormControlTextarea1">{{ __('messages.desc_en') }}</label>
+                <textarea class="form-control" name="desc_en" id="exampleFormControlTextarea1" rows="3">{{ $data['ad']['desc_en'] }}</textarea>
+            </div>
+{{--            <div class="form-group">--}}
+{{--                <label for="sel1">{{ __('messages.ad_place') }}</label>--}}
+{{--                <select class="form-control" name="place" id="sel1">--}}
+{{--                    <option selected>{{ __('messages.select') }}</option>--}}
+{{--                    <option {{ $data['ad']['place'] == 1 ? 'selected' : '' }} value="1">{{ __('messages.on_the_top') }}</option>--}}
+{{--                    <option {{ $data['ad']['place'] == 2 ? 'selected' : '' }} value="2">{{ __('messages.on_the_middle') }}</option>--}}
+{{--                </select>--}}
+{{--            </div>--}}
 
-            <div class="form-group">
-                <label for="sel1">{{ __('messages.ad_type') }}</label>
-                <select id="ad_type" name="type" class="form-control">
-                    <option selected>{{ __('messages.select') }}</option>
-                    <option {{ $data['ad']['type'] == 'link' ? 'selected' : '' }} value="1">{{ __('messages.outside_the_app') }}</option>
-                    <option {{ $data['ad']['type'] == 'id' ? 'selected' : '' }} value="2">{{ __('messages.inside_the_app') }}</option>
-                </select>
-            </div>
-                   
-            <div style="display: {{ $data['ad']['type'] == 'id' ? 'none' : '' }}" class="form-group mb-4 outside">
-                <label for="link">{{ __('messages.link') }}</label>
-                <input required type="text" name="content" class="form-control" id="link" placeholder="{{ __('messages.link') }}" value="{{ $data['ad']['content'] }}" >
-            </div>
-            
+{{--            <div class="form-group">--}}
+{{--                <label for="sel1">{{ __('messages.ad_type') }}</label>--}}
+{{--                <select id="ad_type" name="type" class="form-control">--}}
+{{--                    <option selected>{{ __('messages.select') }}</option>--}}
+{{--                    <option {{ $data['ad']['type'] == 'link' ? 'selected' : '' }} value="1">{{ __('messages.outside_the_app') }}</option>--}}
+{{--                    <option {{ $data['ad']['type'] == 'id' ? 'selected' : '' }} value="2">{{ __('messages.inside_the_app') }}</option>--}}
+{{--                </select>--}}
+{{--            </div>--}}
+{{--                   --}}
+{{--            <div style="display: {{ $data['ad']['type'] == 'id' ? 'none' : '' }}" class="form-group mb-4 outside">--}}
+{{--                <label for="link">{{ __('messages.link') }}</label>--}}
+{{--                <input required type="text" name="content" class="form-control" id="link" placeholder="{{ __('messages.link') }}" value="{{ $data['ad']['content'] }}" >--}}
+{{--            </div>--}}
+{{--            --}}
 
-            <div style="display: {{ $data['ad']['type'] == 'link' ? 'none' : '' }}" class="form-group inside">
-                <label for="users">{{ __('messages.user') }}</label>
-                <select id="users" class="form-control">
-                    <option selected disabled>{{ __('messages.select') }}</option>
-                    @foreach ($data['users'] as $user)
-                    <option {{ isset($data['product']['user']) && $data['product']['user']['id'] == $user->id ? 'selected' : ''  }} value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div style="display: none" class="form-group productsParent">
-                <label for="products">{{ __('messages.product') }}</label>
-                <select id="products" class="form-control" name="content">
-                </select>
-            </div>
-            
+{{--            <div style="display: {{ $data['ad']['type'] == 'link' ? 'none' : '' }}" class="form-group inside">--}}
+{{--                <label for="users">{{ __('messages.user') }}</label>--}}
+{{--                <select id="users" class="form-control">--}}
+{{--                    <option selected disabled>{{ __('messages.select') }}</option>--}}
+{{--                    @foreach ($data['users'] as $user)--}}
+{{--                    <option {{ isset($data['product']['user']) && $data['product']['user']['id'] == $user->id ? 'selected' : ''  }} value="{{ $user->id }}">{{ $user->name }}</option>--}}
+{{--                    @endforeach--}}
+{{--                </select>--}}
+{{--            </div>--}}
+{{--            <div style="display: none" class="form-group productsParent">--}}
+{{--                <label for="products">{{ __('messages.product') }}</label>--}}
+{{--                <select id="products" class="form-control" name="content">--}}
+{{--                </select>--}}
+{{--            </div>--}}
+
             <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">
         </form>
     </div>

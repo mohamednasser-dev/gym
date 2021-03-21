@@ -29,7 +29,7 @@
                         <p class="">Log in to your account to continue.</p>
                         @include('admin.layouts.messages')
                         @include('admin.layouts.errors')
-                        <form class="text-left" method="post" action="{{route('hole.login')}}" >
+                        <form class="text-left" method="post" action="{{route('post.hole.login')}}" >
                             <div class="form">
                                 @csrf
                                 <div id="username-field" class="field-wrapper input">
@@ -51,7 +51,6 @@
                                         <button type="submit" class="btn btn-primary" value="">Log In</button>
                                     </div>
                                 </div>
-
                             </div>
                         </form>
                     </div>

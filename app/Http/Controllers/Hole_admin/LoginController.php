@@ -21,18 +21,29 @@ class LoginController extends AdminController{
 //    }
     // get login page
     public function getlogin(){
-        return view('hole_admin.login');
+        if (\Auth::guard('admin')->check()) {
+            return redirect('/admin-panel');
+        }else if (\Auth::guard('hole')->check()) {
+            return redirect('/hole-panel/hole/home');
+        } else {
+            return view('hole_admin.login');
+        }
     }
 
     // post login
     public function postlogin(Request $request){
         $credentials = request(['email', 'password']);
         if (Auth::guard('hole')->attempt($credentials)) {
-            $user = Auth::guard('hole')->user();
-            return redirect('/admin-panel/hole/home');
+            if(Auth::guard('hole')->user()->status == 'active'){
+                $user = Auth::guard('hole')->user();
+                return redirect('/hole-panel/hole/home');
+            }else{
+                Auth::guard('hole')->logout();
+                return view('hole_admin.login');
+            }
         } else {
             session()->flash('success', trans('messages.email_pass_invalied'));
-            return view('admin.login');
+            return view('hole_admin.login');
         }
     }
 
