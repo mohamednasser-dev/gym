@@ -1,6 +1,6 @@
-@extends('hole.app')
+@extends('coach.app')
 
-@section('title' , __('messages.holes'))
+@section('title' , __('messages.coaches'))
 
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
@@ -8,12 +8,12 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <h4>{{ __('messages.holes') }}</h4>
+                        <h4>{{ __('messages.coaches') }}</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <a class="btn btn-info" href="{{route('holes.create')}}"> {{ __('messages.add') }} </a>
+                        <a class="btn btn-info" href="{{route('coaches.create')}}"> {{ __('messages.add') }} </a>
                     </div>
                 </div>
             </div>
@@ -23,12 +23,11 @@
                         <thead>
                         <tr>
                             <th class="text-center">Id</th>
-                            <th class="text-center">{{ __('messages.logo') }}</th>
-                            <th class="text-center">{{ __('messages.hole_name') }}</th>
+                            <th class="text-center">{{ __('messages.image') }}</th>
+                            <th class="text-center">{{ __('messages.name') }}</th>
                             <th class="text-center">{{ __('messages.email') }}</th>
-                            <th class="text-center">{{ __('messages.phone') }}</th>
                             <th class="text-center">{{ __('messages.status') }}</th>
-                            <th class="text-center">{{ __('messages.famous_holes') }}</th>
+                            <th class="text-center">{{ __('messages.famous_coaches') }}</th>
                             <th class="text-center">{{ __('messages.details') }}</th>
                             @if(Auth::user()->update_data)
                                 <th class="text-center">{{ __('messages.edit') }}</th>
@@ -40,38 +39,37 @@
                         @foreach ($data as $row)
                             <tr>
                                 <td class="text-center"><?=$i;?></td>
-                                <td class="text-center"><img src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->logo }}"  /></td>
+                                <td class="text-center"><img src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->image }}"  /></td>
                                 <td class="text-center">{{ $row->name }}</td>
                                 <td class="text-center">{{ $row->email }}</td>
-                                <td class="text-center">{{ $row->phone }}</td>
                                 <td class="text-center">
                                     @if($row->status == 'active')
-                                        <a href="/admin-panel/holes/change_status/unactive/{{$row->id}}">
+                                        <a href="/admin-panel/coaches/change_status/unactive/{{$row->id}}">
                                             <span class="badge badge-danger">{{ __('messages.block') }}</span>
                                         </a>
                                     @else
-                                        <a href="/admin-panel/holes/change_status/active/{{$row->id}}">
+                                        <a href="/admin-panel/coaches/change_status/active/{{$row->id}}">
                                             <span class="badge badge-success">{{ __('messages.active') }}</span>
                                         </a>
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">
                                     @if($row->famous == '1' )
-                                        <a href="{{route('holes.make_famous',$row->id)}}" class="btn btn-danger  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('coaches.make_famous',$row->id)}}" class="btn btn-danger  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @else
-                                        <a href="{{route('holes.make_famous',$row->id)}}" class="btn btn-dark  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('coaches.make_famous',$row->id)}}" class="btn btn-dark  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">
-                                    <a href="{{route('holes.details',$row->id)}}"><i class="far fa-eye"></i></a>
+                                    <a href="{{route('coaches.details',$row->id)}}"><i class="far fa-eye"></i></a>
                                 </td>
                                 @if(Auth::user()->update_data)
                                     <td class="text-center blue-color">
-                                        <a href="{{route('holes.edit',$row->id)}}">
+                                        <a href="{{route('coaches.edit',$row->id)}}">
                                             <i class="far fa-edit"></i>
                                         </a>
                                     </td>

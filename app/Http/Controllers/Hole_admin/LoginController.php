@@ -1,19 +1,11 @@
 <?php
 namespace App\Http\Controllers\Hole_admin;
-use App\Admin;
-use App\Hole;
-use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\ContactUs;
-use App\User;
-use App\Product;
-use App\Plan;
-use App\Ad;
-use Illuminate\Support\Facades\Hash;
 
-class LoginController extends AdminController{
+
+class LoginController extends Controller{
 
 //    public function __construct()
 //    {
@@ -24,7 +16,7 @@ class LoginController extends AdminController{
         if (\Auth::guard('admin')->check()) {
             return redirect('/admin-panel');
         }else if (\Auth::guard('hole')->check()) {
-            return redirect('/hole-panel/hole/home');
+            return redirect(route('hall.home'));
         } else {
             return view('hole_admin.login');
         }
@@ -36,7 +28,7 @@ class LoginController extends AdminController{
         if (Auth::guard('hole')->attempt($credentials)) {
             if(Auth::guard('hole')->user()->status == 'active'){
                 $user = Auth::guard('hole')->user();
-                return redirect('/hole-panel/hole/home');
+                return redirect(route('hall.home'));
             }else{
                 Auth::guard('hole')->logout();
                 return view('hole_admin.login');

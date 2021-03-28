@@ -1,7 +1,19 @@
 <?php
 
 // Holes Routes
-Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => "Admin"] , function($router){
+Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => "Admin\Coach"] , function($router){
 
+    Route::group([ 'prefix' => 'coaches',] , function($router){
+        Route::get('show' , 'CoachController@index')->name('coaches.show');
 
+        Route::get('details/{id}' , 'CoachController@show')->name('coaches.details');
+        Route::get('create' , 'CoachController@create')->name('coaches.create');
+        Route::get('edit/{id}' , 'CoachController@edit')->name('coaches.edit');
+        Route::post('update/{id}' , 'CoachController@update')->name('coaches.update');
+        Route::post('store' , 'CoachController@store')->name('coaches.store');
+        Route::get('change_status/{status}/{id}' , 'CoachController@change_status');
+        Route::get('make_famous/{id}' , 'CoachController@make_famous')->name('coaches.make_famous');
+//        Route::get('edit/{id}' , 'HoleController@edit');
+    });
+    Route::get('famous_coaches' , 'CoachController@famous_coaches')->name('famous_coaches');
 });

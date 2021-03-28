@@ -27,7 +27,7 @@
     <header class="header navbar navbar-expand-sm">
         <ul class="navbar-item theme-brand flex-row  text-center">
             <li class="nav-item theme-logo">
-                <a href="/admin-panel/hole/home">
+                <a href="{{route('hall.home')}}">
                     <img
                         src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/<?=Auth::guard('hole')->user()->logo ?>"
                         class="navbar-logo" style="height: 50px;" alt="logo">
@@ -35,9 +35,9 @@
             </li>
             <li class="nav-item theme-text">
                 @if(App::isLocale('en'))
-                    <a href="/admin-panel/hole/home" class="nav-link"> <?=Auth::guard('hole')->user()->name?></a>
+                    <a href="{{route('hall.home')}}" class="nav-link"> <?=Auth::guard('hole')->user()->name?></a>
                 @else
-                    <a href="/admin-panel/hole/home" class="nav-link"> <?=Auth::guard('hole')->user()->name?></a>
+                    <a href="{{route('hall.home')}}" class="nav-link"> <?=Auth::guard('hole')->user()->name?></a>
                 @endif
             </li>
         </ul>
@@ -45,14 +45,14 @@
             <li class="nav-item dropdown language-dropdown">
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="language-dropdown"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @if(App::isLocale('en'))
+                    @if(app()->getLocale() == 'en')
                         <img src="/admin/assets/img/ca.png" class="flag-width" alt="flag">
                     @else
                         <img src="/admin/assets/img/ar.png" class="flag-width" alt="flag">
                     @endif
                 </a>
                 <div class="dropdown-menu position-absolute" aria-labelledby="language-dropdown">
-                    @if(App::isLocale('en'))
+                    @if(app()->getLocale() == 'en')
                         <a class="dropdown-item d-flex" href="/setlocale/ar"><img src="/admin/assets/img/ar.png" class="flag-width" alt="flag">
                             <span class="align-self-center">&nbsp;{{ __('messages.arabic') }}</span>
                         </a>
@@ -72,7 +72,7 @@
                 <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">
                     <div class="">
                         <div class="dropdown-item">
-                            <a class="" href="/admin-panel/hole/profile">
+                            <a class="" href="/hall-panel/profile">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                      stroke-linejoin="round" class="feather feather-user">
@@ -82,7 +82,7 @@
                             </a>
                         </div>
                         <div class="dropdown-item">
-                            <a class="" href="/admin-panel/hole/logout">
+                            <a class="" href="/hall-panel/logout">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                      stroke-linejoin="round" class="feather feather-log-out">
@@ -116,7 +116,7 @@
                 <div class="page-header">
                     <nav class="breadcrumb-one" aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/admin-panel/hole/home">{{ __('messages.dashboard') }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('hall.home')}}">{{ __('messages.dashboard') }}</a></li>
                             <!-- <li class="breadcrumb-item active" aria-current="page"><span>Sales</span></li> -->
                         </ol>
                     </nav>

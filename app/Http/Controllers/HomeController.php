@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Balance_package;
+use App\Coach;
+use App\Hole;
 use App\Main_ad;
 use App\Plan_details;
 use App\Setting;
@@ -108,32 +110,22 @@ class HomeController extends Controller
     }
 
     public function getHomeAds(Request $request) {
-        $expired = \DB::table('products')->whereDate('expiry_date', '<', Carbon::now())->get();
-
-		for($i = 0; $i < count($expired); $i++){
-			$product = Product::find($expired[$i]->id);
-			$product->status = 2;
-			$product->save();
-		}
-        $one = Ad::select('id' , 'image' , 'type' , 'content')->where('place' , 1)->inRandomOrder()->take(1)->get();
-        $two = Ad::select('id' , 'image' , 'type' , 'content')->where('place' , 2)->inRandomOrder()->take(1)->get();
-        $three = Ad::select('id' , 'image' , 'type' , 'content')->where('place' , 3)->inRandomOrder()->take(1)->get();
-        if (count($one) > 0) {
-            $data['ads_section_one'] = $one[0];
-        }else {
-            $data['ads_section_one'] = (object)[];
+        $lang = $request->lang;
+        if($lang == 'ar'){
+            $data['slider_ads'] = Ad::select('id' , 'image' , 'title_ar as title' , 'desc_ar as content')->get();
+        }else if($lang == 'en'){
+            $data['slider_ads'] = Ad::select('id' , 'image' , 'title_en as title' , 'desc_en as content')->get();
         }
-        if (count($two) > 0) {
-            $data['ads_section_two'] = $two[0];
-        }else {
-            $data['ads_section_two'] = (object)[];
-        }
-
-        if (count($three) > 0) {
-            $data['ads_section_three'] = $three[0];
-        }else {
-            $data['ads_section_three'] = (object)[];
-        }
+        $data['famous_halls'] = Hole::select('id' , 'cover' ,'logo', 'name' , 'started_price')
+                                    ->where('famous','1')
+                                    ->where('status','active')
+                                    ->where('deleted','0')
+                                    ->get();
+        $data['famous_coaches'] = Coach::select('id','image','available','name')
+                                        ->where('famous','1')
+                                        ->where('status','active')
+                                        ->where('deleted','0')
+                                        ->get();
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
     }

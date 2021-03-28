@@ -19,11 +19,23 @@
             'mix_hole' => "مختلط",
             'from' => "من",
             'to' => "الى",
+            'lang' => "خط الطول",
+            'lat' => "خط العرض",
+            'add_new_branch' => "اضافة فرع جديد",
+            'branch_ar' => "اسم الفرع بالعربية",
+            'branch_en' => "اسم الفرع بالانجليزية",
+            'add_new_coach' => "اضافة مدرب جديد",
+            'avilable_times' => "المواعيد المتاحة",
             'about_hole' => "نبذة عن الصالة",
+            'about_coach' => "نظرة عامة",
+            'famous_coaches' => "اشهر المدربين",
             'hole_details' => "تفاصيل الصالة",
             'famous_holes' => "اشهر الصالات",
             'famous_removed_done' => "تم حذف الصالة من اشهر الصالات",
+            'famous_removed_done_coach' => "تم حذف المدرب من اشهر المدربين",
             'famous_done' => "تم اضافة الصالة الى اشهر الصالات",
+            'famous_done_coaches' => "تم اضافة المدرب الى اشهر المدربين",
+            'coach_details' => "تفاصيل المدرب",
 
 
 

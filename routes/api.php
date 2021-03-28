@@ -107,7 +107,9 @@ use Illuminate\Http\Request;
     Route::get('/home/{lang}/{v}' , 'HomeController@gethome')->middleware('checkguest');
 
     // get home data
-    Route::get('/home-ads/{lang}/{v}' , 'HomeController@getHomeAds')->middleware('checkguest');
+    Route::get('/app_home/{lang}/{v}' , 'HomeController@getHomeAds')->middleware('checkguest');
+    Route::get('/all_halls/{type}/{lang}/{v}' , 'HallsController@all_halls')->middleware('checkguest');
+    Route::get('/hall/details/{id}/{lang}/{v}' , 'HallsController@details')->middleware('checkguest');
 
     // send contact us message
     Route::post('/contactus/{lang}/{v}' , 'ContactUsController@SendMessage')->middleware('checkguest');

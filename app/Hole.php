@@ -20,6 +20,7 @@ class Hole extends Authenticatable
         'deleted',
         'cover',
         'famous',
+        'started_price',
         'about_hole',
     ];
 }

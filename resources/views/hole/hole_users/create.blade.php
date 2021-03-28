@@ -12,13 +12,6 @@
              </div>
         </div>
     </div>
-    @if (session('status'))
-        <div class="alert alert-danger mb-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
-            <strong>Error!</strong> {{ session('status') }} </button>
-        </div>
-    @endif
-
     <form method="post" action="{{route('holes.store')}}" enctype="multipart/form-data">
      @csrf
     <div class="form-group mb-4">
@@ -125,9 +118,50 @@
             <input  type="time" name="mix_hole_to" class="form-control">
         </div>
     </div>
-
+    <h4>{{ __('messages.branches') }}</h4>
+    <div class="form-group row">
+        <div class="card-body parent" style='text-align:right' id="parent">
+            <button type='button' class="btn btn-primary mb-2 mr-2" value='Add Button' id='addButton'>
+                {{ __('messages.add_new_branch') }}
+                <i class="fa fa-plus"></i></button>
+            <div id="" class="form-group row">
+                <div class="col-sm-3 ">{{ __('messages.branch_ar') }}</div>
+                <div class="col-sm-3 ">{{ __('messages.branch_en') }}</div>
+                <div class="col-sm-2 ">{{ __('messages.lang') }}</div>
+                <div class="col-sm-2 ">{{ __('messages.lat') }}</div>
+                <div class="col-sm-2 ">{{ __('messages.delete') }}</div>
+            </div>
+            <div class="panel" style='text-align:right'>
+            </div>
+        </div>
+    </div>
     <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
 </form>
 </div>
+@endsection
+@section('scripts')
+        <script>
+            $(document).ready(function () {
+                var i = 0;
+                $("#addButton").click(function () {
+                        var html = '';
+                        html += ' <div id="' + i + '" class="form-group row">';
+                        html += ' ';
+                        html += '<div class="col-sm-3 "><input id="title_ar' + i + '"  name="branches[' + i + '][title_ar]" type="text" class="form-control"></div>';
+                        html += '<div class="col-sm-3 "><input  name="branches[' + i + '][title_en]" type="text" class="form-control"></div>';
+                        html += '<div class="col-sm-2 "><input  name="branches[' + i + '][longitude]" type="text" class="form-control"></div>';
+                        html += '<div class="col-sm-2 "><input  name="branches[' + i + '][latitude]" type="text" class="form-control"></div>';
+                        html += "<div class='col-sm-2'> <button onclick='myFun("+i+")' class='btn btn-danger' type='button' data-t-id=" + i + "   id='delete'>" +
+                            "                                        <i class='fa fa-trash'></i></button></div>";
+                        html += "</div>";
+                        $('#parent').append(html);
+                        i++;
+                });
+            });
+            function myFun(j) {
+                document.getElementById(j).style.display = 'none';
+                // document.getElementById("title_ar" + j ).val = '';
+            }
 
+        </script>
 @endsection

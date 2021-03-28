@@ -60,14 +60,32 @@
                         @endforeach
                         </tbody>
                     </table>
-                    <label for="">{{ __('messages.logo') }}</label><br>
+                    <h4>{{ __('messages.branches') }}</h4>
+                    @php $hole_branches = \App\Hole_branch::where('hole_id',$data->id)->get(); @endphp
+                    <table class="table table-bordered mb-4">
+                        <thead>
+                        <tr>
+                            <th class="text-center">{{ __('messages.branch_ar') }}</th>
+                            <th class="text-center">{{ __('messages.branch_en') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($hole_branches as $row)
+                            <tr>
+                                <td class="text-center">{{$row->title_ar}}</td>
+                                <td class="text-center">{{$row->title_en}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <h4>{{ __('messages.logo') }}</h4>
                     <div class="row">
                         <div class="col-md-2 product_image">
                             <img style="width: 100%"
                                  src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $data->logo }}"/>
                         </div>
                     </div>
-                    <label style="margin-top: 20px" for="">{{ __('messages.cover') }}</label><br>
+                    <h4>{{ __('messages.cover') }}</h4><br>
                     <div class="row">
                         <div style="position : relative" class="col-md-2 product_image">
                             <img width="100%"

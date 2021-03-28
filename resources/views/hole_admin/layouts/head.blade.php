@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @if(App::isLocale('ar'))
+    @if(app()->getLocale() == 'ar')
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
@@ -45,7 +45,7 @@
         <link href="/admin/rtl/assets/css/components/tabs-accordian/custom-accordions.css" rel="stylesheet" type="text/css" />
         <!--  END CUSTOM STYLE FILE  -->
     @endif
-    @if (App::isLocale('en'))
+    @if (app()->getLocale() == 'en')
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
@@ -88,12 +88,7 @@
         <link href="/admin/assets/css/components/tabs-accordian/custom-accordions.css" rel="stylesheet" type="text/css" />
         <!--  END setting page  -->
     @endif
-
         <link href="/admin/plugins/toast-master/css/jquery.toast.css" rel="stylesheet">
         <link href="/admin/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css">
         <link href="/css/new_styles.css" rel="stylesheet" type="text/css">
-
-
-
-
 </head>
