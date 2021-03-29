@@ -21,5 +21,6 @@ class Coach extends Model
         'about_coach',
         'time_from',
         'time_to',
+        'rate',
     ];
 }

@@ -2,6 +2,42 @@
     namespace App\Helpers;
     class APIHelpers {
 
+        // get month year for the api
+        public static function get_month_year($created_at, $lang)
+        {
+            $month = $created_at->format('F');
+            if ($lang == 'ar') {
+                if ($month == 'January') {
+                    $month = 'يناير';
+                } else if ($month == 'February') {
+                    $month = 'فبراير';
+                } else if ($month == 'March') {
+                    $month = 'مارس';
+                } else if ($month == 'April') {
+                    $month = 'ابريل';
+                } else if ($month == 'May') {
+                    $month = 'مايو';
+                } else if ($month == 'June') {
+                    $month = 'يونيو';
+                } else if ($month == 'July') {
+                    $month = 'يوليو';
+                } else if ($month == 'August') {
+                    $month = 'أغسطي';
+                } else if ($month == 'September') {
+                    $month = 'سبتمبر';
+                } else if ($month == 'October') {
+                    $month = 'أكتوبر';
+                } else if ($month == 'November') {
+                    $month = 'نوفمبر';
+                } else if ($month == 'December') {
+                    $month = 'ديسمبر';
+                }
+            } else {
+                $month = $created_at->format('F');
+            }
+            return $created_at->format('Y') . ' ' . $month;
+        }
+
         // format the response for the api
         public static function createApiResponse($is_error , $code , $message_en , $message_ar , $content , $lang){
           if($lang == 'en'){

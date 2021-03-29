@@ -209,5 +209,9 @@ use Illuminate\Http\Request;
    //re new my ad   (re publish)
     Route::get('ad/republish_ad/{product_id}/{plan_id}/{lang}/{v}' , 'ProductController@republish_ad');
 
+//    hall rates
+    Route::get('rates/{type}/{id}/{lang}/{v}' , 'HallsController@rates');
+    Route::post('rates/{type}/{lang}/{v}' , 'HallsController@store_rate');
+
 
 

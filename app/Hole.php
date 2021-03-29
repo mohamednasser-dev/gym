@@ -22,5 +22,6 @@ class Hole extends Authenticatable
         'famous',
         'started_price',
         'about_hole',
+        'rate',
     ];
 }
