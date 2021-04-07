@@ -13,12 +13,12 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <a class="btn btn-info" href="{{route('holes.create')}}"> {{ __('messages.add') }} </a>
+                        <a class="btn btn-info" href="{{route('halls.create')}}"> {{ __('messages.add') }} </a>
                     </div>
                 </div>
             </div>
             <div class="widget-content widget-content-area">
-                <div class="table-responsive">
+                <a class="table-responsive">
                     <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                         <thead>
                         <tr>
@@ -27,6 +27,7 @@
                             <th class="text-center">{{ __('messages.hole_name') }}</th>
                             <th class="text-center">{{ __('messages.email') }}</th>
                             <th class="text-center">{{ __('messages.phone') }}</th>
+                            <th class="text-center">{{ __('messages.branches') }}</th>
                             <th class="text-center">{{ __('messages.status') }}</th>
                             <th class="text-center">{{ __('messages.famous_holes') }}</th>
                             <th class="text-center">{{ __('messages.details') }}</th>
@@ -44,37 +45,54 @@
                                 <td class="text-center">{{ $row->name }}</td>
                                 <td class="text-center">{{ $row->email }}</td>
                                 <td class="text-center">{{ $row->phone }}</td>
+
+                                <td class="text-center blue-color">
+                                    <a href="{{route('branches.show',$row->id)}}">
+                                        <div class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="feather feather-layers">
+                                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                                <polyline points="2 17 12 22 22 17"></polyline>
+                                                <polyline points="2 12 12 17 22 12"></polyline>
+                                            </svg>
+                                        </div>
+                                    </a>
+                                </td>
                                 <td class="text-center">
                                     @if($row->status == 'active')
-                                        <a href="/admin-panel/holes/change_status/unactive/{{$row->id}}">
+                                        <a href="/admin-panel/halls/change_status/unactive/{{$row->id}}">
                                             <span class="badge badge-danger">{{ __('messages.block') }}</span>
                                         </a>
                                     @else
-                                        <a href="/admin-panel/holes/change_status/active/{{$row->id}}">
+                                        <a href="/admin-panel/halls/change_status/active/{{$row->id}}">
                                             <span class="badge badge-success">{{ __('messages.active') }}</span>
                                         </a>
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">
                                     @if($row->famous == '1' )
-                                        <a href="{{route('holes.make_famous',$row->id)}}" class="btn btn-danger  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('halls.make_famous',$row->id)}}" class="btn btn-danger  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @else
-                                        <a href="{{route('holes.make_famous',$row->id)}}" class="btn btn-dark  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('halls.make_famous',$row->id)}}" class="btn btn-dark  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">
-                                    <a href="{{route('holes.details',$row->id)}}"><i class="far fa-eye"></i></a>
+                                    <a href="{{route('halls.details',$row->id)}}"><i class="far fa-eye"></i></a>
                                 </td>
                                 @if(Auth::user()->update_data)
                                     <td class="text-center blue-color">
-                                        <a href="{{route('holes.edit',$row->id)}}">
+                                        <a href="{{route('halls.edit',$row->id)}}">
                                             <i class="far fa-edit"></i>
                                         </a>
                                     </td>
+                                @endif
+                                @if(Auth::user()->delete_data)
+                                    <td class="text-center blue-color" ><a onclick="return confirm('{{ __('messages.delete_confirmation') }}');" href="/admin-panel/halls/delete/{{ $row->id }}" ><i class="far fa-trash-alt"></i></a></td>
                                 @endif
                                 <?php $i++; ?>
                             </tr>

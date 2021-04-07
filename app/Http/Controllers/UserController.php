@@ -1,24 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Balance_package;
-use App\WalletTransaction;
-use Illuminate\Http\Request;
-use App\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use JD\Cloudder\Facades\Cloudder;
+use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
+use App\WalletTransaction;
 use App\UserNotification;
+use App\Balance_package;
 use App\Notification;
-use App\Product;
 use App\ProductImage;
-use App\Setting;
 use App\Favorite;
 use App\Category;
-use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Support\Facades\DB;
+use App\Product;
+use App\Setting;
+use App\User;
 
 
 

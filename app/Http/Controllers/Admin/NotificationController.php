@@ -1,10 +1,8 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Admin\AdminController;
 use App\Visitor;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Support\Facades\DB;
 use App\Helpers\APIHelpers;
 use App\Notification;
 use App\UserNotification;

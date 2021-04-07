@@ -28,8 +28,7 @@
         <ul class="navbar-item theme-brand flex-row  text-center">
             <li class="nav-item theme-logo">
                 <a href="/admin-panel">
-                    <img
-                        src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/<?=Auth::user()->custom['setting']['logo']?>"
+                    <img style="height: 50px;" src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/<?=Auth::user()->custom['setting']['logo']?>"
                         class="navbar-logo" alt="logo">
                 </a>
             </li>

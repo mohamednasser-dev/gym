@@ -111,7 +111,11 @@ use Illuminate\Http\Request;
     Route::get('/all_halls/{type}/{lang}/{v}' , 'HallsController@all_halls')->middleware('checkguest');
     Route::get('/hall/details/{id}/{lang}/{v}' , 'HallsController@details')->middleware('checkguest');
 
-    // send contact us message
+    //for coaches
+    Route::get('/all_coaches/{lang}/{v}' , 'CoachesController@all_coaches')->middleware('checkguest');
+    Route::get('/coachs/details/{id}/{lang}/{v}' , 'CoachesController@details')->middleware('checkguest');
+
+// send contact us message
     Route::post('/contactus/{lang}/{v}' , 'ContactUsController@SendMessage')->middleware('checkguest');
 
     // get app number
@@ -210,8 +214,13 @@ use Illuminate\Http\Request;
     Route::get('ad/republish_ad/{product_id}/{plan_id}/{lang}/{v}' , 'ProductController@republish_ad');
 
 //    hall rates
-    Route::get('rates/{type}/{id}/{lang}/{v}' , 'HallsController@rates');
+    Route::get('rates/{type}/{id}/{lang}/{v}' , 'HallsController@rates')->middleware('checkguest');;
     Route::post('rates/{type}/{lang}/{v}' , 'HallsController@store_rate');
+
+
+    Route::post('reservation/store/{lang}/{v}' , 'HallsController@store_reservation');
+    Route::get('reservation/{type}/{lang}/{v}' , 'HallsController@reservation_types');
+    Route::get('reservation/store/excute_pay/{lang}/{v}' , 'HallsController@excute_store_reservation');
 
 
 

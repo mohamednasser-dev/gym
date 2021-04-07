@@ -1,4 +1,4 @@
-@extends('admin.app')
+ @extends('admin.app')
 
 @section('title' , __('messages.add_new_manager'))
 
@@ -8,16 +8,16 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-					
+
                     <h4>{{ __('messages.add_new_manager') }}</h4>
              </div>
     </div>
-    
+
     @if (session('status'))
         <div class="alert alert-danger mb-4" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
             <strong>Error!</strong> {{ session('status') }} </button>
-        </div> 
+        </div>
     @endif
 
     <form method="post" action="" >
@@ -46,7 +46,7 @@
                   <input  type="checkbox" class="new-control-input all-permisssions">
                   <span class="new-control-indicator"></span><span class="new-chk-content">{{ __('messages.all') }}</span>
                 </label>
-            </div>     
+            </div>
         </div>
 
         @foreach ($data['permissions'] as $permission)
@@ -54,48 +54,48 @@
              <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
                   <input name="permission[]" value="{{ $permission->id }}" type="checkbox" class="new-control-input single-permission">
-                  @if( Config::get('app.locale') == 'en' )    
+                  @if( Config::get('app.locale') == 'en' )
                     <span class="new-control-indicator"></span><span class="new-chk-content">{{ $permission->permission_en }}</span>
                   @elseif( Config::get('app.locale') == 'ar' )
-                    <span class="new-control-indicator"></span><span class="new-chk-content">{{ $permission->permission_ar }}</span>  
-                  @endif  
+                    <span class="new-control-indicator"></span><span class="new-chk-content">{{ $permission->permission_ar }}</span>
+                  @endif
                 </label>
-            </div>     
-        </div>            
+            </div>
+        </div>
         @endforeach
-        
+
      </div>
-     <br>   
+     <br>
      <div class="row" >
         <div class="col-12" >
             <label> {{ __('messages.another_permissions') }} </label>
         </div>
-        
+
         <div class="col-md-3" >
              <div >
                 <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
                   <input name="add_data" value="1" type="checkbox" class="new-control-input">
                   <span class="new-control-indicator"></span><span class="new-chk-content">{{ __('messages.add') }}</span>
                 </label>
-            </div>     
-        </div>            
+            </div>
+        </div>
         <div class="col-md-3" >
              <div >
                 <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
                   <input name="update_data" value="1" type="checkbox" class="new-control-input">
                   <span class="new-control-indicator"></span><span class="new-chk-content">{{ __('messages.update') }}</span>
                 </label>
-            </div>     
-        </div> 
+            </div>
+        </div>
         <div class="col-md-3" >
              <div >
                 <label class="new-control new-checkbox new-checkbox-text checkbox-primary">
                   <input name="delete_data" value="1" type="checkbox" class="new-control-input">
                   <span class="new-control-indicator"></span><span class="new-chk-content">{{ __('messages.delete') }}</span>
                 </label>
-            </div>     
-        </div> 
-        
+            </div>
+        </div>
+
      </div>
 
     <br>

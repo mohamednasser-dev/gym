@@ -1,8 +1,14 @@
+
 @extends('hole.app')
 
 @section('title' , __('messages.add_new_hole'))
 
 @section('content')
+    <?php
+        $lat = '29.280331923084315';
+        $lng = '47.95993041992187';
+    ?>
+{{--    //--------------------------------------------------------}}
 <div class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-header">
@@ -12,7 +18,7 @@
              </div>
         </div>
     </div>
-    <form method="post" action="{{route('holes.store')}}" enctype="multipart/form-data">
+    <form method="post" action="{{route('halls.store')}}" enctype="multipart/form-data">
      @csrf
     <div class="form-group mb-4">
         <label for="name">{{ __('messages.hole_name') }}</label>
@@ -35,7 +41,7 @@
         <textarea class="form-control" name="about_hole" id="exampleFormControlTextarea1" rows="4"></textarea>
     </div>
     <div class="form-group mb-4 mt-3">
-        <label for="exampleFormControlFile1">{{ __('messages.logo') }}</label>
+        <h4>{{ __('messages.logo') }}</h4>
         <div class="custom-file-container" data-upload-id="mySecondImage">
             <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) <a href="javascript:void(0)" class="custom-file-container__image-clear" title="Clear Image">x</a></label>
             <label class="custom-file-container__custom-file" >
@@ -118,50 +124,42 @@
             <input  type="time" name="mix_hole_to" class="form-control">
         </div>
     </div>
-    <h4>{{ __('messages.branches') }}</h4>
-    <div class="form-group row">
-        <div class="card-body parent" style='text-align:right' id="parent">
-            <button type='button' class="btn btn-primary mb-2 mr-2" value='Add Button' id='addButton'>
-                {{ __('messages.add_new_branch') }}
-                <i class="fa fa-plus"></i></button>
-            <div id="" class="form-group row">
-                <div class="col-sm-3 ">{{ __('messages.branch_ar') }}</div>
-                <div class="col-sm-3 ">{{ __('messages.branch_en') }}</div>
-                <div class="col-sm-2 ">{{ __('messages.lang') }}</div>
-                <div class="col-sm-2 ">{{ __('messages.lat') }}</div>
-                <div class="col-sm-2 ">{{ __('messages.delete') }}</div>
-            </div>
-            <div class="panel" style='text-align:right'>
-            </div>
-        </div>
-    </div>
     <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
 </form>
 </div>
 @endsection
 @section('scripts')
         <script>
-            $(document).ready(function () {
-                var i = 0;
-                $("#addButton").click(function () {
-                        var html = '';
-                        html += ' <div id="' + i + '" class="form-group row">';
-                        html += ' ';
-                        html += '<div class="col-sm-3 "><input id="title_ar' + i + '"  name="branches[' + i + '][title_ar]" type="text" class="form-control"></div>';
-                        html += '<div class="col-sm-3 "><input  name="branches[' + i + '][title_en]" type="text" class="form-control"></div>';
-                        html += '<div class="col-sm-2 "><input  name="branches[' + i + '][longitude]" type="text" class="form-control"></div>';
-                        html += '<div class="col-sm-2 "><input  name="branches[' + i + '][latitude]" type="text" class="form-control"></div>';
-                        html += "<div class='col-sm-2'> <button onclick='myFun("+i+")' class='btn btn-danger' type='button' data-t-id=" + i + "   id='delete'>" +
-                            "                                        <i class='fa fa-trash'></i></button></div>";
-                        html += "</div>";
-                        $('#parent').append(html);
-                        i++;
-                });
-            });
-            function myFun(j) {
-                document.getElementById(j).style.display = 'none';
-                // document.getElementById("title_ar" + j ).val = '';
+            function myMap() {
+                var mapProp= {
+                    center:new google.maps.LatLng({{$lat}},{{$lng}}),
+                    zoom:5,
+                };
+                var map = new google.maps.Map(document.getElementById("us1"),mapProp);
             }
+        </script>
+       <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDPN_XufKy-QTSCB68xFJlqtUjHQ8m6uUY&callback=myMap"></script>
 
+
+
+        {{--    <script src="{{url('admin/assets/js/locationpicker.jquery.js')}}"></script>--}}
+        <script  src="{{url('/')}}/admin/assets/js/locationpicker.jquery.js"></script>
+        <script>
+            $('#us1').locationpicker({
+                location: {
+                    latitude: {{$lat}},
+                    longitude: {{$lng}}
+                },
+
+                radius: 300,
+                markerIcon: "{{url('/images/map-marker.png')}}",
+                inputBinding: {
+                    latitudeInput: $('#lat'),
+                    longitudeInput: $('#lng')
+                    // radiusInput: $('#us2-radius'),
+                    // locationNameInput: $('#us2-address')
+                }
+
+            });
         </script>
 @endsection

@@ -20,7 +20,6 @@ class Authenticate extends Middleware
                         if (strpos($uri, 'admin-panel') !== false) {
                             return route('adminlogin');
                         }elseif (strpos($uri, 'hole-panel') !== false){
-
                             return route('hole.home');
                         }else{
                             return route('invalid' , [1,2]);

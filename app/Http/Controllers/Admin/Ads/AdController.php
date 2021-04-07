@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Admin\Ads;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Support\Facades\DB;
 use App\Ad;
 use App\User;
 use App\Product;

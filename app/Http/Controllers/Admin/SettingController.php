@@ -1,9 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Support\Facades\DB;
 use App\Setting;
 
 class SettingController extends AdminController{

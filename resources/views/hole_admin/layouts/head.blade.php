@@ -88,6 +88,7 @@
         <link href="/admin/assets/css/components/tabs-accordian/custom-accordions.css" rel="stylesheet" type="text/css" />
         <!--  END setting page  -->
     @endif
+        @yield('styles')
         <link href="/admin/plugins/toast-master/css/jquery.toast.css" rel="stylesheet">
         <link href="/admin/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css">
         <link href="/css/new_styles.css" rel="stylesheet" type="text/css">

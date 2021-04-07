@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
 use App\Visitor;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class VisitorController extends Controller
 {

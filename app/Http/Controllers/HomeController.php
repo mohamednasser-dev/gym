@@ -7,6 +7,7 @@ use App\Coach;
 use App\Hole;
 use App\Main_ad;
 use App\Plan_details;
+use App\Product_view;
 use App\Setting;
 use App\User;
 use Illuminate\Http\Request;
@@ -116,11 +117,19 @@ class HomeController extends Controller
         }else if($lang == 'en'){
             $data['slider_ads'] = Ad::select('id' , 'image' , 'title_en as title' , 'desc_en as content')->get();
         }
-        $data['famous_halls'] = Hole::select('id' , 'cover' ,'logo', 'name' , 'started_price')
+        $data['famous_halls'] = Hole::select('id' , 'cover' ,'logo', 'name' , 'started_price','rate')
                                     ->where('famous','1')
                                     ->where('status','active')
                                     ->where('deleted','0')
-                                    ->get();
+                                    ->get()
+                                    ->map(function($halls){
+                                        $floatVal = floatval($halls->rate);
+                                        // If the parsing succeeded and the value is not equivalent to an int
+                                        if($floatVal && intval($floatVal) != $floatVal){
+                                            $halls->rate =  number_format((float)$halls->rate, 1, '.', '');
+                                        }
+                                        return $halls;
+                                    });
         $data['famous_coaches'] = Coach::select('id','image','available','name')
                                         ->where('famous','1')
                                         ->where('status','active')

@@ -1,12 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Admin\Coach;
-
 use App\Coach;
-use App\Hole;
-use App\Hole_time_work;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use JD\Cloudder\Facades\Cloudder;

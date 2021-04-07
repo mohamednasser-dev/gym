@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Category_option;
 use App\Category_option_value;
-use App\Helpers\APIHelpers;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\categories\OptionsValuesController;
 use App\Plan;
 use App\Plan_details;
 use App\Product_feature;

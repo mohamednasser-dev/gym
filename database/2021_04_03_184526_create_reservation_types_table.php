@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHoleMediaTable extends Migration
+class CreateReservationTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateHoleMediaTable extends Migration
      */
     public function up()
     {
-        Schema::create('hole_media', function (Blueprint $table) {
+        Schema::create('reservation_types', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title_ar');
+            $table->string('title_en');
+            $table->enum('deleted',['0','1'])->default('0');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateHoleMediaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hole_media');
+        Schema::dropIfExists('reservation_types');
     }
 }

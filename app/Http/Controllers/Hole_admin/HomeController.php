@@ -1,18 +1,155 @@
 <?php
 namespace App\Http\Controllers\Hole_admin;
-use App\Hole;
-use App\Http\Controllers\Admin\AdminController;
+use App\Hole_branch;
+use App\Hole_time_work;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use App\Hole;
+use JD\Cloudder\Facades\Cloudder;
 
 class HomeController extends Controller{
 
     // get all contact us messages
     public function home(){
-
         return view('hole_admin.home');
+    }
+    public function hall_data(){
+        $id = auth()->guard('hole')->user()->id;
+        $data = Hole::where('id',$id)->first();
+        return view('hole_admin.hall_data.index',compact('data'));
+    }
+
+
+    public function hall_time_works(){
+        $id = auth()->guard('hole')->user()->id;
+        $data = Hole::where('id',$id)->first();
+        $time_male = Hole_time_work::where('hole_id',$id)->where('type','male')->first();
+        $time_female = Hole_time_work::where('hole_id',$id)->where('type','female')->first();
+        $time_mix = Hole_time_work::where('hole_id',$id)->where('type','mix')->first();
+        $branches = Hole_branch::where('hole_id',$id)->get();
+        return view('hole_admin.hall_data.time_works',compact('data','time_male','time_female','time_mix','branches'));
+    }
+
+    public function update_hall_data(Request $request , $id)
+    {
+        $data = $this->validate(\request(),
+            [
+                'name' => 'required',
+                'email' => 'required',
+                'phone' => 'required|numeric',
+                'about_hole' => '',
+            ]);
+
+        if($request->password){
+            $data['password'] = Hash::make($request->password);
+        }
+        if($request->logo != null){
+            $logo = $request->file('logo')->getRealPath();
+            Cloudder::upload($logo, null);
+            $imagereturned = Cloudder::getResult();
+            $image_id = $imagereturned['public_id'];
+            $image_format = $imagereturned['format'];
+            $image_new_logo = $image_id.'.'.$image_format;
+            $data['logo'] = $image_new_logo ;
+        }
+        if($request->cover != null){
+            $logo = $request->file('cover')->getRealPath();
+            Cloudder::upload($logo, null);
+            $imagereturned = Cloudder::getResult();
+            $image_id = $imagereturned['public_id'];
+            $image_format = $imagereturned['format'];
+            $image_new_cover = $image_id.'.'.$image_format;
+            $data['cover'] = $image_new_cover ;
+        }
+        $hole = Hole::where('id',$id)->update($data);
+        session()->flash('success', trans('messages.updated_s'));
+        return back();
+    }
+
+    public function update_hall_time_works(Request $request , $id)
+    {
+        if($request->male == 'male'){
+            $this->validate(\request(),
+                [
+                    'male_hole_from' => 'required',
+                    'male_hole_to' => 'required'
+                ]);
+        }
+        if($request->female == 'female'){
+            $this->validate(\request(),
+                [
+                    'female_hole_from' => 'required',
+                    'female_hole_to' => 'required'
+                ]);
+        }
+        if($request->mix == 'mix'){
+            $this->validate(\request(),
+                [
+                    'mix_hole_from' => 'required',
+                    'mix_hole_to' => 'required'
+                ]);
+        }
+        if($request->male == 'male'){
+            $male_time = Hole_time_work::where('hole_id',$id)->where('type','male')->first();
+            if($male_time == null){
+                $male_data['time_to'] = $request->male_hole_to;
+                $male_data['type'] = 'male';
+                $male_data['time_from'] = $request->male_hole_from;
+                $male_data['hole_id'] = $id ;
+                Hole_time_work::create($male_data);
+            }else{
+                $male_update_data['time_to'] = $request->male_hole_to;
+                $male_update_data['time_from'] = $request->male_hole_from;
+                Hole_time_work::where('hole_id',$id)->where('type','male')->update($male_update_data);
+            }
+        }else{
+            $male_time = Hole_time_work::where('hole_id',$id)->where('type','male')->first();
+            if($male_time != null){
+                $male_time->delete();
+            }
+        }
+        if($request->female == 'female'){
+            $female_time = Hole_time_work::where('hole_id',$id)->where('type','female')->first();
+            if($female_time == null){
+                $female_data['time_to'] = $request->female_hole_to;
+                $female_data['type'] = 'female';
+                $female_data['time_from'] = $request->female_hole_from;
+                $female_data['hole_id'] = $id ;
+                Hole_time_work::create($female_data);
+            }else{
+                $female_update_data['time_to'] = $request->female_hole_to;
+                $female_update_data['time_from'] = $request->female_hole_from;
+                Hole_time_work::where('hole_id',$id)->where('type','female')->update($female_update_data);
+            }
+        }else{
+            $female_time = Hole_time_work::where('hole_id',$id)->where('type','female')->first();
+            if($female_time != null){
+                $female_time->delete();
+            }
+        }
+        if($request->mix == 'mix'){
+            $mix_time = Hole_time_work::where('hole_id',$id)->where('type','mix')->first();
+            if($mix_time == null){
+                $mix_data['time_to'] = $request->mix_hole_to;
+                $mix_data['type'] = 'mix';
+                $mix_data['time_from'] = $request->mix_hole_from;
+                $mix_data['hole_id'] = $id ;
+                Hole_time_work::create($mix_data);
+            }else{
+                $mix_update_data['time_to'] = $request->mix_hole_to;
+                $mix_update_data['time_from'] = $request->mix_hole_from;
+                Hole_time_work::where('hole_id',$id)->where('type','mix')->update($mix_update_data);
+            }
+        }else{
+            $mix_time = Hole_time_work::where('hole_id',$id)->where('type','mix')->first();
+            if($mix_time != null){
+                $mix_time->delete();
+            }
+        }
+        session()->flash('success', trans('messages.updated_s'));
+        return back();
     }
 
     // get profile

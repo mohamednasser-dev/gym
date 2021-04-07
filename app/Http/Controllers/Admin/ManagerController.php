@@ -1,14 +1,12 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Admin\AdminController;
+use App\Hole;
+use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Support\Facades\DB;
 use App\Admin;
 use App\Permission;
 use App\AdminPermission;
-use Illuminate\Support\Facades\Auth;
 
 
 class ManagerController extends AdminController{
@@ -22,7 +20,8 @@ class ManagerController extends AdminController{
    // post add manager
    public function AddPost(Request $request){
         $check_manager_mail = Admin::where('email' , $request->email)->first();
-        if($check_manager_mail){
+        $check_hall_mail = Hole::where('email' , $request->email)->first();
+        if($check_manager_mail || $check_hall_mail){
             return redirect('admin-panel/managers/add')->with('status', 'Email Exists Before');
         }
 

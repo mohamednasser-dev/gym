@@ -128,38 +128,7 @@
                         <input  type="time" @if($time_mix != null) value="{{$time_mix->time_to}}" @endif name="mix_hole_to" class="form-control">
                     </div>
                 </div>
-                <h4>{{ __('messages.branches') }}</h4>
-                <div class="form-group row">
-                    <div class="card-body parent" style='text-align:right' id="parent">
-                        <button type='button' class="btn btn-primary mb-2 mr-2" value='Add Button' id='addButton'>
-                            {{ __('messages.add_new_branch') }}
-                            <i class="fa fa-plus"></i></button>
-                        <div id="" class="form-group row">
-                            <div class="col-sm-3 ">{{ __('messages.branch_ar') }}</div>
-                            <div class="col-sm-3 ">{{ __('messages.branch_en') }}</div>
-                            <div class="col-sm-3 ">{{ __('messages.lang') }}</div>
-                            <div class="col-sm-3 ">{{ __('messages.lat') }}</div>
-                        </div>
-                        @foreach($branches as $key =>$branch)
-                            <div id="" class="form-group row">
-                                <div class="col-sm-3 ">
-                                    {{ Form::select('rows[' .$key . '][base_id]',App\Models\Base::pluck('name','id'),$product_comp->base_id
-                                    ,["class"=>"form-control custom-select col-12 " ]) }}
-                                    <input  name="branches[' + i + '][title_ar]" value="{{$branch->title_ar}}" type="text" class="form-control">
-                                </div>
-                                <div class='col-sm-6'>
-
-                                    {{ Form::number('rows[' .$key . '][quantity]',$product_comp->quantity,["step" =>'0.01',"class"=>"form-control" ,"required",'placeholder'=>trans('admin.quantity')]) }}
-
-                                </div>
-                            </div>
-                        @endforeach
-                        <div class="panel" style='text-align:right'>
-                        </div>
-                    </div>
-                </div>
-
-                <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
+                <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">
             </form>
         </div>
 

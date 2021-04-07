@@ -12,7 +12,6 @@ class hole
             $request->id = \Auth::guard('hole')->user()->id;
             return $next($request);
         } else {
-            dd('not autherize');
             session()->flash('error', trans('messages.unautherize'));
             return redirect()->back();
         }

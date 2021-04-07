@@ -123,6 +123,14 @@
                 </div>
             </li>
         </ul>
+        @if(Auth::guard('hole')->user()->famous == '1')
+            <ul class="navbar-nav flex-row ml-auto " style="padding-top: 5px;">
+                <span class="btn btn-warning mb-2 mr-2 rounded-circle">
+                    <i class="far fa-star"></i>
+                </span>
+                <span style="padding-top: 12px;padding-left: 20px;">{{ __('messages.choosen_famous') }}</span>
+            </ul>
+        @endif
     </header>
 </div>
 <!--  END NAVBAR  -->

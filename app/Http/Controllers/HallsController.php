@@ -3,23 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Coach;
-use App\ContactUs;
 use App\Hole;
+use App\Hole_booking;
 use App\Hole_branch;
 use App\Hole_time_work;
+use App\Income;
 use App\Rate;
+use App\Reservation;
+use App\Reservation_goal;
+use App\Reservation_type;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
-
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class HallsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['all_halls','details','rates','store_rate']]);
+        $this->middleware('auth:api' , ['except' => ['excute_store_reservation','store_reservation','all_halls','details','rates','store_rate']]);
     }
     public function all_halls(Request $request,$type) {
         $halls = Hole_time_work::where('type',$type)->get();
@@ -50,10 +53,30 @@ class HallsController extends Controller
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $rates, $request->lang );
         return response()->json($response , 200);
     }
+
+    public function reservation_types(Request $request) {
+        $lang = $request->lang ;
+        $data = null;
+        if($request->type == 'types'){
+            if($lang == 'ar'){
+                $data = Reservation_type::select('id','title_ar as title')->where('deleted','0')->get();
+            }else{
+                $data = Reservation_type::select('id','title_en as title')->where('deleted','0')->get();
+            }
+        }else if($request->type == 'goals'){
+            if($lang == 'ar'){
+                $data = Reservation_goal::select('id','title_ar as title')->where('deleted','0')->get();
+            }else{
+                $data = Reservation_goal::select('id','title_en as title')->where('deleted','0')->get();
+            }
+        }
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
+        return response()->json($response , 200);
+    }
     public function store_rate(Request $request,$type){
         $validator = Validator::make($request->all(), [
             'text' => 'required',
-            'rate' => 'required',
+            'rate' => 'required|numeric|max:5',
             'target_id' => 'required',
         ]);
         if ($validator->fails()) {
@@ -87,9 +110,102 @@ class HallsController extends Controller
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , null, $request->lang );
         return response()->json($response , 200);
     }
+
+    public function store_reservation(Request $request) {
+        $booking = Hole_booking::where('id',$request->booking_id)->first();
+        if($booking == null){
+            $response = APIHelpers::createApiResponse(true , 406 , 'يجب اختيار اشتراك صحيح اولا' ,' You must choose a valid subscription first', (object)[] , $request->lang);
+            return response()->json($response , 406);
+        }
+        $price = null ;
+        if($booking->is_discount == '1'){
+            $price = $booking->discount_price ;
+        }else{
+            $price = $booking->price ;
+        }
+        $user = auth()->user();
+        $root_url = $request->root();
+        $path='https://apitest.myfatoorah.com/v2/SendPayment';
+        $token="bearer rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";
+        $headers = array(
+            'Authorization:' .$token,
+            'Content-Type:application/json'
+        );
+        $call_back_url = $root_url."/api/reservation/excute_pay?user_id=".$user->id."&booking_id=".$request->booking_id.
+            "&price=".$price."&name=".$request->name."&age=".$request->age."&length=".$request->length."&weight=".
+            $request->weight."&type_id=".$request->type_id."&goal_id=".$request->goal_id."&other=".$request->other;
+        $error_url = $root_url."/api/pay/error";
+        $fields =array(
+            "CustomerName" => $user->name,
+            "NotificationOption" => "LNK",
+            "InvoiceValue" => $price,
+            "CallBackUrl" => $call_back_url,
+            "ErrorUrl" => $error_url,
+            "Language" => "AR",
+            "CustomerEmail" => $user->email
+        );
+
+        $payload =json_encode($fields);
+        $curl_session =curl_init();
+        curl_setopt($curl_session,CURLOPT_URL, $path);
+        curl_setopt($curl_session,CURLOPT_POST, true);
+        curl_setopt($curl_session,CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl_session,CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl_session,CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl_session,CURLOPT_IPRESOLVE, CURLOPT_IPRESOLVE);
+        curl_setopt($curl_session,CURLOPT_POSTFIELDS, $payload);
+        $result=curl_exec($curl_session);
+        curl_close($curl_session);
+        $result = json_decode($result);
+
+        $data['url'] = $result->Data->InvoiceURL;
+        $response = APIHelpers::createApiResponse(false , 200 ,  '' , '' , $data , $request->lang );
+        return response()->json($response , 200);
+    }
+    public function excute_store_reservation(Request $request){
+        $validator = Validator::make($request->all(), [
+            'booking_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true , 406 ,  'بعض الحقول مفقودة', 'بعض الحقول مفقودة' , null, $request->lang );
+            return response()->json($response , 406);
+        }
+        $user = auth()->user();
+        $data['user_id'] = $request->user_id ;
+        $data['name'] = $request->name ;
+        $data['age'] = $request->age ;
+        $data['length'] = $request->length ;
+        $data['weight'] = $request->weight ;
+        $data['type_id'] = $request->type_id ;
+        $data['goal_id'] = $request->goal_id ;
+        $data['other'] = $request->other ;
+        $data['booking_id'] = $request->booking_id ;
+        $data['price'] = $request->price ;
+
+        //get booking data to get expire date
+        $booking = Hole_booking::find($request->booking_id);
+        $mytime = Carbon::now();
+        $today =  Carbon::parse($mytime->toDateTimeString())->format('Y-m-d H:i');
+        $final_date = Carbon::createFromFormat('Y-m-d H:i', $today);
+        $final_expire_date = $final_date->addMonths($booking->months_num);
+        $data['expire_date'] = $final_expire_date ;
+        $reserve = Reservation::create($data);
+        if($reserve != null){
+            $income_Data['price'] = $request->price ;
+            $income_Data['type'] = 'hall' ;
+            $income_Data['user_id'] = $request->user_id ;
+            $income_Data['reservation_id'] = $reserve->id ;
+            $income_Data['booking_id'] = $request->booking_id ;
+            Income::createe($income_Data);
+        }
+
+        $response = APIHelpers::createApiResponse(false , 200 ,  'تم الحجز فالاشتراك بنجاح', 'Reservation saves successfully' , null, $request->lang );
+        return response()->json($response , 200);
+    }
     public function details(Request $request,$id) {
         $lang = $request->lang ;
-        $hall = Hole::select('id','cover','logo','name','about_hole')->find($id);
+        $hall = Hole::select('id','cover','logo','name','about_hole','rate')->find($id);
         if($hall != null){
             $data['basic'] = $hall;
             $data['work_times'] = Hole_time_work::select('id','time_from','time_to','type')
@@ -105,6 +221,7 @@ class HallsController extends Controller
                                                             $time->type = 'المختلط';
                                                         }
                                                     }
+//                                                    $time->rate =
                                                     return $time;
                                                 });
             if($lang == 'ar') {
@@ -112,6 +229,30 @@ class HallsController extends Controller
             }else{
                 $data['branches'] = Hole_branch::select('id', 'title_en as title', 'latitude', 'longitude')->where('hole_id', $id)->get();
             }
+
+            $rates_one = Rate::where('type','hall')->where('order_id',$id)->where('rate',1)->get()->count();
+            $rates_tow = Rate::where('type','hall')->where('order_id',$id)->where('rate',2)->get()->count();
+            $rates_three = Rate::where('type','hall')->where('order_id',$id)->where('rate',3)->get()->count();
+            $rates_four = Rate::where('type','hall')->where('order_id',$id)->where('rate',4)->get()->count();
+            $rates_five = Rate::where('type','hall')->where('order_id',$id)->where('rate',5)->get()->count();
+            $data['stars_count']['one'] = $rates_one;
+            $data['stars_count']['tow'] = $rates_tow;
+            $data['stars_count']['three'] = $rates_three;
+            $data['stars_count']['four'] = $rates_four;
+            $data['stars_count']['five'] = $rates_five;
+
+            $data['all_rates'] = Rate::select('text','rate','user_id as user_name','created_at')->where('type','hall')
+                ->where('order_id',$id)
+                ->where('admin_approval',1)
+                ->get()
+                ->map(function($rate) use ($lang){
+                    $user = User::where('id',$rate->user_name)->first();
+                    $rate->user = $user->name;
+//                $rate->created_at = APIHelpers::get_month_year($rate->created_at, $lang);
+                    return $rate;
+                });
+            $data['rates_count'] = count($data['all_rates']);
+            $data['reservations'] = Hole_booking::with('Details')->select('id','name','title as description','price','is_discount','discount','discount_price','common')->where('hole_id',$id)->where('deleted','0')->get();
         }
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);

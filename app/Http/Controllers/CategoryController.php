@@ -7,15 +7,12 @@ use App\Category_option;
 use App\Category_option_value;
 use App\SubFiveCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\APIHelpers;
 use App\Category;
 use App\SubCategory;
 use App\SubTwoCategory;
 use App\SubThreeCategory;
-use App\ProductImage;
 use App\Product;
 use App\SubFourCategory;
 

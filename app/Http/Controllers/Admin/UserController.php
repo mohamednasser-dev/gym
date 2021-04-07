@@ -1,10 +1,8 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Admin\AdminController;
 use App\WalletTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 use App\Helpers\APIHelpers;
 use JD\Cloudder\Facades\Cloudder;
 use App\User;

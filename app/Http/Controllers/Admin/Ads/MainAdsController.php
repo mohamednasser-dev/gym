@@ -1,15 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Admin\Ads;
-
-use App\Ad;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Controller;
+use JD\Cloudder\Facades\Cloudder;
+use Illuminate\Http\Request;
 use App\Main_ad;
 use App\Product;
 use App\User;
-use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Http\Request;
 
 class MainAdsController extends AdminController
 {

@@ -30,9 +30,13 @@ class LoginController extends Controller{
                 $user = Auth::guard('hole')->user();
                 return redirect(route('hall.home'));
             }else{
+                session()->flash('success', trans('messages.you_are_not_active'));
                 Auth::guard('hole')->logout();
                 return view('hole_admin.login');
             }
+        }else if (Auth::guard('admin')->attempt($credentials)) {
+            $user = Auth::guard('admin')->user();
+            return redirect('/admin-panel');
         } else {
             session()->flash('success', trans('messages.email_pass_invalied'));
             return view('hole_admin.login');

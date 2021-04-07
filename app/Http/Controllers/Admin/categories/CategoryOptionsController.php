@@ -4,8 +4,6 @@ use App\Category_option;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Support\Facades\DB;
-use App\Category;
 
 class CategoryOptionsController extends AdminController{
     public function index()

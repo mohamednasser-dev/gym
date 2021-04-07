@@ -1,36 +1,28 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Category;
-use App\Category_option;
-use App\Category_option_value;
-use App\Marka;
-use App\MarkaType;
-use App\Plan;
-use App\Plan_details;
-use App\Product_feature;
-use App\Product_view;
-use App\SubCategory;
-use App\SubFiveCategory;
-use App\SubFourCategory;
-use App\SubThreeCategory;
-use App\SubTwoCategory;
-use App\TypeModel;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use JD\Cloudder\Facades\Cloudder;
+use App\Category_option_value;
+use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
-use App\User;
+use App\SubThreeCategory;
+use App\Product_feature;
+use App\SubFiveCategory;
+use App\SubFourCategory;
+use App\SubTwoCategory;
+use App\ProductImage;
+use App\Plan_details;
+use App\Product_view;
+use App\SubCategory;
+use Carbon\Carbon;
+use App\Category;
 use App\Favorite;
 use App\Product;
-use App\ProductImage;
 use App\Setting;
-use JD\Cloudder\Facades\Cloudder;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use App\Plan;
+use App\User;
 
 class ProductController extends Controller
 {

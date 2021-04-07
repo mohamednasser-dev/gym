@@ -1,6 +1,7 @@
 <?php
     return [
 
+        'delete_conf' => "Are you sure you want to delete this item?",
         'feature_hoursfeature_hours' => "Number of hours of the property",
         'feature_type' => "Property type",
         'expier_num' => "Displays for two",

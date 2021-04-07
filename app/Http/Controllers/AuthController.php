@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Visitor;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
-use App\Http\Controllers\Controller;
 use App\User;
 use App\Setting;
 

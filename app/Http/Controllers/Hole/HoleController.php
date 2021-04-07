@@ -5,12 +5,6 @@ use App\Hole_branch;
 use App\Hole_time_work;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\ContactUs;
-use App\User;
-use App\Product;
-use App\Plan;
-use App\Ad;
 use Illuminate\Support\Facades\Hash;
 use JD\Cloudder\Facades\Cloudder;
 
@@ -45,7 +39,7 @@ class HoleController extends AdminController{
         $data = $this->validate(\request(),
             [
                 'name' => 'required',
-                'email' => 'required',
+                'email' => 'required|unique:holes|unique:users|unique:admins',
                 'phone' => 'required|numeric',
                 'about_hole' => '',
                 'password' => 'required|numeric',
@@ -59,14 +53,14 @@ class HoleController extends AdminController{
                     'male_hole_to' => 'required'
                 ]);
         }
-        if($request->male == 'female'){
+        if($request->female == 'female'){
             $this->validate(\request(),
                 [
                     'female_hole_from' => 'required',
                     'female_hole_to' => 'required'
                 ]);
         }
-        if($request->male == 'mix'){
+        if($request->mix == 'mix'){
             $this->validate(\request(),
                 [
                     'mix_hole_from' => 'required',
@@ -96,15 +90,15 @@ class HoleController extends AdminController{
             $data['cover'] = $image_new_cover ;
         }
         $hole = Hole::create($data);
-
-        if($request->branches != null){
-            foreach ($request->branches as $row) {
-                if ($row['title_ar'] != null && $row['title_en'] != null && $row['longitude'] != null && $row['latitude'] != null) {
-                    $row['hole_id'] = $hole->id;
-                    Hole_branch::create($row);
-                }
-            }
-        }
+//
+//        if($request->branches != null){
+//            foreach ($request->branches as $row) {
+//                if ($row['title_ar'] != null && $row['title_en'] != null && $row['longitude'] != null && $row['latitude'] != null) {
+//                    $row['hole_id'] = $hole->id;
+//                    Hole_branch::create($row);
+//                }
+//            }
+//        }
         if($request->male == 'male'){
             $male_data['time_from'] = $request->male_hole_from;
             $male_data['time_to'] = $request->male_hole_to;
@@ -127,7 +121,7 @@ class HoleController extends AdminController{
             Hole_time_work::create($male_data);
         }
         session()->flash('success', trans('messages.added_s'));
-        return redirect( route('holes.show'));
+        return redirect( route('halls.show'));
     }
     public function update(Request $request , $id)
     {
@@ -145,14 +139,14 @@ class HoleController extends AdminController{
                     'male_hole_to' => 'required'
                 ]);
         }
-        if($request->male == 'female'){
+        if($request->female == 'female'){
             $this->validate(\request(),
                 [
                     'female_hole_from' => 'required',
                     'female_hole_to' => 'required'
                 ]);
         }
-        if($request->male == 'mix'){
+        if($request->mix == 'mix'){
             $this->validate(\request(),
                 [
                     'mix_hole_from' => 'required',
@@ -222,7 +216,7 @@ class HoleController extends AdminController{
         }
         if($request->mix == 'mix'){
             $mix_time = Hole_time_work::where('hole_id',$id)->where('type','mix')->first();
-            if($male_time == null){
+            if($mix_time == null){
                 $mix_data['time_to'] = $request->mix_hole_to;
                 $mix_data['type'] = 'mix';
                 $mix_data['time_from'] = $request->mix_hole_from;
@@ -239,8 +233,8 @@ class HoleController extends AdminController{
                 $mix_time->delete();
             }
         }
-        session()->flash('success', trans('messages.added_s'));
-        return redirect( route('holes.show'));
+        session()->flash('success', trans('messages.updated_s'));
+        return redirect( route('halls.show'));
     }
     public function show($id){
         $data = Hole::find($id);
@@ -252,6 +246,13 @@ class HoleController extends AdminController{
         $user = Hole::find($request->id);
         $user->status = $request->status;
         $user->save();
+        return redirect()->back();
+    }
+    public function destroy($id){
+        $hall = Hole::find($id);
+        $hall->deleted = '1';
+        $hall->save();
+        session()->flash('success', trans('messages.deleted_s'));
         return redirect()->back();
     }
 

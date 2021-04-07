@@ -287,6 +287,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
     Route::get('model/update/{id}' , 'BrandTypeModelsController@update')->name("model.update.new");
     Route::get('models/delete/{id}' , 'BrandTypeModelsController@destroy')->name("models.delete");
 
+
 });
 
 
