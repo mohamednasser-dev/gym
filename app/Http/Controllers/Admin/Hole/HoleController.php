@@ -1,8 +1,9 @@
 <?php
-namespace App\Http\Controllers\Hole;
+namespace App\Http\Controllers\Admin\Hole;
 use App\Hole;
 use App\Hole_branch;
 use App\Hole_time_work;
+use App\HomeSection;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,12 +13,12 @@ class HoleController extends AdminController{
 
     // get all contact us messages
     public function index(){
-        $data = Hole::where('deleted','0')->get();
+        $data = Hole::where('deleted','0')->orderBy('sort' , 'asc')->get();
         return view('hole.hole_users.index',compact('data'));
     }
 
     public function famous_holes(){
-        $data = Hole::where('famous','1')->where('deleted','0')->get();
+        $data = Hole::where('famous','1')->where('deleted','0')->orderBy('sort' , 'asc')->get();
         return view('hole.hole_users.index',compact('data'));
     }
 
@@ -269,6 +270,25 @@ class HoleController extends AdminController{
             session()->flash('success', trans('messages.famous_done'));
         }
         return back();
+    }
+
+    // sorting
+    public function sort(Request $request) {
+        $post = $request->all();
+        $count = 0;
+        for ($i = 0; $i < count($post['id']); $i ++) :
+            $index = $post['id'][$i];
+            $home_section = Hole::findOrFail($index);
+            $count ++;
+            $newPosition = $count;
+            $data['sort'] = $newPosition;
+            if($home_section->update($data)) {
+                echo "success";
+            }else {
+                echo "failed";
+            }
+        endfor;
+        exit('success');
     }
 
 }

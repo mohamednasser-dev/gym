@@ -1,7 +1,25 @@
 @extends('coach.app')
 
 @section('title' , __('messages.coaches'))
-
+@push('scripts')
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $("tbody#sortable").sortable({
+            items: "tr",
+            placeholder: "ui-state-hightlight",
+            update: function () {
+                var ids = $('tbody#sortable').sortable("serialize");
+                var url = "{{ route('coaches.sort') }}";
+                $.post(url, ids + "&_token={{ csrf_token() }}");
+            }
+        });
+    </script>
+@endpush
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -27,6 +45,7 @@
                             <th class="text-center">{{ __('messages.name') }}</th>
                             <th class="text-center">{{ __('messages.email') }}</th>
                             <th class="text-center">{{ __('messages.status') }}</th>
+                            <th class="text-center">{{ __('messages.rates') }}</th>
                             <th class="text-center">{{ __('messages.famous_coaches') }}</th>
                             <th class="text-center">{{ __('messages.details') }}</th>
                             @if(Auth::user()->update_data)
@@ -34,12 +53,14 @@
                             @endif
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="sortable">
                         <?php $i = 1; ?>
                         @foreach ($data as $row)
-                            <tr>
+                            <tr id="id_{{ $row->id }}">
                                 <td class="text-center"><?=$i;?></td>
-                                <td class="text-center"><img src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->image }}"  /></td>
+                                <td class="text-center"><img
+                                        src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->image }}"/>
+                                </td>
                                 <td class="text-center">{{ $row->name }}</td>
                                 <td class="text-center">{{ $row->email }}</td>
                                 <td class="text-center">
@@ -54,12 +75,40 @@
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">
+                                    @php $rates =  \App\Rate::where('order_id',$row->id)->where('type','coach')->where('admin_approval',2)->get(); @endphp
+                                    @if( count($rates) > 0 )
+                                        <a href="{{route('coaches.rates',$row->id)}}"
+                                           class="btn btn-warning  mb-2 mr-2 rounded-circle" title=""
+                                           style="position: absolute;margin-right: -22px;margin-top: -20px;"
+                                           data-original-title="Tooltip using BUTTON tag">
+                                            {{$row->rate}}
+                                        </a>
+                                        <span class="unreadcount"
+                                              style="position: absolute;margin-top: -27px;margin-right: -28px;"
+                                              title="{{ __('messages.new_rates') }}">
+                                            <span class="insidecount">
+                                                {{count($rates)}}
+                                            </span>
+                                        </span>
+                                    @else
+                                        <a href="{{route('coaches.rates',$row->id)}}"
+                                           class="btn btn-warning  mb-2 mr-2 rounded-circle" title=""
+                                           data-original-title="Tooltip using BUTTON tag">
+                                            {{$row->rate}}
+                                        </a>
+                                    @endif
+                                </td>
+                                <td class="text-center blue-color">
                                     @if($row->famous == '1' )
-                                        <a href="{{route('coaches.make_famous',$row->id)}}" class="btn btn-danger  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('coaches.make_famous',$row->id)}}"
+                                           class="btn btn-danger  mb-2 mr-2 rounded-circle" title="{{ __('messages.famous') }}"
+                                           data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @else
-                                        <a href="{{route('coaches.make_famous',$row->id)}}" class="btn btn-dark  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('coaches.make_famous',$row->id)}}"
+                                           class="btn btn-dark  mb-2 mr-2 rounded-circle" title="{{ __('messages.not_famous') }}"
+                                           data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @endif

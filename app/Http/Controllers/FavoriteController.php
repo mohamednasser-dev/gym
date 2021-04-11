@@ -16,26 +16,28 @@ class FavoriteController extends Controller
     public function addtofavorites(Request $request){
         $user = auth()->user();
         if($user->active == 0){
-            $response = APIHelpers::createApiResponse(true , 406 ,  'تم حظر حسابك', 'تم حظر حسابك' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  'your account blocked', 'تم حظر حسابك' , null, $request->lang );
             return response()->json($response , 406);
         }
         $validator = Validator::make($request->all() , [
             'product_id' => 'required',
+            'type' => 'required|in:hall,coach',
         ]);
         if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 ,  'بعض الحقول مفقودة', 'بعض الحقول مفقودة' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,   $validator->errors()->first(), $validator->errors()->first() , null, $request->lang );
             return response()->json($response , 406);
         }
-        $favorite = Favorite::where('product_id' , $request->product_id)->where('user_id' , $user->id)->first();
+        $favorite = Favorite::where('product_id' , $request->product_id)->where('type',$request->type)->where('user_id' , $user->id)->first();
         if($favorite){
-            $response = APIHelpers::createApiResponse(true , 406 ,  'تم إضافه هذا المنتج للمفضله من قبل', 'تم إضافه هذا المنتج للمفضله من قبل' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  'this favorite added before', 'تم إضافه هذا المفضل  من قبل' , null, $request->lang );
             return response()->json($response , 406);
         }else{
             $favorite = new Favorite();
             $favorite->user_id = $user->id;
             $favorite->product_id = $request->product_id;
+            $favorite->type = $request->type;
             $favorite->save();
-            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $favorite, $request->lang);
+            $response = APIHelpers::createApiResponse(false , 200 ,  'success added', 'تم الاضافة بنجاح' , $favorite, $request->lang);
             return response()->json($response , 200);
         }
     }
@@ -43,26 +45,24 @@ class FavoriteController extends Controller
     public function removefromfavorites(Request $request){
         $user = auth()->user();
         if($user->active == 0){
-            $response = APIHelpers::createApiResponse(true , 406 ,  'تم حظر حسابك', 'تم حظر حسابك' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  'your account blocked', 'تم حظر حسابك' , null, $request->lang );
             return response()->json($response , 406);
         }
-
         $validator = Validator::make($request->all() , [
-            'product_id' => 'required',
+            'fav_id' => 'required',
         ]);
-
         if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 ,  'بعض الحقول مفقودة', 'بعض الحقول مفقودة' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first(), null, $request->lang );
             return response()->json($response , 406);
         }
 
-        $favorite = Favorite::where('product_id' , $request->product_id)->where('user_id',$user->id)->first();
+        $favorite = Favorite::where('id' , $request->fav_id)->first();
         if($favorite){
             $favorite->delete();
             $response = APIHelpers::createApiResponse(false , 200 ,  'Deteted ', 'تم الحذف' , null, $request->lang);
             return response()->json($response , 200);
         }else{
-            $response = APIHelpers::createApiResponse(true , 406 ,  'هذا المنتج غير موجود بالمفضله', 'هذا المنتج غير موجود بالمفضله' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  'this favorite not exist', 'هذا المفضل غير موجود بالمفضله' , null, $request->lang );
             return response()->json($response , 406);
         }
     }
@@ -73,14 +73,40 @@ class FavoriteController extends Controller
             $response = APIHelpers::createApiResponse(true , 406 ,  'تم حظر حسابك', 'تم حظر حسابك' , null, $request->lang );
             return response()->json($response , 406);
         }else {
-            $favorites = Favorite::select('id','product_id','user_id')
-                                 ->with('Product')
+            $hall_favorites = Favorite::select('id','product_id','user_id')
+                                 ->with('Hall')
+                                 ->where('type','hall')
                                  ->where('user_id', $user->id)
                                  ->orderBy('id','desc')
                                  ->get();
-
-            if(count($favorites) > 0) {
-                $response = APIHelpers::createApiResponse(false, 200, '', '', $favorites, $request->lang);
+            $halls = [];
+            foreach ($hall_favorites as $key => $row){
+                $halls[$key]['id'] = $row->id;
+                $halls[$key]['hall_id'] = $row->product_id;
+                $halls[$key]['title'] = $row->Hall->name;
+                $halls[$key]['image'] = $row->Hall->image;
+                $halls[$key]['logo'] = $row->Hall->logo;
+                $halls[$key]['rate'] = $row->Hall->rate ;
+                $halls[$key]['favorite'] = true;
+            }
+            $coach_favorites = Favorite::select('id','product_id','user_id')
+                ->with('Coach')
+                ->where('type','coach')
+                ->where('user_id', $user->id)
+                ->orderBy('id','desc')
+                ->get();
+            $coaches = [];
+            foreach ($coach_favorites as $key => $row){
+                $coaches[$key]['id'] = $row->id;
+                $coaches[$key]['product_id'] = $row->product_id;
+                $coaches[$key]['title'] = $row->Coach->name;
+                $coaches[$key]['image'] = $row->Coach->image;
+                $coaches[$key]['rate'] = $row->Coach->rate ;
+                $coaches[$key]['available'] = $row->Coach->available ;
+                $coaches[$key]['favorite'] = true;
+            }
+            if( count($halls) > 0 ||  count($coaches) > 0 ) {
+                $response = APIHelpers::createApiResponse(false, 200, '', '', array('halls'=> $halls , 'coaches'=> $coaches), $request->lang);
             }else{
                 $response = APIHelpers::createApiResponse(false, 200, 'no item favorite to show', 'لا يوجد عناصر للعرض', null, $request->lang);
             }

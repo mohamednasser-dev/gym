@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Coach;
+use App\Favorite;
 use App\Hole;
 use App\Hole_booking;
 use App\Hole_branch;
@@ -16,6 +17,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class HallsController extends Controller
@@ -25,6 +27,7 @@ class HallsController extends Controller
         $this->middleware('auth:api' , ['except' => ['excute_store_reservation','store_reservation','all_halls','details','rates','store_rate']]);
     }
     public function all_halls(Request $request,$type) {
+        $user = auth()->user();
         $halls = Hole_time_work::where('type',$type)->get();
         foreach ($halls as $key => $hall){
             $selected_hall = Hole::findOrFail($hall->hole_id);
@@ -33,6 +36,18 @@ class HallsController extends Controller
                 $data[$key]['cover'] = $selected_hall->cover;
                 $data[$key]['logo'] = $selected_hall->logo;
                 $data[$key]['name'] = $selected_hall->name;
+                $data[$key]['rate'] = $selected_hall->rate;
+
+                if($user == null){
+                    $data[$key]['favorite'] = false ;
+                }else{
+                    $fav = Favorite::where('user_id', $user->id)->where('product_id', $selected_hall->id)->where('type','hall')->first();
+                    if($fav == null){
+                        $data[$key]['favorite'] = false ;
+                    }else{
+                        $data[$key]['favorite'] = true ;
+                    }
+                }
             }
         }
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
@@ -76,38 +91,42 @@ class HallsController extends Controller
     public function store_rate(Request $request,$type){
         $validator = Validator::make($request->all(), [
             'text' => 'required',
-            'rate' => 'required|numeric|max:5',
+            'rate' => 'required|numeric|min:1|max:5',
             'target_id' => 'required',
         ]);
         if ($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 ,  'بعض الحقول مفقودة', 'بعض الحقول مفقودة' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first() , null, $request->lang );
             return response()->json($response , 406);
         }
         $user = auth()->user();
+
+        if($user == null){
+            $response = APIHelpers::createApiResponse(true , 406 ,  'you should login first', 'يجب تسجيل الدخول اولا' , null, $request->lang );
+            return response()->json($response , 406);
+        }
         $data['user_id'] = $user->id ;
         $data['text'] = $request->text ;
         $data['rate'] = $request->rate ;
         $data['order_id'] = $request->target_id ;
-        $data['admin_approval'] = 1 ;
+        $data['admin_approval'] = 2 ;
         $data['type'] = $type ;
         $rating = Rate::create($data);
-        if($rating != null){
-            $total_rates = Rate::where('order_id',$request->target_id)->where( 'admin_approval' , 1 )->where( 'type' , $type )->get();
-            $total_rates = Rate::where('order_id',$request->target_id)->where( 'admin_approval' , 1 )->where( 'type' , $type )->get();
-            $sum_rates = $total_rates->sum('rate');
-            $count_rates = count($total_rates);
-            $new_rate = $sum_rates / $count_rates ;
-            if($type == 'hall'){
-                $hall = Hole::findOrFail($request->target_id);
-                $hall->rate = $new_rate;
-                $hall->save();
-            }else if($type == 'coach'){
-                $hall = Coach::findOrFail($request->target_id);
-                $hall->rate = $new_rate;
-                $hall->save();
-            }
-        }
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , null, $request->lang );
+//        if($rating != null){
+//            $total_rates = Rate::where('order_id',$request->target_id)->where( 'admin_approval' , 1 )->where( 'type' , $type )->get();
+//            $sum_rates = $total_rates->sum('rate');
+//            $count_rates = count($total_rates);
+//            $new_rate = $sum_rates / $count_rates ;
+//            if($type == 'hall'){
+//                $hall = Hole::findOrFail($request->target_id);
+//                $hall->rate = $new_rate;
+//                $hall->save();
+//            }else if($type == 'coach'){
+//                $hall = Coach::findOrFail($request->target_id);
+//                $hall->rate = $new_rate;
+//                $hall->save();
+//            }
+//        }
+        $response = APIHelpers::createApiResponse(false , 200 ,  'rate added successfully', 'تم اضافة التقييم بنجاح' , null, $request->lang );
         return response()->json($response , 200);
     }
 
@@ -205,8 +224,20 @@ class HallsController extends Controller
     }
     public function details(Request $request,$id) {
         $lang = $request->lang ;
+        $user = auth()->user();
+        Session::put('api_lang',$lang);
         $hall = Hole::select('id','cover','logo','name','about_hole','rate')->find($id);
         if($hall != null){
+            if($user == null){
+                $data['favorite'] = false ;
+            }else{
+                $fav = Favorite::where('user_id', $user->id)->where('product_id', $id)->where('type','hall')->first();
+                if($fav == null){
+                    $data['favorite'] = false ;
+                }else{
+                    $data['favorite'] = true ;
+                }
+            }
             $data['basic'] = $hall;
             $data['work_times'] = Hole_time_work::select('id','time_from','time_to','type')
                                                 ->where('hole_id',$id)
@@ -230,11 +261,12 @@ class HallsController extends Controller
                 $data['branches'] = Hole_branch::select('id', 'title_en as title', 'latitude', 'longitude')->where('hole_id', $id)->get();
             }
 
-            $rates_one = Rate::where('type','hall')->where('order_id',$id)->where('rate',1)->get()->count();
-            $rates_tow = Rate::where('type','hall')->where('order_id',$id)->where('rate',2)->get()->count();
-            $rates_three = Rate::where('type','hall')->where('order_id',$id)->where('rate',3)->get()->count();
-            $rates_four = Rate::where('type','hall')->where('order_id',$id)->where('rate',4)->get()->count();
-            $rates_five = Rate::where('type','hall')->where('order_id',$id)->where('rate',5)->get()->count();
+            $rates_one = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',1)->get()->count();
+            $rates_tow = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',2)->get()->count();
+            $rates_three = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',3)->get()->count();
+            $rates_four = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',4)->get()->count();
+            $rates_five = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',5)->get()->count();
+
             $data['stars_count']['one'] = $rates_one;
             $data['stars_count']['tow'] = $rates_tow;
             $data['stars_count']['three'] = $rates_three;
@@ -242,17 +274,31 @@ class HallsController extends Controller
             $data['stars_count']['five'] = $rates_five;
 
             $data['all_rates'] = Rate::select('text','rate','user_id as user_name','created_at')->where('type','hall')
-                ->where('order_id',$id)
-                ->where('admin_approval',1)
-                ->get()
-                ->map(function($rate) use ($lang){
-                    $user = User::where('id',$rate->user_name)->first();
-                    $rate->user = $user->name;
-//                $rate->created_at = APIHelpers::get_month_year($rate->created_at, $lang);
-                    return $rate;
-                });
+                                    ->where('order_id',$id)
+                                    ->where('admin_approval',1)
+                                    ->get()
+                                    ->map(function($rate) use ($lang){
+                                        $user = User::where('id',$rate->user_name)->first();
+                                        $rate->user = $user->name;
+                    //                $rate->created_at = APIHelpers::get_month_year($rate->created_at, $lang);
+                                        return $rate;
+                                    });
             $data['rates_count'] = count($data['all_rates']);
-            $data['reservations'] = Hole_booking::with('Details')->select('id','name','title as description','price','is_discount','discount','discount_price','common')->where('hole_id',$id)->where('deleted','0')->get();
+            if($lang == 'ar'){
+                $data['reservations'] = Hole_booking::with('Details')
+                                                    ->select('id','name_ar as name','title_ar as description','price','is_discount','discount','discount_price','common')
+                                                    ->where('hole_id',$id)
+                                                    ->where('deleted','0')
+                                                    ->orderBy('common','desc')
+                                                    ->get();
+            }else{
+                $data['reservations'] = Hole_booking::with('Details')
+                                                    ->select('id','name_en as name','title_en as description','price','is_discount','discount','discount_price','common')
+                                                    ->where('hole_id',$id)
+                                                    ->where('deleted','0')
+                                                    ->orderBy('common','desc')
+                                                    ->get();
+            }
         }
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);

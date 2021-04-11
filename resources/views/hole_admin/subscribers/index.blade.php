@@ -29,6 +29,7 @@
                             <th class="text-center">{{ __('messages.user_name') }}</th>
                             <th class="text-center">{{ __('messages.booking_name') }}</th>
                             <th class="text-center">{{ __('messages.end_date') }}</th>
+                            <th class="text-center">{{ __('messages.personal_data') }}</th>
                             <th class="text-center">{{ __('messages.status') }}</th>
                         </tr>
                         </thead>
@@ -37,9 +38,79 @@
                         @foreach ($data as $row)
                             <tr>
                                 <td class="text-center"><?=$i;?></td>
-                                <td class="text-center">{{ $row->User->name }}</td>
+                                <td class="text-center"><a href="{{route('subscription.user_data',$row->user_id)}}">{{ $row->User->name }}</a> </td>
                                 <td class="text-center"> @if(app()->getLocale() == 'ar') {{ $row->Booking->name_ar }} @else {{ $row->Booking->name_en }} @endif </td>
                                 <td class="text-center"> {{date('Y-m-d', strtotime($row->expire_date))}}</td>
+                                <td class="text-center">
+                                    <div class="dropdown custom-dropdown">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                 stroke-linecap="round" stroke-linejoin="round"
+                                                 class="feather feather-more-horizontal">
+                                                <circle cx="12" cy="12" r="1"></circle>
+                                                <circle cx="19" cy="12" r="1"></circle>
+                                                <circle cx="5" cy="12" r="1"></circle>
+                                            </svg>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
+                                            <br>
+                                            <table id="html5-extension" class="table table-hover non-hover" style="width: 300px;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center"> <h6> {{ __('messages.name') }}</h6> </td>
+                                                        <td class="text-center"> {{$row->name}} </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center"><h6> {{ __('messages.age') }}</h6> </td>
+                                                        <td class="text-center"> {{$row->age}} </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center"><h6> {{ __('messages.length') }}</h6> </td>
+                                                        <td class="text-center"> {{$row->length}} </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center"><h6> {{ __('messages.weight') }}</h6> </td>
+                                                        <td class="text-center"> {{$row->weight}} </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center"><h6> {{ __('messages.type') }}</h6> </td>
+                                                        <td class="text-center">
+                                                            @if($row->type_id != null )
+                                                                @if(app()->getLocale() == 'ar')
+                                                                    {{$row->Type->title_ar}}
+                                                                @else
+                                                                    {{$row->Type->title_en}}
+                                                                @endif
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center"> <h6>{{ __('messages.goal') }}</h6> </td>
+                                                        <td class="text-center">
+                                                            @if($row->goal_id != null )
+                                                                @if(app()->getLocale() == 'ar')
+                                                                    {{$row->Goal->title_ar}}
+                                                                @else
+                                                                    {{$row->Goal->title_en}}
+                                                                @endif
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center"> <h6>{{ __('messages.other') }} </h6></td>
+                                                        <td class="text-center"> {{$row->other}} </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center"> {{ __('messages.other') }}</td>
+                                                        <td class="text-center">{{ __('messages.other') }} </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td class="text-center blue-color">
                                     @if($row->status == 'start')
                                         <div class="btn-group">
@@ -149,7 +220,7 @@
                             <label for="plan_price"> &nbsp; </label>
                             <div class="form-check pl-0">
                                 <div class="custom-control custom-checkbox checkbox-info">
-                                    <input type="checkbox" class="custom-control-input" name="add_money" value="add_money" id="add_money">
+                                    <input type="checkbox" checked class="custom-control-input" name="add_money" value="add_money" id="add_money">
                                     <label class="custom-control-label" for="add_money">{{ __('messages.add_money_to_income') }}</label>
                                 </div>
                             </div>

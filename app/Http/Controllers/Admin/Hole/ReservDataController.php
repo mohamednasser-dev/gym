@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Hole;
+namespace App\Http\Controllers\Admin\Hole;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Reservation_goal;

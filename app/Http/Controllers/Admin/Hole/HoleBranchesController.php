@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Hole;
+namespace App\Http\Controllers\Admin\Hole;
 use App\Hole;
 use App\Hole_branch;
 use App\Hole_time_work;
@@ -11,7 +11,6 @@ use JD\Cloudder\Facades\Cloudder;
 
 class HoleBranchesController extends AdminController{
 
-    // get all contact us messages
     public function show($id){
         $data = Hole_branch::where('hole_id',$id)->get();
         return view('hole.hole_users.branches.index' ,compact('data','id'));

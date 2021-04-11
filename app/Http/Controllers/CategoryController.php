@@ -71,7 +71,7 @@ class CategoryController extends Controller
         ]);
 
         if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 ,  'بعض الحقول مفقودة' ,  'بعض الحقول مفقودة' , null , $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first() ,  $validator->errors()->first() , null , $request->lang );
             return response()->json($response , 406);
         }
         if($request->lang == 'en'){
@@ -153,7 +153,7 @@ class CategoryController extends Controller
         ]);
 
         if($validator->fails() && !isset($request->sub_category_level1_id)) {
-            $response = APIHelpers::createApiResponse(true , 406 ,  'بعض الحقول مفقودة' ,  'بعض الحقول مفقودة' , null , $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first() ,  $validator->errors()->first(), null , $request->lang );
             return response()->json($response , 406);
         }
 

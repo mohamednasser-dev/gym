@@ -6,6 +6,7 @@ use App\Hole_booking_detail;
 use App\Http\Controllers\Controller;
 use App\Income;
 use App\Reservation;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Hole_branch;
@@ -37,6 +38,11 @@ class SubscribersController extends Controller{
         return back();
     }
 
+    public function user_data($id){
+        $data['user'] = User::find($id);
+        return view('hole_admin.subscribers.user_data' ,compact('data'));
+    }
+
     public function re_new(Request $request){
         $reservation = Reservation::find($request->reserv_id);
 
@@ -47,15 +53,27 @@ class SubscribersController extends Controller{
         $final_date = Carbon::createFromFormat('Y-m-d H:i', $today);
         $final_expire_date = $final_date->addMonths($booking->months_num);
 
+        $data['name'] = $reservation->name ;
+        $data['age'] = $reservation->age ;
+        $data['length'] = $reservation->length ;
+        $data['weight'] = $reservation->weight ;
+        $data['type_id'] = $reservation->type_id ;
+        $data['goal_id'] = $reservation->goal_id ;
+        $data['other'] = $reservation->other ;
+        $data['user_id'] = $reservation->user_id ;
         $data['expire_date'] = $final_expire_date ;
         $data['booking_id'] = $request->booking_id ;
-        $data['renew_num'] = $reservation->renew_num + 1 ;
+        $data['payment'] = 'cash' ;
+        if($booking->is_discount == '1'){
+            $data['price'] = $booking->discount_price ;
+        }else{
+            $data['price'] = $booking->price ;
+        }
         $data['status'] = 'start';
         $updated_reserv = Reservation::create($data);
 
-        if($updated_reserv == 1 ){
+        if($updated_reserv  != null ){
             if($request->add_money == 'add_money'){
-
                 if($booking->is_discount == '1'){
                     $income_Data['price'] = $booking->discount_price ;
                 }else{

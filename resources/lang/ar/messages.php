@@ -72,7 +72,7 @@
             'end_subscription' => "انهاء الاشتراك",
             'bookng_month_num' => "عدد شهور الاشتراك",
             'reserv_data' => "بيانات الاشتراكات",
-            'current_reservayion' => "الاشتراك الحالى",
+            'current_reservayion' => "الاشتراك سارى",
             'resubscribe' => "تجديد الاشتراك",
             'choose_booking' => "اختر الاشتراك",
             'renew' => "تجديد",
@@ -82,6 +82,20 @@
             'reservation_re_new_money' => "تم تجديد الاشتراك بنجاح و اضافة المبلغ للدخل",
             'reserve_period' => "مده الاشتراك",
             'month' => "شهر",
+            'acception' => "الموافقه",
+            'new_rate' => "تقييم جديد",
+            'reject' => "رفض",
+            'age' => "العمر",
+            'length' => "الطول",
+            'weight' => "الوزن",
+            'other' => "اخرى",
+            'points_packages' => "باقات النقاط",
+            'new_rates' => "تقييمات جديدة",
+            'personal_data' => "البيانات الشخصيه",
+            'famous' => "مشهور",
+            'not_famous' => "ليس مشهور",
+
+
 
 
 

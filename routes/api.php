@@ -111,6 +111,9 @@ use Illuminate\Http\Request;
     Route::get('/all_halls/{type}/{lang}/{v}' , 'HallsController@all_halls')->middleware('checkguest');
     Route::get('/hall/details/{id}/{lang}/{v}' , 'HallsController@details')->middleware('checkguest');
 
+    //my account
+    Route::get('/subscriptions/{type}/{lang}/{v}' , 'SubscriptionsController@subscriptions');
+
     //for coaches
     Route::get('/all_coaches/{lang}/{v}' , 'CoachesController@all_coaches')->middleware('checkguest');
     Route::get('/coachs/details/{id}/{lang}/{v}' , 'CoachesController@details')->middleware('checkguest');

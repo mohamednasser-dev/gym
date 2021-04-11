@@ -1,7 +1,25 @@
 @extends('hole.app')
 
 @section('title' , __('messages.holes'))
-
+@push('scripts')
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $("tbody#sortable").sortable({
+            items : "tr",
+            placeholder : "ui-state-hightlight",
+            update : function () {
+                var ids = $('tbody#sortable').sortable("serialize");
+                var url = "{{ route('halls.sort') }}";
+                $.post(url , ids + "&_token={{ csrf_token() }}");
+            }
+        });
+    </script>
+@endpush
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -29,6 +47,7 @@
                             <th class="text-center">{{ __('messages.phone') }}</th>
                             <th class="text-center">{{ __('messages.branches') }}</th>
                             <th class="text-center">{{ __('messages.status') }}</th>
+                            <th class="text-center">{{ __('messages.rates') }}</th>
                             <th class="text-center">{{ __('messages.famous_holes') }}</th>
                             <th class="text-center">{{ __('messages.details') }}</th>
                             @if(Auth::user()->update_data)
@@ -36,12 +55,12 @@
                             @endif
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="sortable">
                         <?php $i = 1; ?>
                         @foreach ($data as $row)
-                            <tr>
+                            <tr id="id_{{ $row->id }}">
                                 <td class="text-center"><?=$i;?></td>
-                                <td class="text-center"><img src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->logo }}"  /></td>
+                                <td class="text-center"><img src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->logo }}"/></td>
                                 <td class="text-center">{{ $row->name }}</td>
                                 <td class="text-center">{{ $row->email }}</td>
                                 <td class="text-center">{{ $row->phone }}</td>
@@ -49,8 +68,10 @@
                                 <td class="text-center blue-color">
                                     <a href="{{route('branches.show',$row->id)}}">
                                         <div class="">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2"
+                                                 stroke-linecap="round"
                                                  stroke-linejoin="round" class="feather feather-layers">
                                                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                                                 <polyline points="2 17 12 22 22 17"></polyline>
@@ -71,12 +92,38 @@
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">
+                                    @php $rates =  \App\Rate::where('order_id',$row->id)->where('type','hall')->where('admin_approval',2)->get(); @endphp
+                                    @if( count($rates) > 0 )
+                                        <a href="{{route('admin_hall_rates.show',$row->id)}}"
+                                           class="btn btn-warning  mb-2 mr-2 rounded-circle" title="{{ __('messages.famous') }}"
+                                           style="position: absolute;margin-right: -22px;margin-top: -20px;"
+                                           data-original-title="Tooltip using BUTTON tag">
+                                            {{$row->rate}}
+                                        </a>
+                                        <span class="unreadcount" style="position: absolute;margin-top: -27px;margin-right: -28px;" title="{{ __('messages.new_rates') }}">
+                                            <span class="insidecount">
+                                                {{count($rates)}}
+                                            </span>
+                                        </span>
+                                    @else
+                                    <a href="{{route('admin_hall_rates.show',$row->id)}}"
+                                       class="btn btn-warning  mb-2 mr-2 rounded-circle" title="{{ __('messages.not_famous') }}"
+                                       data-original-title="Tooltip using BUTTON tag">
+                                        {{$row->rate}}
+                                    </a>
+                                    @endif
+                                </td>
+                                <td class="text-center blue-color">
                                     @if($row->famous == '1' )
-                                        <a href="{{route('halls.make_famous',$row->id)}}" class="btn btn-danger  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('halls.make_famous',$row->id)}}"
+                                           class="btn btn-danger  mb-2 mr-2 rounded-circle" title=""
+                                           data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @else
-                                        <a href="{{route('halls.make_famous',$row->id)}}" class="btn btn-dark  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('halls.make_famous',$row->id)}}"
+                                           class="btn btn-dark  mb-2 mr-2 rounded-circle" title=""
+                                           data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @endif
@@ -92,16 +139,19 @@
                                     </td>
                                 @endif
                                 @if(Auth::user()->delete_data)
-                                    <td class="text-center blue-color" ><a onclick="return confirm('{{ __('messages.delete_confirmation') }}');" href="/admin-panel/halls/delete/{{ $row->id }}" ><i class="far fa-trash-alt"></i></a></td>
+                                    <td class="text-center blue-color"><a
+                                            onclick="return confirm('{{ __('messages.delete_confirmation') }}');"
+                                            href="/admin-panel/halls/delete/{{ $row->id }}"><i
+                                                class="far fa-trash-alt"></i></a></td>
                                 @endif
                                 <?php $i++; ?>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
-                </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection
 @section('scripts')

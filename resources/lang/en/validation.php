@@ -161,6 +161,14 @@ return [
         "special_title_ar"=>'The name of the featured ads section in Arabic',
         "special_title_en"=>'The name of the distinctive ads section in English',
         "special_hours"=>'Number of hours for featured advertisements',
+
+        "male_hole_from"=>'from hour to men',
+        "male_hole_to"=>'to hour to men',
+        "female_hole_from"=>'from hour to women',
+        "female_hole_to"=>'to hour to women',
+        "mix_hole_from"=>'from hour to mix',
+        "mix_hole_to"=>'to hour to mix',
+        "rate"=>'rate',
     ],
 
 ];

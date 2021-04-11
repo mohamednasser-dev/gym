@@ -4,7 +4,7 @@ Route::get('/',function(){
     return redirect()->route('hole_login');
 });
 // halls Routes
-Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => "Hole"] , function($router){
+Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => "Admin\Hole"] , function($router){
     Route::get('home' , 'HomeController@home')->name('hole.home_panel');
     Route::group([ 'prefix' => 'halls',] , function($router){
         Route::get('show' , 'HoleController@index')->name('halls.show');
@@ -16,8 +16,13 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::post('store' , 'HoleController@store')->name('halls.store');
         Route::get('change_status/{status}/{id}' , 'HoleController@change_status');
         Route::get('make_famous/{id}' , 'HoleController@make_famous')->name('halls.make_famous');
+        Route::post('sort' , 'HoleController@sort')->name('halls.sort');
 //        Route::get('edit/{id}' , 'HoleController@edit');
     });
+    Route::resource('admin_hall_rates' , 'HoleRatesController');
+    Route::get('admin_hall_rate/{type}/{id}' , 'HoleRatesController@change_status')->name('admin_hall_rate.change_status');
+
+
     Route::get('famous_holes' , 'HoleController@famous_holes')->name('famous_holes');
     Route::resource('branches' , 'HoleBranchesController');
     Route::get('branches/create_new/{id}' , 'HoleBranchesController@create')->name('branches.create_new');
@@ -60,6 +65,7 @@ Route::group(['middleware'=> ['language','hole'],'prefix' => "hall-panel",'names
 
     Route::get('subscribers/{type}' , 'SubscribersController@index')->name('subscribers');
     Route::get('subscribers/{id}/end' , 'SubscribersController@end')->name('subscription.end');
+    Route::get('subscribers/user_data/{id}' , 'SubscribersController@user_data')->name('subscription.user_data');
     Route::post('subscribers/re_new' , 'SubscribersController@re_new')->name('subscription.re_new');
 
     Route::resource('booking' , 'BookingsController');

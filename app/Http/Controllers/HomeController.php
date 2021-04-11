@@ -112,6 +112,7 @@ class HomeController extends Controller
 
     public function getHomeAds(Request $request) {
         $lang = $request->lang;
+        $user = auth()->user();
         if($lang == 'ar'){
             $data['slider_ads'] = Ad::select('id' , 'image' , 'title_ar as title' , 'desc_ar as content')->get();
         }else if($lang == 'en'){
@@ -121,12 +122,18 @@ class HomeController extends Controller
                                     ->where('famous','1')
                                     ->where('status','active')
                                     ->where('deleted','0')
+                                    ->orderBy('sort','asc')
                                     ->get()
-                                    ->map(function($halls){
-                                        $floatVal = floatval($halls->rate);
-                                        // If the parsing succeeded and the value is not equivalent to an int
-                                        if($floatVal && intval($floatVal) != $floatVal){
-                                            $halls->rate =  number_format((float)$halls->rate, 1, '.', '');
+                                    ->map(function($halls) use ($user){
+                                        if($user == null){
+                                            $halls->favorite = false ;
+                                        }else{
+                                            $fav = Favorite::where('user_id', $user->id)->where('product_id', $halls->id)->where('type','hall')->first();
+                                            if($fav == null){
+                                                $halls->favorite = false ;
+                                            }else{
+                                                $halls->favorite = true ;
+                                            }
                                         }
                                         return $halls;
                                     });
@@ -134,7 +141,21 @@ class HomeController extends Controller
                                         ->where('famous','1')
                                         ->where('status','active')
                                         ->where('deleted','0')
-                                        ->get();
+                                        ->orderBy('sort','asc')
+                                        ->get()
+                                        ->map(function($coaches) use ($user){
+                                            if($user == null){
+                                                $coaches->favorite = false ;
+                                            }else{
+                                                $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type','coach')->first();
+                                                if($fav == null){
+                                                    $coaches->favorite = false ;
+                                                }else{
+                                                    $coaches->favorite = true ;
+                                                }
+                                            }
+                                            return $coaches;
+                                        });
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
     }

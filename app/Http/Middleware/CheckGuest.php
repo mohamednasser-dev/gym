@@ -16,12 +16,12 @@ class CheckGuest
      */
     public function handle($request, Closure $next)
     {
-        
+
         if(auth()->user()){
             return $next($request);
         }else{
             $gusetkey = $request->header('Authorization');
-            if($gusetkey == '$2y$12$ZtgKLOyfvyXH33JE67Ei0.qupt771t62d21M4/OJumBmsZ1bexxpCPiuhfdR'){
+            if($gusetkey == '$2y$12$ZtgKLOyfvyXH33JE67Ei0uqupt771t62d21M4TOJumBmsZ1bexxpCPiuhfdRG'){
                 return $next($request);
             }
             $response = APIHelpers::createApiResponse(true , 401 ,  'توكن زائر خاطيء' , null );

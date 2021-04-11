@@ -3,6 +3,7 @@
     <div class="overlay"></div>
     <div class="search-overlay"></div>
     <!--  BEGIN SIDEBAR  -->
+    @php $rates =  \App\Rate::where('type','hall')->where('admin_approval',2)->get(); @endphp
     <div class="sidebar-wrapper sidebar-theme">
         <nav id="sidebar">
             <div class="shadow-bottom"></div>
@@ -17,7 +18,7 @@
                 </li>
                 @if(in_array(4 , Auth::user()->custom['admin_permission']))
                     <li class="menu halls">
-                        <a href="#users" data-active="true" data-toggle="collapse" aria-expanded="true"
+                        <a href="#halls" data-active="true" data-toggle="collapse" aria-expanded="true"
                            class="dropdown-toggle first-link">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -28,7 +29,15 @@
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
-                                <span>{{ __('messages.holes') }}</span>
+                                <span>{{ __('messages.holes') }}
+                                    @if( count($rates) > 0 )
+                                        <span class="unreadcount" title="{{ __('messages.new_rates') }}">
+                                            <span class="insidecount">
+                                                {{count($rates)}}
+                                            </span>
+                                        </span>
+                                    @endif
+                                </span>
                             </div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -38,14 +47,22 @@
                                 </svg>
                             </div>
                         </a>
-                        <ul class="collapse submenu list-unstyled show" id="users" data-parent="#accordionExample">
+                        <ul class="collapse submenu list-unstyled show" id="halls" data-parent="#accordionExample">
                             @if(Auth::user()->add_data)
                                 <li class="active create">
                                     <a href="{{route('halls.create')}}"> {{ __('messages.add') }} </a>
                                 </li>
                             @endif
                             <li class="show">
-                                <a href="{{route('halls.show')}}"> {{ __('messages.show') }} </a>
+                                <a href="{{route('halls.show')}}"> {{ __('messages.show') }}
+                                    @if( count($rates) > 0 )
+                                        <span class="unreadcount" title="{{ __('messages.new_rates') }}">
+                                            <span class="insidecount">
+                                                {{count($rates)}}
+                                            </span>
+                                        </span>
+                                    @endif
+                                </a>
                             </li>
                         </ul>
                     </li>
@@ -68,7 +85,7 @@
                 @endif
                 @if(in_array(4 , Auth::user()->custom['admin_permission']))
                     <li class="menu reserv_data">
-                        <a href="#users" data-active="true" data-toggle="collapse" aria-expanded="true"
+                        <a href="#reserv_data" data-active="true" data-toggle="collapse" aria-expanded="true"
                            class="dropdown-toggle first-link">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -89,7 +106,7 @@
                                 </svg>
                             </div>
                         </a>
-                        <ul class="collapse submenu list-unstyled show" id="users" data-parent="#accordionExample">
+                        <ul class="collapse submenu list-unstyled show" id="reserv_data" data-parent="#accordionExample">
                             @if(Auth::user()->add_data)
                                 <li class="active types">
                                     <a href="{{route('reserv_data.types')}}"> {{ __('messages.type') }} </a>

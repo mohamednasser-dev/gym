@@ -23,5 +23,6 @@ class Hole extends Authenticatable
         'started_price',
         'about_hole',
         'rate',
+        'sort',
     ];
 }

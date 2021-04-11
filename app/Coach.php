@@ -22,5 +22,6 @@ class Coach extends Model
         'time_from',
         'time_to',
         'rate',
+        'sort',
     ];
 }
