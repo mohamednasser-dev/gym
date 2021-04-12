@@ -130,9 +130,9 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
                                                 <a class="dropdown-item" href="{{route('subscription.end',$row->id)}}"
                                                    style="color: red; text-align: center;">{{ __('messages.end_subscription') }}</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="javascript:void(0);" id="re_new_btn" data-reserve-id="{{$row->id}}" data-toggle="modal" data-target="#choose_booking"
-                                                   style="color: #2196f3; text-align: center;">{{ __('messages.resubscribe') }}</a>
+{{--                                                <div class="dropdown-divider"></div>--}}
+{{--                                                <a class="dropdown-item" href="javascript:void(0);" id="re_new_btn" data-reserve-id="{{$row->id}}" data-toggle="modal" data-target="#choose_booking"--}}
+{{--                                                   style="color: #2196f3; text-align: center;">{{ __('messages.resubscribe') }}</a>--}}
                                             </div>
                                         </div>
                                     @elseif($row->status == 'ended')
@@ -150,10 +150,10 @@
                                                     <polyline points="6 9 12 15 18 9"></polyline>
                                                 </svg>
                                             </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
-                                                <a class="dropdown-item" href="javascript:void(0);" id="re_new_btn" data-reserve-id="{{$row->id}}" data-toggle="modal" data-target="#choose_booking"
-                                                   style="color: #2196f3; text-align: center;">{{ __('messages.resubscribe') }}</a>
-                                            </div>
+{{--                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">--}}
+{{--                                                <a class="dropdown-item" href="javascript:void(0);" id="re_new_btn" data-reserve-id="{{$row->id}}" data-toggle="modal" data-target="#choose_booking"--}}
+{{--                                                   style="color: #2196f3; text-align: center;">{{ __('messages.resubscribe') }}</a>--}}
+{{--                                            </div>--}}
                                         </div>
                                     @endif
                                 </td>

@@ -20,6 +20,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
 //        Route::get('edit/{id}' , 'HoleController@edit');
     });
     Route::resource('admin_hall_rates' , 'HoleRatesController');
+    Route::get('all_rates' , 'HoleRatesController@all_rates')->name('halls.all_rates');
     Route::get('admin_hall_rate/{type}/{id}' , 'HoleRatesController@change_status')->name('admin_hall_rate.change_status');
 
 

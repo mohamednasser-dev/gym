@@ -58,8 +58,6 @@ class AuthController extends Controller
         $user->token = $this->respondWithToken($token);
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $user , $request->lang);
         return response()->json($response , 200);
-
-
     }
 
     public function invalid(Request $request){

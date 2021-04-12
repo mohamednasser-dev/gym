@@ -48,6 +48,10 @@ return [
             'driver' => 'session',
             'provider' => 'holes',
         ],
+        'coach' => [
+            'driver' => 'session',
+            'provider' => 'coaches',
+        ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
@@ -85,6 +89,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Hole::class,
         ],
+        'coaches' => [
+            'driver' => 'eloquent',
+            'model' => App\Coach::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -115,6 +123,12 @@ return [
         ],
         'holes' => [
             'provider' => 'holes',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'coaches' => [
+            'provider' => 'coaches',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

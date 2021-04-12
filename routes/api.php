@@ -217,7 +217,7 @@ use Illuminate\Http\Request;
     Route::get('ad/republish_ad/{product_id}/{plan_id}/{lang}/{v}' , 'ProductController@republish_ad');
 
 //    hall rates
-    Route::get('rates/{type}/{id}/{lang}/{v}' , 'HallsController@rates')->middleware('checkguest');;
+    Route::get('rates/{type}/{id}/{lang}/{v}' , 'HallsController@rates')->middleware('checkguest');
     Route::post('rates/{type}/{lang}/{v}' , 'HallsController@store_rate');
 
 
@@ -225,5 +225,9 @@ use Illuminate\Http\Request;
     Route::get('reservation/{type}/{lang}/{v}' , 'HallsController@reservation_types');
     Route::get('reservation/store/excute_pay/{lang}/{v}' , 'HallsController@excute_store_reservation');
 
+
+//    coach - panel ----------------------------------------------------------------------------------------------------------------
+    Route::post('coach_login/{lang}/{v}' , 'CoachesController@login')->middleware('checkguest');
+    Route::post('coach/update/ny_data/{lang}/{v}' , 'CoachesController@update_coach_data');
 
 

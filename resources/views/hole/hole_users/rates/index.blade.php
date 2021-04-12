@@ -1,5 +1,10 @@
 @extends('hole.app')
-@section('title' , __('messages.rates'))
+@if(Route::current()->getName() == 'halls.all_rates')
+    @section('title' , __('messages.all_rates'))
+@else
+    @section('title' , __('messages.rates'))
+@endif
+
 @section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -14,7 +19,11 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <h4>{{ __('messages.rates') }}</h4>
+                        @if(Route::current()->getName() == 'halls.all_rates')
+                            <h4>{{ __('messages.all_rates') }}</h4>
+                        @else
+                            <h4>{{ __('messages.rates') }}</h4>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -24,6 +33,9 @@
                         <thead>
                         <tr>
                             <th class="text-center">Id</th>
+                            @if(Route::current()->getName() == 'halls.all_rates')
+                                <th class="text-center">{{ __('messages.hall_name') }}</th>
+                            @endif
                             <th class="text-center">{{ __('messages.text') }}</th>
                             <th class="text-center">{{ __('messages.rate') }}</th>
                             <th class="text-center">{{ __('messages.acception') }}</th>
@@ -34,6 +46,9 @@
                         @foreach ($data as $row)
                             <tr>
                                 <td class="text-center"><?=$i;?></td>
+                                @if(Route::current()->getName() == 'halls.all_rates')
+                                    <td class="text-center">{{ $row->Hall->name }}</td>
+                                @endif
                                 <td class="text-center">{{ $row->text }}</td>
                                 <td class="text-center">
                                     @if($row->rate == 1)

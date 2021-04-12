@@ -41,27 +41,10 @@ class SettingController extends AdminController{
         $setting->snap_chat = $request->snap_chat;
         $setting->watsapp = $request->watsapp;
         $setting->map_url = $request->map_url;
-//		$setting->ad_period = $request->ad_period;
-//		$setting->free_ads_count = $request->free_ads_count;
         $setting->latitude = $request->latitude;
         $setting->longitude = $request->longitude;
         $setting->fax = $request->fax;
         $setting->post_address = $request->post_address;
-        $setting->free_balance = $request->free_balance;
-//		if($request->show_buy){
-//			$setting->show_buy = $request->show_buy;
-//		}else{
-//			$setting->show_buy = 0;
-//		}
-		if($request->is_loop_free_balance){
-			$setting->is_loop_free_balance = 'y';
-		}else{
-			$setting->is_loop_free_balance = 'n';
-		}
-        $setting->free_loop_period = $request->free_loop_period;
-        $setting->free_loop_balance = $request->free_loop_balance;
-
-
 		$setting->save();
         return  back();
     }

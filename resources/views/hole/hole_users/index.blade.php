@@ -53,6 +53,9 @@
                             @if(Auth::user()->update_data)
                                 <th class="text-center">{{ __('messages.edit') }}</th>
                             @endif
+                            @if(Auth::user()->delete_data)
+                                <th class="text-center">{{ __('messages.delete') }}</th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody id="sortable">
@@ -95,7 +98,7 @@
                                     @php $rates =  \App\Rate::where('order_id',$row->id)->where('type','hall')->where('admin_approval',2)->get(); @endphp
                                     @if( count($rates) > 0 )
                                         <a href="{{route('admin_hall_rates.show',$row->id)}}"
-                                           class="btn btn-warning  mb-2 mr-2 rounded-circle" title="{{ __('messages.famous') }}"
+                                           class="btn btn-warning  mb-2 mr-2 rounded-circle"
                                            style="position: absolute;margin-right: -22px;margin-top: -20px;"
                                            data-original-title="Tooltip using BUTTON tag">
                                             {{$row->rate}}
@@ -107,7 +110,7 @@
                                         </span>
                                     @else
                                     <a href="{{route('admin_hall_rates.show',$row->id)}}"
-                                       class="btn btn-warning  mb-2 mr-2 rounded-circle" title="{{ __('messages.not_famous') }}"
+                                       class="btn btn-warning  mb-2 mr-2 rounded-circle"
                                        data-original-title="Tooltip using BUTTON tag">
                                         {{$row->rate}}
                                     </a>
@@ -116,13 +119,13 @@
                                 <td class="text-center blue-color">
                                     @if($row->famous == '1' )
                                         <a href="{{route('halls.make_famous',$row->id)}}"
-                                           class="btn btn-danger  mb-2 mr-2 rounded-circle" title=""
+                                           class="btn btn-danger  mb-2 mr-2 rounded-circle" title="{{ __('messages.famous') }}"
                                            data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @else
                                         <a href="{{route('halls.make_famous',$row->id)}}"
-                                           class="btn btn-dark  mb-2 mr-2 rounded-circle" title=""
+                                           class="btn btn-dark  mb-2 mr-2 rounded-circle" title="{{ __('messages.not_famous') }}"
                                            data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
