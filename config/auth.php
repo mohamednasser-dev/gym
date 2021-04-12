@@ -49,7 +49,7 @@ return [
             'provider' => 'holes',
         ],
         'coach' => [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'coaches',
         ],
         'api' => [

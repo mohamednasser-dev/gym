@@ -135,7 +135,7 @@ class CoachesController extends Controller
     public function update_coach_data(Request $request) {
         $lang = $request->lang ;
         $user = auth()->guard('coach')->user();
-        dd(auth()->guard('coach'));
+        dd(auth()->guard('coach')->user()->id);
         $input = $request->all();
         $validator = Validator::make($input , [
             'name' => 'required',
