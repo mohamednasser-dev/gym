@@ -49,8 +49,9 @@ return [
             'provider' => 'holes',
         ],
         'coach' => [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'coaches',
+            'hash' => false,
         ],
         'api' => [
             'driver' => 'jwt',

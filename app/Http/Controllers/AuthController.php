@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Coach;
+use App\User_caoch_ask;
 use App\Visitor;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -112,6 +114,14 @@ class AuthController extends Controller
         $user->my_wallet = $user->my_wallet + $free_balance;
         $user->free_ads_count = 0;
         $user->save();
+
+        // add free coach ask
+        $caoches = Coach::where('deleted','0')->get();
+        foreach ($caoches as $row){
+            $data['user_id'] = $user->id;
+            $data['caoch_id'] = $row->id;
+            User_caoch_ask::create($data);
+        }
 
         $visitor = Visitor::where('unique_id' , $request->unique_id)->first();
         if($visitor){

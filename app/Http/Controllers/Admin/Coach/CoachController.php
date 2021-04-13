@@ -5,6 +5,8 @@ use App\Coach;
 use App\Hole;
 use App\Http\Controllers\Admin\AdminController;
 use App\Rate;
+use App\User;
+use App\User_caoch_ask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use JD\Cloudder\Facades\Cloudder;
@@ -18,8 +20,25 @@ class CoachController extends AdminController
      */
     public function index()
     {
-        $data = Coach::where('deleted','0')->get();
+        $data = Coach::where('is_confirm','accepted')->where('deleted','0')->get();
         return view('coach.coach_users.index',compact('data'));
+    }
+    public function rejected()
+    {
+        $data = Coach::where('is_confirm','rejected')->where('deleted','0')->get();
+        return view('coach.coach_users.index',compact('data'));
+    }
+    public function new_join()
+    {
+        $data = Coach::where('is_confirm','new')->where('deleted','0')->get();
+        return view('coach.coach_users.index',compact('data'));
+    }
+    public function confirm($id,$type)
+    {
+        $data['is_confirm'] = $type ;
+        Coach::where('id',$id)->update($data);
+        session()->flash('success', trans('messages.status_changed'));
+        return back();
     }
 
     /**
@@ -66,6 +85,14 @@ class CoachController extends AdminController
             $data['image'] = $image_new_logo ;
         }
         $coach = Coach::create($data);
+
+        // add free coach ask to every user
+        $users = User::all();
+        foreach ($users as $row){
+            $data['user_id'] = $row->id;
+            $data['caoch_id'] = $coach->id;
+            User_caoch_ask::create($data);
+        }
         session()->flash('success', trans('messages.added_s'));
         return redirect( route('coaches.show'));
     }

@@ -7,7 +7,7 @@ use Session;
 
 class Hole_booking extends Model
 {
-    protected $fillable = ['name_ar','name_en','title_ar', 'title_en','price','discount','is_discount','discount_price','deleted','hole_id','months_num'];
+    protected $fillable = ['name_ar','name_en','title_ar', 'title_en','price','discount','is_discount','discount_price','common','deleted','hole_id','months_num'];
 
     public function Details() {
         if(Session::get('api_lang') == 'ar'){

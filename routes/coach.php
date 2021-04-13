@@ -5,6 +5,9 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
 
     Route::group([ 'prefix' => 'coaches',] , function($router){
         Route::get('show' , 'CoachController@index')->name('coaches.show');
+        Route::get('rejected' , 'CoachController@rejected')->name('coaches.rejected');
+        Route::get('confirm/{id}/{type}' , 'CoachController@confirm')->name('coach.confirm');
+        Route::get('new_join' , 'CoachController@new_join')->name('coaches.new_join');
         Route::get('details/{id}' , 'CoachController@show')->name('coaches.details');
         Route::get('create' , 'CoachController@create')->name('coaches.create');
         Route::post('sort' , 'CoachController@sort')->name('coaches.sort');

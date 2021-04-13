@@ -47,6 +47,7 @@
                             <th class="text-center">{{ __('messages.status') }}</th>
                             <th class="text-center">{{ __('messages.rates') }}</th>
                             <th class="text-center">{{ __('messages.famous_coaches') }}</th>
+                            <th class="text-center">{{ __('messages.join_requests') }}</th>
                             <th class="text-center">{{ __('messages.details') }}</th>
                             @if(Auth::user()->update_data)
                                 <th class="text-center">{{ __('messages.edit') }}</th>
@@ -111,6 +112,72 @@
                                            data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
+                                    @endif
+                                </td>
+                                <td class="text-center blue-color">
+                                    @if($row->is_confirm == 'new')
+                                        <div class="btn-group">
+                                            <button type="button"
+                                                    class="btn btn-dark btn-sm">{{ __('messages.new_request') }}</button>
+                                            <button type="button"
+                                                    class="btn btn-dark btn-sm dropdown-toggle dropdown-toggle-split"
+                                                    id="dropdownMenuReference5" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                     class="feather feather-chevron-down">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
+                                                <a class="dropdown-item" href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'accepted'])}}"
+                                                   style="color: limegreen; text-align: center;">{{ __('messages.accept') }}</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'rejected'])}}"
+                                                   style="color: red; text-align: center;">{{ __('messages.reject') }}</a>
+                                            </div>
+                                        </div>
+                                    @elseif($row->is_confirm == 'accepted')
+                                        <div class="btn-group">
+                                            <button type="button"
+                                                    class="btn btn-success btn-sm">{{ __('messages.accepted') }}</button>
+                                            <button type="button"
+                                                    class="btn btn-success btn-sm dropdown-toggle dropdown-toggle-split"
+                                                    id="dropdownMenuReference5" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                     class="feather feather-chevron-down">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
+                                                <a class="dropdown-item" href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'rejected'])}}"
+                                                   style="color: red; text-align: center;">{{ __('messages.reject') }}</a>
+                                            </div>
+                                        </div>
+                                    @elseif($row->is_confirm == 'rejected')
+                                        <div class="btn-group">
+                                            <button type="button"
+                                                    class="btn btn-danger btn-sm">{{ __('messages.rejected') }}</button>
+                                            <button type="button"
+                                                    class="btn btn-danger btn-sm dropdown-toggle dropdown-toggle-split"
+                                                    id="dropdownMenuReference5" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                     class="feather feather-chevron-down">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
+                                                <a class="dropdown-item" href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'accepted'])}}"
+                                                   style="color: limegreen; text-align: center;">{{ __('messages.accept') }}</a>
+                                            </div>
+                                        </div>
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">

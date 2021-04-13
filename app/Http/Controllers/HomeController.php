@@ -139,6 +139,7 @@ class HomeController extends Controller
                                     });
         $data['famous_coaches'] = Coach::select('id','image','available','name')
                                         ->where('famous','1')
+                                        ->where('is_confirm','accepted')
                                         ->where('status','active')
                                         ->where('deleted','0')
                                         ->orderBy('sort','asc')
@@ -159,7 +160,6 @@ class HomeController extends Controller
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
     }
-
 //nasser code
     // main ad page
     public function main_ad(Request $request){

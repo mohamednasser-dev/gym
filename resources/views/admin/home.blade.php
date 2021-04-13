@@ -3,8 +3,12 @@
 @section('title' , 'Admin Panel Home')
 
 @section('content')
-    @php $rates =  \App\Rate::where('type','hall')->where('admin_approval',2)->get(); @endphp
-    @php $coaches =  \App\Rate::where('type','coach')->where('admin_approval',2)->get(); @endphp
+    @php
+        $rates =  \App\Rate::where('type','hall')->where('admin_approval',2)->get();
+        $coaches =  \App\Rate::where('type','coach')->where('admin_approval',2)->get();
+        $new_coaches =  \App\Coach::where('is_confirm','new')->get();
+        $coaches_notify = count($coaches) + count($new_coaches) ;
+    @endphp
     <div class="row" >
         <div class="layout-px-spacing">
             <div class="row layout-top-spacing">
@@ -36,10 +40,10 @@
                             <img class="card-img-top" src="{{url('/')}}/admin/assets/img/coaches.png" alt="Card image cap">
                             <div class="card-body">
                                 <h5 class="card-title mt-2">{{ __('messages.coaches') }}
-                                    @if( count($coaches) > 0 )
-                                        <span class="unreadcount" title="{{ __('messages.new_rates') }}">
+                                    @if( $coaches_notify > 0 )
+                                        <span class="unreadcount" title="{{ __('messages.new_rates_and_new_coaches') }}">
                                             <span class="insidecount">
-                                                {{count($coaches)}}
+                                                {{$coaches_notify}}
                                             </span>
                                         </span>
                                     @endif

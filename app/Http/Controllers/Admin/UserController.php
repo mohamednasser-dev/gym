@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
+use App\Coach;
+use App\User_caoch_ask;
 use App\WalletTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -85,6 +87,15 @@ class UserController extends AdminController{
         $user->password = Hash::make($request->password);
         $user->free_ads_count = $free_ads;
         $user->save();
+        if($user->save()){
+            // add free coach ask
+            $caoches = Coach::where('deleted','0')->get();
+            foreach ($caoches as $row){
+                $data['user_id'] = $user->id;
+                $data['caoch_id'] = $row->id;
+                User_caoch_ask::create($data);
+            }
+        }
         return redirect('admin-panel/users/show');
     }
 

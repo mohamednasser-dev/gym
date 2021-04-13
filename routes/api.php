@@ -227,7 +227,9 @@ use Illuminate\Http\Request;
 
 
 //    coach - panel ----------------------------------------------------------------------------------------------------------------
-    Route::post('coach_login/{lang}/{v}' , 'CoachesController@login')->middleware('checkguest');
+    Route::post('coach/login/{lang}/{v}' , 'CoachesController@login')->middleware('checkguest');
+    Route::post('coach/register/{lang}/{v}' , 'CoachesController@register')->middleware('checkguest');
+    Route::get('coach/ny_data/{lang}/{v}' , 'CoachesController@ny_data');
     Route::post('coach/update/ny_data/{lang}/{v}' , 'CoachesController@update_coach_data');
 
 

@@ -24,6 +24,28 @@
                             <td>{{ $data->email }}</td>
                         </tr>
                         <tr>
+                            <td class="label-table"> {{ __('messages.phone') }} </td>
+                            <td>{{ $data->phone }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-table"> {{ __('messages.age') }} </td>
+                            <td>{{ $data->age }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-table"> {{ __('messages.exp_years') }} </td>
+                            <td>{{ $data->exp }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-table"> {{ __('messages.gender') }} </td>
+                            <td>
+                                @if( $data->gender == 'male')
+                                    {{ __('messages.male') }}
+                                @else
+                                    {{ __('messages.female') }}
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="label-table"> {{ __('messages.about_coach') }} </td>
                             <td>{{ $data->about_coach }}</td>
                         </tr>
