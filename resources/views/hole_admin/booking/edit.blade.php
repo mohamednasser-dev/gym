@@ -44,16 +44,16 @@
                         <label for="plan_price"> &nbsp; </label>
                         <div class="form-check pl-0">
                             <div class="custom-control custom-checkbox checkbox-info">
-                                <input type="checkbox" @if($data->is_discount == '1') checked @endif class="custom-control-input" name="cb_discount" value="discount" id="discount">
+                                <input type="checkbox" @if($data->is_discount == 1) checked @endif class="custom-control-input" name="cb_discount" value="discount" id="discount">
                                 <label class="custom-control-label" for="discount">{{ __('messages.discount') }}</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4" id="discount_cont" @if($data->is_discount == '0') style="display: none;" @endif >
+                    <div class="col-md-4" id="discount_cont" @if($data->is_discount == 0) style="display: none;" @endif >
                         <label for="plan_price">{{ __('messages.discount') }}</label>
                         <input  type="number" step="any" value="{{$data->discount}}" id="txt_discount" name="discount" class="form-control">
                     </div>
-                    <div class="col-md-4" id="discount_price_cont" @if($data->is_discount == '0') style="display: none;" @endif >
+                    <div class="col-md-4" id="discount_price_cont" @if($data->is_discount == 0) style="display: none;" @endif >
                         <label for="plan_price">{{ __('messages.discount_price') }}</label>
                         <input  type="number" step="any" value="{{$data->discount_price}}" readonly id="txt_discount_price" name="discount_price" class="form-control">
                     </div>

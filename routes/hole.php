@@ -35,7 +35,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
     Route::post('reserv_data/types/update' , 'ReservDataController@types_update')->name("reserv.types.update");
     Route::get('reserv_data/types/delete/{id}' , 'ReservDataController@types_delete')->name("reserv.types.delete");
 
-    Route::get('reserv_data/goals' , 'ReservDataController@goals')->name("reserv_data.goals");
+    Route::get('reserv_data/goals/{id}' , 'ReservDataController@goals')->name("reserv_data.goals");
     Route::post('reserv_data/goals/store' , 'ReservDataController@goals_store')->name("reserv.goals.store");
     Route::post('reserv_data/goals/update' , 'ReservDataController@goals_update')->name("reserv.goals.update");
     Route::get('reserv_data/goals/delete/{id}' , 'ReservDataController@goals_delete')->name("reserv.goals.delete");

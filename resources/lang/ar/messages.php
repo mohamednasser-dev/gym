@@ -102,6 +102,7 @@
             'all_accepted' => "المقبولين",
             'all_rejected' => "المرفوضين",
             'new_request' => "طلب جديد",
+            'options' => "الخيارات",
             'new_rates_and_new_coaches' => "تقييمات جديدة ومدربين جدد",
 
 

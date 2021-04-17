@@ -13,7 +13,12 @@ class ReservDataController extends AdminController
     public function types()
     {
         $data = Reservation_type::where('deleted','0')->get();
-        return view('hole.reserv_data.types.index',compact('data'));
+        return view('hole.reserv_data.index',compact('data'));
+    }
+    public function goals($id)
+    {
+        $data = Reservation_goal::where('type_id',$id)->where('deleted','0')->get();
+        return view('hole.reserv_data.goals',compact('data','id'));
     }
     public function types_store(Request $request)
     {
@@ -46,15 +51,12 @@ class ReservDataController extends AdminController
         return back();
     }
 
-    public function goals()
-    {
-        $data = Reservation_goal::where('deleted','0')->get();
-        return view('hole.reserv_data.goals.index',compact('data'));
-    }
+
     public function goals_store(Request $request)
     {
         $data = $this->validate(\request(),
             [
+                'type_id' => 'required',
                 'title_ar' => 'required',
                 'title_en' => 'required'
             ]);

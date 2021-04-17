@@ -58,54 +58,31 @@
                                             <br>
                                             <table id="html5-extension" class="table table-hover non-hover" style="width: 300px;">
                                                 <tbody>
+                                                @php $options = \App\Reservation_option::where('reservation_id',$row->id)->get(); @endphp
+                                                @foreach($options as $reserve_data)
                                                     <tr>
-                                                        <td class="text-center"> <h6> {{ __('messages.name') }}</h6> </td>
-                                                        <td class="text-center"> {{$row->name}} </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center"><h6> {{ __('messages.age') }}</h6> </td>
-                                                        <td class="text-center"> {{$row->age}} </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center"><h6> {{ __('messages.length') }}</h6> </td>
-                                                        <td class="text-center"> {{$row->length}} </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center"><h6> {{ __('messages.weight') }}</h6> </td>
-                                                        <td class="text-center"> {{$row->weight}} </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center"><h6> {{ __('messages.type') }}</h6> </td>
                                                         <td class="text-center">
-                                                            @if($row->type_id != null )
+                                                            <h6>
                                                                 @if(app()->getLocale() == 'ar')
-                                                                    {{$row->Type->title_ar}}
+                                                                    {{$reserve_data->Type->title_ar}}
                                                                 @else
-                                                                    {{$row->Type->title_en}}
+                                                                    {{$reserve_data->Type->title_en}}
                                                                 @endif
+                                                            </h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if($reserve_data->goal_id > 0)
+                                                                @if(app()->getLocale() == 'ar')
+                                                                    {{$reserve_data->Goal->title_ar}}
+                                                                @else
+                                                                    {{$reserve_data->Goal->title_en}}
+                                                                @endif
+                                                            @else
+                                                                {{$reserve_data->goal_id}}
                                                             @endif
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="text-center"> <h6>{{ __('messages.goal') }}</h6> </td>
-                                                        <td class="text-center">
-                                                            @if($row->goal_id != null )
-                                                                @if(app()->getLocale() == 'ar')
-                                                                    {{$row->Goal->title_ar}}
-                                                                @else
-                                                                    {{$row->Goal->title_en}}
-                                                                @endif
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center"> <h6>{{ __('messages.other') }} </h6></td>
-                                                        <td class="text-center"> {{$row->other}} </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center"> {{ __('messages.other') }}</td>
-                                                        <td class="text-center">{{ __('messages.other') }} </td>
-                                                    </tr>
+                                                @endforeach
                                                 </tbody>
                                             </table>
                                         </div>

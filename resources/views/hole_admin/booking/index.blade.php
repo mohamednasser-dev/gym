@@ -109,7 +109,7 @@
                                     </div>
                                 </td>
                                 <td class="text-center blue-color">
-                                    @if($row->common == '1')
+                                    @if($row->common == 1)
                                         <a href="{{route('booking.common',$row->id)}}" class="btn btn-warning  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-star"></i>
                                         </a>

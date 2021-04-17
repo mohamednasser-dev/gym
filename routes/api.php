@@ -221,15 +221,35 @@ use Illuminate\Http\Request;
     Route::post('rates/{type}/{lang}/{v}' , 'HallsController@store_rate');
 
 
-    Route::post('reservation/store/{lang}/{v}' , 'HallsController@store_reservation');
-    Route::get('reservation/{type}/{lang}/{v}' , 'HallsController@reservation_types');
+    Route::post('reservation/{type}/store/{lang}/{v}' , 'HallsController@store_reservation');
+    Route::get('reservation/options/{lang}/{v}' , 'HallsController@reservation_types');
     Route::get('reservation/store/excute_pay/{lang}/{v}' , 'HallsController@excute_store_reservation');
 
 
 //    coach - panel ----------------------------------------------------------------------------------------------------------------
     Route::post('coach/login/{lang}/{v}' , 'CoachesController@login')->middleware('checkguest');
     Route::post('coach/register/{lang}/{v}' , 'CoachesController@register')->middleware('checkguest');
-    Route::get('coach/ny_data/{lang}/{v}' , 'CoachesController@ny_data');
+    Route::get('coach/my_data/{lang}/{v}' , 'CoachesController@my_data');
     Route::post('coach/update/ny_data/{lang}/{v}' , 'CoachesController@update_coach_data');
+
+    //for plans
+    Route::get('coach/my_plans/{lang}/{v}' , 'CoachesController@my_plans');
+    Route::post('coach/plan/store/{lang}/{v}' , 'CoachesController@store_plan');
+    Route::get('coach/plan/data/{id}/{lang}/{v}' , 'CoachesController@select_plan_data');
+    Route::post('coach/plan/update/{id}/{lang}/{v}' , 'CoachesController@update_plan');
+    Route::get('coach/plan/common/{id}/{lang}/{v}' , 'CoachesController@make_common');
+    Route::post('coach/plan/delete/{lang}/{v}' , 'CoachesController@delete_plan');
+    Route::get('coach/plan/details/{id}/{lang}/{v}' , 'CoachesController@plan_details');
+    Route::post('coach/plan/details/store/{lang}/{v}' , 'CoachesController@store_plan_detail');
+    Route::post('coach/plan/detail/delete/{lang}/{v}' , 'CoachesController@delete_plan_detail');
+
+    //for media
+    Route::get('coach/media/{lang}/{v}' , 'CoachesController@media');
+    Route::post('coach/media/store/{lang}/{v}' , 'CoachesController@store_media');
+    Route::post('coach/media/delete/{lang}/{v}' , 'CoachesController@delete_media');
+
+
+
+
 
 

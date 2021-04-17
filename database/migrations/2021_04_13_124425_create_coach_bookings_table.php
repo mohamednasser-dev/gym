@@ -21,8 +21,9 @@ class CreateCoachBookingsTable extends Migration
             $table->string('title_en');
             $table->double('price');
             $table->enum('common',['0','1']);
-            $table->double('discount');
-            $table->double('discount_price');
+            $table->bigInteger('is_discount')->default(0);
+            $table->double('discount')->nullable();
+            $table->double('discount_price')->nullable();
             $table->bigInteger('months_num')->unsigned()->default(1);
             $table->enum('deleted',['0','1'])->default('0');
             $table->bigInteger('coach_id')->unsigned()->nullable();

@@ -39,7 +39,7 @@ class BookingsController extends Controller{
         }
         $data['hole_id'] = auth()->guard('hole')->user()->id;
         if($request->cb_discount == 'discount'){
-            $data['is_discount'] = '1';
+            $data['is_discount'] = 1;
             $data['discount'] = $request->discount;
             $data['discount_price'] = $request->discount_price;
         }
@@ -111,22 +111,22 @@ class BookingsController extends Controller{
         }
         $data['hole_id'] = auth()->guard('hole')->user()->id;
         if($request->cb_discount == 'discount'){
-            $data['is_discount'] = '1';
+            $data['is_discount'] = 1;
             $data['discount'] = $request->discount;
             $data['discount_price'] = $request->discount_price;
         }else{
-            $data['is_discount'] = '0';
+            $data['is_discount'] = 0;
         }
         Hole_booking::where('id',$id)->update($data);
         session()->flash('success', trans('messages.updated_s'));
         return redirect( route('booking.index'));
     }
     public function make_common($id){
-        $data['common'] = '0';
+        $data['common'] = 0;
         Hole_booking::where('hole_id',auth()->guard('hole')->user()->id)->update($data);
 
         $booking = Hole_booking::where('id',$id)->first();
-        $booking->common = '1';
+        $booking->common = 1;
         $booking->save();
         session()->flash('success', trans('messages.common_s'));
         return redirect()->back();
