@@ -24,7 +24,7 @@ class CheckGuest
             if($gusetkey == '$2y$12$ZtgKLOyfvyXH33JE67Ei0uqupt771t62d21M4TOJumBmsZ1bexxpCPiuhfdRG'){
                 return $next($request);
             }
-            $response = APIHelpers::createApiResponse(true , 401 ,  'توكن زائر خاطيء' , null );
+            $response = APIHelpers::createApiResponse(true , 401 ,  'Guest token wrong', 'توكن زائر خاطيء', null,$request->lang );
             return response()->json($response , 401);
         }
     }

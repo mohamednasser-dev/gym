@@ -63,7 +63,7 @@
                         @foreach ($data as $row)
                             <tr id="id_{{ $row->id }}">
                                 <td class="text-center"><?=$i;?></td>
-                                <td class="text-center"><img src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->logo }}"/></td>
+                                <td class="text-center"><img src="{{image_cloudinary_url()}}{{ $row->logo }}"/></td>
                                 <td class="text-center">{{ $row->name }}</td>
                                 <td class="text-center">{{ $row->email }}</td>
                                 <td class="text-center">{{ $row->phone }}</td>

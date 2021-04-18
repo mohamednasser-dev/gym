@@ -1,5 +1,6 @@
 <?php
     namespace App\Helpers;
+
     class APIHelpers {
 
         // get month year for the api
@@ -64,7 +65,7 @@
       }
 
         // calculate the distance
-       public static function distance($lat1, $lon1, $lat2, $lon2, $unit) {
+        public static function distance($lat1, $lon1, $lat2, $lon2, $unit) {
             if (($lat1 == $lat2) && ($lon1 == $lon2)) {
               return 0;
             }
@@ -86,8 +87,8 @@
             }
           }
 
-          // send fcm notification
-          public static function send_notification($title , $body , $image , $data , $token){
+        // send fcm notification
+        public static function send_notification($title , $body , $image , $data , $token){
 
             $message= $body;
             $title= $title;
@@ -116,11 +117,6 @@
             curl_close($curl_session);
             return $result;
           }
-
-
-
-
-
 
     }
 ?>
