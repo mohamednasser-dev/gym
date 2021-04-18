@@ -36,7 +36,7 @@
                     <label for="exampleFormControlFile1">{{ __('messages.image') }}</label>
                     <div class="row">
                         <div class="col-md-2 product_image">
-                            <img style="width: 50%" src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $data->image }}"  />
+                            <img style="width: 50%" src="{{image_cloudinary_url()}}{{ $data->image }}"  />
                         </div>
                     </div>
                     <div class="custom-file-container" data-upload-id="myFirstImage">

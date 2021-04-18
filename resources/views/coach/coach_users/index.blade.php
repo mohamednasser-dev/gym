@@ -59,8 +59,8 @@
                         @foreach ($data as $row)
                             <tr id="id_{{ $row->id }}">
                                 <td class="text-center"><?=$i;?></td>
-                                <td class="text-center"><img
-                                        src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->image }}"/>
+                                <td class="text-center">
+                                    <img src="{{image_cloudinary_url()}}{{ $row->image }}"/>
                                 </td>
                                 <td class="text-center">{{ $row->name }}</td>
                                 <td class="text-center">{{ $row->email }}</td>
@@ -102,13 +102,15 @@
                                 <td class="text-center blue-color">
                                     @if($row->famous == '1' )
                                         <a href="{{route('coaches.make_famous',$row->id)}}"
-                                           class="btn btn-danger  mb-2 mr-2 rounded-circle" title="{{ __('messages.famous') }}"
+                                           class="btn btn-danger  mb-2 mr-2 rounded-circle"
+                                           title="{{ __('messages.famous') }}"
                                            data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @else
                                         <a href="{{route('coaches.make_famous',$row->id)}}"
-                                           class="btn btn-dark  mb-2 mr-2 rounded-circle" title="{{ __('messages.not_famous') }}"
+                                           class="btn btn-dark  mb-2 mr-2 rounded-circle"
+                                           title="{{ __('messages.not_famous') }}"
                                            data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
@@ -131,10 +133,12 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
-                                                <a class="dropdown-item" href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'accepted'])}}"
+                                                <a class="dropdown-item"
+                                                   href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'accepted'])}}"
                                                    style="color: limegreen; text-align: center;">{{ __('messages.accept') }}</a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'rejected'])}}"
+                                                <a class="dropdown-item"
+                                                   href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'rejected'])}}"
                                                    style="color: red; text-align: center;">{{ __('messages.reject') }}</a>
                                             </div>
                                         </div>
@@ -154,7 +158,8 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
-                                                <a class="dropdown-item" href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'rejected'])}}"
+                                                <a class="dropdown-item"
+                                                   href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'rejected'])}}"
                                                    style="color: red; text-align: center;">{{ __('messages.reject') }}</a>
                                             </div>
                                         </div>
@@ -174,7 +179,8 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
-                                                <a class="dropdown-item" href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'accepted'])}}"
+                                                <a class="dropdown-item"
+                                                   href="{{route('coach.confirm',['id'=>$row->id ,'type'=>'accepted'])}}"
                                                    style="color: limegreen; text-align: center;">{{ __('messages.accept') }}</a>
                                             </div>
                                         </div>

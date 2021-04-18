@@ -27,9 +27,9 @@
 
            <div id="demo-test-gallery container" class="demo-gallery" data-pswp-uid="1">
                 @foreach($data as $row)
-                   <a class="img-1" href="https://res.cloudinary.com/carsads/image/upload/v1581928924/{{ $row->image }}" data-size="1600x1068"
-                      data-med="https://res.cloudinary.com/carsads/image/upload/v1581928924/{{ $row->image }}" data-med-size="1024x683" data-author="Samuel Rohl">
-                       <img style="height: 350px;" src="https://res.cloudinary.com/carsads/image/upload/v1581928924/{{ $row->image }}" alt="image-gallery">
+                   <a class="img-1" href="{{media_image_cloudinary_url()}}{{ $row->image }}" data-size="1600x1068"
+                      data-med="{{media_image_cloudinary_url()}}{{ $row->image }}" data-med-size="1024x683" data-author="Samuel Rohl">
+                       <img style="height: 350px;" src="{{media_image_cloudinary_url()}}{{ $row->image }}" alt="image-gallery">
                    </a>
 {{--                   <form action="{{route('media.delete',$row->id)}}" method="post">--}}
 {{--                       <button type="submit" class="btn btn-danger mb-2 mr-2">--}}

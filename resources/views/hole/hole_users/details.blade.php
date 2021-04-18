@@ -82,14 +82,14 @@
                     <div class="row">
                         <div class="col-md-2 product_image">
                             <img style="width: 100%"
-                                 src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $data->logo }}"/>
+                                 src="{{image_cloudinary_url()}}{{ $data->logo }}"/>
                         </div>
                     </div>
                     <h4>{{ __('messages.cover') }}</h4><br>
                     <div class="row">
                         <div style="position : relative" class="col-md-2 product_image">
                             <img width="100%"
-                                 src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $data->cover }}"/>
+                                 src="{{image_cloudinary_url()}}{{ $data->cover }}"/>
                         </div>
                     </div>
                 </div>

@@ -39,7 +39,7 @@
                         @foreach ($data as $row)
                             <tr >
                                 <td class="text-center blue-color"><?=$i;?></td>
-                                <td class="text-center"><img src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $row->image }}"  /></td>
+                                <td class="text-center"><img src="{{image_cloudinary_url()}}{{ $row->image }}"  /></td>
                                 <td class="text-center">{{ $row->created_at->format('Y-m-d') }}</td>
                                 @if(Auth::user()->update_data)
                                     <td class="text-center blue-color" ><a href="{{ route('main_ads.edit', $row->id) }}" ><i class="far fa-edit"></i></a></td>

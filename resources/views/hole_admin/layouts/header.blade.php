@@ -29,7 +29,7 @@
             <li class="nav-item theme-logo">
                 <a href="{{route('hall.home')}}">
                     <img
-                        src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/<?=Auth::guard('hole')->user()->logo ?>"
+                        src="{{image_cloudinary_url()}}<?=Auth::guard('hole')->user()->logo ?>"
                         class="navbar-logo" style="height: 50px;" alt="logo">
                 </a>
             </li>

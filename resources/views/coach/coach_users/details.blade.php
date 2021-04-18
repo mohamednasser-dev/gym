@@ -69,7 +69,7 @@
                     <div class="row">
                         <div class="col-md-2 product_image">
                             <img style="width: 100%"
-                                 src="https://res.cloudinary.com/carsads/image/upload/w_100,q_100/v1581928924/{{ $data->image}}"/>
+                                 src="{{image_cloudinary_url()}}{{ $data->image}}"/>
                         </div>
                     </div>
                 </div>

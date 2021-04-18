@@ -7,3 +7,10 @@ if (!function_exists('image_cloudinary_url')){
     }
 }
 
+if (!function_exists('media_image_cloudinary_url')){
+    function media_image_cloudinary_url(){
+        $url = 'https://res.cloudinary.com/dsibvtsiv/image/upload/v1581928924/';
+        return  $url ;
+    }
+}
+
