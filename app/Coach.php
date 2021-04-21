@@ -28,6 +28,7 @@ class Coach extends Authenticatable implements JWTSubject
         'age',
         'exp',
         'user_id',
+        'phone',
         'story'
     ];
 

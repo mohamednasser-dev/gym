@@ -27,16 +27,13 @@
 
            <div id="demo-test-gallery container" class="demo-gallery" data-pswp-uid="1">
                 @foreach($data as $row)
-                   <a class="img-1" href="{{media_image_cloudinary_url()}}{{ $row->image }}" data-size="1600x1068"
+
+                   <a id="btn_media" data-media-id="{{$row->id}}" class="img-1" href="{{media_image_cloudinary_url()}}{{ $row->image }}" data-size="1600x1068"
                       data-med="{{media_image_cloudinary_url()}}{{ $row->image }}" data-med-size="1024x683" data-author="Samuel Rohl">
                        <img style="height: 350px;" src="{{media_image_cloudinary_url()}}{{ $row->image }}" alt="image-gallery">
+
                    </a>
-{{--                   <form action="{{route('media.delete',$row->id)}}" method="post">--}}
-{{--                       <button type="submit" class="btn btn-danger mb-2 mr-2">--}}
-{{--                           {{ __('messages.delete') }}--}}
-{{--                           <i class="fa fa-trash"></i>--}}
-{{--                       </button>--}}
-{{--                   </form>--}}
+
                @endforeach
            </div>
            <!-- Root element of PhotoSwipe. Must have class pswp. -->
@@ -59,7 +56,13 @@
                            <div class="pswp__counter"></div>
                            <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
                            <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-                           <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                           <form action="{{route('media.delete')}}" method="post">
+                                @csrf
+                                <input type="hidden" id="txt_media_id" name="media_id">
+                                <button type="submit" class="btn btn-danger" title="{{ __('messages.delete') }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                           </form>
                            <!-- element will get class pswp__preloader--active when preloader is running -->
                            <div class="pswp__preloader">
                                <div class="pswp__preloader__icn">
@@ -130,5 +133,12 @@
     <script src="/admin/plugins/lightbox/photoswipe-ui-default.min.js"></script>
     <script src="/admin/plugins/lightbox/custom-photswipe.js"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
+    <script>
+        var media_id ;
+        $(document).on('click', '#btn_media', function () {
+            media_id = $(this).data('media-id');
+            $("#txt_media_id").val(media_id);
+        });
+    </script>
 @endsection
 

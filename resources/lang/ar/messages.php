@@ -103,6 +103,8 @@
             'all_rejected' => "المرفوضين",
             'new_request' => "طلب جديد",
             'options' => "الخيارات",
+            'search_with_booking' => "البحث بالاشتراك",
+            'payment_method' => "طريقه الدفع",
             'new_rates_and_new_coaches' => "تقييمات جديدة ومدربين جدد",
 
 

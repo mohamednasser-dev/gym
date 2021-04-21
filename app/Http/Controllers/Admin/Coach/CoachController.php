@@ -68,11 +68,13 @@ class CoachController extends AdminController
                 'about_coach' => '',
                 'password' => 'required|numeric',
                 'image' => 'required',
-                'time_from' => 'required',
-                'time_to' => 'required',
+                'time_from' => '',
+                'time_to' => '',
             ]);
         if($request->password){
             $data['password'] = Hash::make($request->password);
+        }else{
+            unset($data['password']);
         }
         $data['verified'] = 1;
         if($request->image != null){
@@ -149,11 +151,13 @@ class CoachController extends AdminController
                 'name' => 'required',
                 'email' => 'required',
                 'about_coach' => '',
-                'time_from' => 'required',
-                'time_to' => 'required',
+                'time_from' => '',
+                'time_to' => '',
             ]);
         if($request->password){
             $data['password'] = Hash::make($request->password);
+        }else{
+            unset($data['password']);
         }
         if($request->image != null){
             $logo = $request->file('image')->getRealPath();

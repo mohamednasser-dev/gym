@@ -8,6 +8,7 @@ use App\Hole;
 use App\Main_ad;
 use App\Plan_details;
 use App\Product_view;
+use App\Reservation;
 use App\Setting;
 use App\User;
 use Illuminate\Http\Request;
@@ -25,67 +26,18 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['balance_packages' ,'gethome', 'getHomeAds','check_ad','main_ad']]);
+        $this->middleware('auth:api' , ['except' => ['balance_packages' ,'gethome', 'app_home','check_ad','main_ad']]);
     }
 
     public function gethome(Request $request){
-//        --------------------------------------------- begin scheduled functions --------------------------------------------------------
-
-        $expired = Product::where('status',1)->whereDate('expiry_date', '<', Carbon::now())->get();
+        //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
+        $expired = Reservation::where('status','start')->whereDate('expire_date', '<', Carbon::now())->get();
         foreach ($expired as $row){
-            $product = Product::find($row->id);
-            $product->status = 2;
-            $product->re_post = '0';
+            $product = Reservation::find($row->id);
+            $product->status = 'ended';
             $product->save();
         }
-
-        $not_special = Product::where('status',1)->where('is_special','1')->whereDate('expire_special_date', '<', Carbon::now())->get();
-        foreach ($not_special as $row){
-            $product_special = Product::find($row->id);
-            $product_special->is_special = '0';
-            $product_special->save();
-        }
-        $mytime = Carbon::now();
-        $today =  Carbon::parse($mytime->toDateTimeString())->format('Y-m-d H:i');
-        $re_post_ad = Product::where('status',1)->where('re_post','1')->whereDate('re_post_date', '<', Carbon::now())->get();
-        foreach ($re_post_ad as $row){
-
-            $product_re_post = Product::find($row->id);
-            $product_re_post->created_at = Carbon::now();
-            // to generate new next repost date ...
-            $re_post = Plan_details::where('plan_id',$row->plan_id)->where('type','re_post')->first();
-            $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-            $final_expire_re_post_date = $final_pin_date->addDays($re_post->expire_days);
-
-            $product_re_post->re_post_date = $final_expire_re_post_date;
-            $product_re_post->save();
-        }
-
-        $pin_ad = Product::where('status',1)->where('pin','1')->whereDate('expire_pin_date', '<', Carbon::now())->get();
-        foreach ($pin_ad as $row){
-            $product_pined = Product::find($row->id);
-            $product_pined->pin = '0';
-            $product_pined->save();
-        }
-
-        $pin_ad = Setting::where('id',1)->whereDate('free_loop_date', '<', Carbon::now())->first();
-        if ($pin_ad != null) {
-            if($pin_ad->is_loop_free_balance == 'y') {
-                $all_users = User::where('active', 1)->get();
-                foreach ($all_users as $row) {
-                    $user = User::find($row->id);
-                    $user->my_wallet = $user->my_wallet + $pin_ad->free_loop_balance;
-                    $user->free_balance = $user->free_balance + $pin_ad->free_loop_balance;
-                    $user->save();
-                }
-                $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-                $final_free_loop_date = $final_pin_date->addDays($pin_ad->free_loop_period);
-                $pin_ad->free_loop_date = $final_free_loop_date ;
-                $pin_ad->save();
-            }
-        }
-//        --------------------------------------------- end scheduled functions --------------------------------------------------------
-
+        //        --------------------------------------------- end scheduled functions --------------------------------------------------------
         $data['slider'] = Ad::select('id' , 'image' , 'type' , 'content')->where('place' , 1)->get();
         $data['ads'] = Ad::select('id' , 'image' , 'type' , 'content')->where('place' , 2)->get();
         $data['categories'] = Category::select('id' , 'image' , 'title_ar as title')->where('deleted' , 0)->get();
@@ -110,7 +62,7 @@ class HomeController extends Controller
         return response()->json($response , 200);
     }
 
-    public function getHomeAds(Request $request) {
+    public function app_home(Request $request) {
         $lang = $request->lang;
         $user = auth()->user();
         if($lang == 'ar'){

@@ -25,7 +25,7 @@
                 <div class="form-container">
                     <div class="form-content">
 
-                        <h1 class="">Hole log in</h1>
+                        <h1 class="">Hall log in</h1>
                         <p class="">Log in to your account to continue.</p>
                         @include('admin.layouts.messages')
                         @include('admin.layouts.errors')

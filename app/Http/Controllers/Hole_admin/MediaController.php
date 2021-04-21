@@ -35,8 +35,8 @@ class MediaController extends Controller{
         session()->flash('success', trans('messages.added_s'));
         return back();
     }
-    public function destroy($id){
-        Hole_media::where('id',$id)->delete();
+    public function destroy(Request $request){
+        Hole_media::where('id',$request->media_id)->delete();
         session()->flash('success', trans('messages.deleted_s'));
         return redirect()->back();
     }

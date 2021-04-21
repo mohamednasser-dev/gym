@@ -6,6 +6,7 @@ use App\Hole_booking_detail;
 use App\Http\Controllers\Controller;
 use App\Income;
 use App\Reservation;
+use App\Reservation_option;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class SubscribersController extends Controller{
         $id = auth()->guard('hole')->user()->id;
         $bookings = Hole_booking::where('hole_id',$id)->where('deleted','0')->get();
         $booking_ids = Hole_booking::where('hole_id',$id)->select('id')->get()->toArray();
-        $data = Reservation::whereIn('booking_id',$booking_ids)->where('status',$type)->orderBy('created_at','desc')->get();
+        $data = Reservation::whereIn('booking_id',$booking_ids)->where('type','hall')->where('status',$type)->orderBy('created_at','desc')->get();
         return view('hole_admin.subscribers.index' ,compact('data','bookings'));
     }
 
@@ -53,13 +54,7 @@ class SubscribersController extends Controller{
         $final_date = Carbon::createFromFormat('Y-m-d H:i', $today);
         $final_expire_date = $final_date->addMonths($booking->months_num);
 
-        $data['name'] = $reservation->name ;
-        $data['age'] = $reservation->age ;
-        $data['length'] = $reservation->length ;
-        $data['weight'] = $reservation->weight ;
-        $data['type_id'] = $reservation->type_id ;
-        $data['goal_id'] = $reservation->goal_id ;
-        $data['other'] = $reservation->other ;
+
         $data['user_id'] = $reservation->user_id ;
         $data['expire_date'] = $final_expire_date ;
         $data['booking_id'] = $request->booking_id ;
@@ -70,9 +65,16 @@ class SubscribersController extends Controller{
             $data['price'] = $booking->price ;
         }
         $data['status'] = 'start';
-        $updated_reserv = Reservation::create($data);
+        $create_reserv = Reservation::create($data);
 
-        if($updated_reserv  != null ){
+        if($create_reserv  != null ){
+            $reserv_options = Reservation_option::where('reservation_id',$request->reserv_id)->get();
+            foreach ($reserv_options as $row){
+                $res_option_data['reservation_id'] = $create_reserv->id;
+                $res_option_data['goal_id'] = $row->goal_id;
+                $res_option_data['type_id'] = $row->type_id;
+                Reservation_option::create($res_option_data);
+            }
             if($request->add_money == 'add_money'){
                 if($booking->is_discount == '1'){
                     $income_Data['price'] = $booking->discount_price ;

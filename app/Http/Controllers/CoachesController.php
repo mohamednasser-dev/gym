@@ -9,6 +9,7 @@ use App\Coach_media;
 use App\Favorite;
 use App\Hole_booking;
 use App\Hole_media;
+use App\Reservation;
 use Illuminate\Support\Facades\Session;
 use App\Rate;
 use App\User;
@@ -25,7 +26,17 @@ class CoachesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['make_common','delete_media','media','store_media','store_plan_detail','select_plan_data','all_coaches','details','login','delete_plan','update_plan','update_coach_data','delete_plan_detail','my_data','my_plans','plan_details','store_plan']]);
+        $this->middleware('auth:api' , ['except' => ['subscribers','make_common','delete_media','media','store_media','store_plan_detail','select_plan_data','all_coaches','details','login','delete_plan','update_plan','update_coach_data','delete_plan_detail','my_data','my_plans','plan_details','store_plan']]);
+
+        //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
+        $expired = Reservation::where('status','start')->whereDate('expire_date', '<', Carbon::now())->get();
+        foreach ($expired as $row){
+            $product = Reservation::find($row->id);
+            $product->status = 'ended';
+            $product->save();
+        }
+        //        --------------------------------------------- end scheduled functions --------------------------------------------------------
+
     }
     public function all_coaches(Request $request) {
         $user = auth()->user();
@@ -33,7 +44,6 @@ class CoachesController extends Controller
                         ->where('deleted','0')
                         ->where('status','active')
                         ->where('is_confirm','accepted')
-                        ->where('verified','1')
                         ->get()
                         ->map(function($coaches) use($user){
                             if($user == null){
@@ -61,6 +71,7 @@ class CoachesController extends Controller
             if ($user == null) {
                 $data['favorite'] = false;
                 $data['free_ask'] = false;
+                $data['payed_ask'] = false;
                 $booking_num = Coach_booking::where('coach_id',$id)
                                             ->where('deleted','0')
                                             ->orderBy('common','desc')
@@ -75,11 +86,22 @@ class CoachesController extends Controller
                     $data['favorite'] = true;
                 }
                 //if user have free ask
-                $free_ask = User_caoch_ask::where('user_id', $user->id)->where('coach_id', $id)->first();
+                $free_ask = User_caoch_ask::where('user_id', $user->id)->where('caoch_id', $id)->first();
                 if ($free_ask->ask_num_free > 0) {
                     $data['free_ask'] = true;
                 } else {
                     $data['free_ask'] = false;
+                }
+                $booking_ids = Coach_booking::where('coach_id',$id)->select('id')->get()->toArray();
+                $pay_ask = Reservation::where('user_id', $user->id)
+                                        ->whereIn('booking_id', $booking_ids)
+                                        ->where('type','coach')
+                                        ->where('status','start')
+                                        ->get();
+                if (count($pay_ask) > 0) {
+                    $data['payed_ask'] = true;
+                } else {
+                    $data['payed_ask'] = false;
                 }
             }
             $data['basic'] = $coach;
@@ -589,6 +611,46 @@ class CoachesController extends Controller
                 $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
                 return response()->json($response , 406);
             }
+        }
+    }
+
+    //subscribers controllers
+    public function subscribers(Request $request,$type){
+        $user = auth()->guard('coach')->user();
+        $lang = $request->lang;
+        if($user == null){
+            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
+            return response()->json($response , 406);
+        }else {
+            $booking_ids = Coach_booking::where('coach_id',$user->id)->select('id')->get()->toArray();
+            $data = Reservation::with('User')->with('Booking_coach')
+                ->whereIn('booking_id',$booking_ids)
+                ->where('type','coach')
+                ->where('status',$type)
+                ->get()
+                ->map(function($reserv) use ($lang){
+                    $reserv->coach_name = $reserv->Booking_coach->Coach->name;
+                    $reserv->coach_logo = $reserv->Booking_coach->Coach->image;
+                    if($lang == 'ar'){
+                        $reserv->reserve_name = $reserv->Booking_coach->name_ar;
+                    }else{
+                        $reserv->reserve_name = $reserv->Booking_coach->name_en;
+                    }
+                    return $reserv;
+                });
+            $subscriptions = null;
+            foreach ($data as $key => $row){
+                $subscriptions[$key]['id'] = $row->id;
+                $subscriptions[$key]['booking_id'] = $row->booking_id;
+                $subscriptions[$key]['user_id'] = $row->user_id;
+                $subscriptions[$key]['user_logo'] = $row->User->image;
+                $subscriptions[$key]['user_name'] = $row->User->name;
+                $subscriptions[$key]['reserve_name'] = $row->reserve_name;
+                $subscriptions[$key]['price'] = $row->price;
+                $subscriptions[$key]['expire_date'] = $row->expire_date;
+            }
+            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,$subscriptions, $request->lang );
+            return response()->json($response , 200);
         }
     }
 

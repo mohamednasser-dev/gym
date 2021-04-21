@@ -62,7 +62,7 @@ Route::group(['middleware'=> ['language','hole'],'prefix' => "hall-panel",'names
 
     Route::resource('hall_rates' , 'RatesController');
     Route::resource('media' , 'MediaController');
-    Route::post('media/delete/{id}' , 'MediaController@destroy')->name('media.delete');
+    Route::post('media/delete' , 'MediaController@destroy')->name('media.delete');
 
     Route::get('subscribers/{type}' , 'SubscribersController@index')->name('subscribers');
     Route::get('subscribers/{id}/end' , 'SubscribersController@end')->name('subscription.end');
@@ -76,6 +76,8 @@ Route::group(['middleware'=> ['language','hole'],'prefix' => "hall-panel",'names
     Route::get('booking_detail/delete/{id}' , 'BookingsController@destroy_detail')->name('booking.destroy_detail');
     Route::post('booking_detail/store' , 'BookingsController@store_detail')->name('booking_detail.store');
 
+    Route::resource('hall_payments' , 'PaymentsController');
+    Route::post('/hall_payments/fetch_by_booking' , 'PaymentsController@fetch_by_booking')->name('hall_payments.fetch_by_booking');
 
 
     Route::get('/logout' , 'LoginController@logout');

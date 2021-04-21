@@ -107,7 +107,7 @@ use Illuminate\Http\Request;
     Route::get('/home/{lang}/{v}' , 'HomeController@gethome')->middleware('checkguest');
 
     // get home data
-    Route::get('/app_home/{lang}/{v}' , 'HomeController@getHomeAds')->middleware('checkguest');
+    Route::get('/app_home/{lang}/{v}' , 'HomeController@app_home')->middleware('checkguest');
     Route::get('/all_halls/{type}/{lang}/{v}' , 'HallsController@all_halls')->middleware('checkguest');
     Route::get('/hall/details/{id}/{lang}/{v}' , 'HallsController@details')->middleware('checkguest');
 
@@ -225,6 +225,14 @@ use Illuminate\Http\Request;
     Route::get('reservation/options/{lang}/{v}' , 'HallsController@reservation_types');
     Route::get('reservation/store/excute_pay/{lang}/{v}' , 'HallsController@excute_store_reservation');
 
+    //coach chat api
+    Route::get('/chat/test_exists_conversation/{id}/{lang}/{v}' , 'ChatController@test_exists_conversation');
+
+    Route::post('/chat/send_message/{lang}/{v}' , 'ChatController@store');
+    Route::get('/chat/my_messages/{lang}/{v}' , 'ChatController@my_messages');
+    Route::get('/chat/get_ad_message/{id}/{conversation_id}/{lang}/{v}' , 'ChatController@get_ad_message');
+    Route::get('/chat/search_conversation/{search}/{lang}/{v}' , 'ChatController@search_conversation');
+    Route::get('/chat/make_read/{message_id}/{lang}/{v}' , 'ChatController@make_read');
 
 //    coach - panel ----------------------------------------------------------------------------------------------------------------
     Route::post('coach/login/{lang}/{v}' , 'CoachesController@login')->middleware('checkguest');
@@ -247,6 +255,18 @@ use Illuminate\Http\Request;
     Route::get('coach/media/{lang}/{v}' , 'CoachesController@media');
     Route::post('coach/media/store/{lang}/{v}' , 'CoachesController@store_media');
     Route::post('coach/media/delete/{lang}/{v}' , 'CoachesController@delete_media');
+
+    //subscribers
+    Route::get('coach/{type}/subscribers/{lang}/{v}' , 'CoachesController@subscribers');
+
+    //chat for coach
+    Route::get('/coach/chat/test_exists_conversation/{id}/{lang}/{v}' , 'CoachChatController@test_exists_conversation');
+    Route::post('/coach/chat/send_message/{lang}/{v}' , 'CoachChatController@store');
+    Route::get('/coach/chat/my_messages/{lang}/{v}' , 'CoachChatController@my_messages');
+    Route::get('/coach/chat/get_ad_message/{id}/{conversation_id}/{lang}/{v}' , 'CoachChatController@get_ad_message');
+    Route::get('/coach/chat/search_conversation/{search}/{lang}/{v}' , 'CoachChatController@search_conversation');
+    Route::get('/coach/chat/make_read/{message_id}/{lang}/{v}' , 'CoachChatController@make_read');
+
 
 
 

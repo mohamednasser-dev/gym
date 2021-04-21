@@ -53,11 +53,11 @@
                 <div class="form-group row">
                     <div class="col-md-6" id="special1_cont">
                         <label for="plan_price">{{ __('messages.from') }}</label>
-                        <input required type="time" value="{{$data->time_from}}" name="time_from" class="form-control">
+                        <input type="time" value="{{$data->time_from}}" name="time_from" class="form-control">
                     </div>
                     <div class="col-md-6" id="special2_cont">
                         <label for="plan_price">{{ __('messages.to') }}</label>
-                        <input required type="time" value="{{$data->time_to}}" name="time_to" class="form-control">
+                        <input type="time" value="{{$data->time_to}}" name="time_to" class="form-control">
                     </div>
                 </div>
                 <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">

@@ -28,6 +28,14 @@ class HallsController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api' , ['except' => ['excute_store_reservation','store_reservation','all_halls','details','rates','store_rate']]);
+        //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
+        $expired = Reservation::where('status','start')->whereDate('expire_date', '<', Carbon::now())->get();
+        foreach ($expired as $row){
+            $product = Reservation::find($row->id);
+            $product->status = 'ended';
+            $product->save();
+        }
+        //        --------------------------------------------- end scheduled functions --------------------------------------------------------
     }
     public function all_halls(Request $request,$type) {
         $user = auth()->user();
@@ -109,9 +117,17 @@ class HallsController extends Controller
     public function store_rate(Request $request,$type){
         $validator = Validator::make($request->all(), [
             'text' => 'required',
-            'rate' => 'required|numeric|min:1|max:5',
-            'target_id' => 'required',
+            'rate' => 'required|numeric|min:1|max:5'
         ]);
+        if($type == 'hall'){
+            $validator = Validator::make($request->all(), [
+                'target_id' => 'required|exists:holes,id'
+            ]);
+        }else if($type == 'coach'){
+            $validator = Validator::make($request->all(), [
+                'target_id' => 'required|exists:coaches,id'
+            ]);
+        }
         if ($validator->fails()) {
             $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first() , null, $request->lang );
             return response()->json($response , 406);
@@ -129,21 +145,7 @@ class HallsController extends Controller
         $data['admin_approval'] = 2 ;
         $data['type'] = $type ;
         $rating = Rate::create($data);
-//        if($rating != null){
-//            $total_rates = Rate::where('order_id',$request->target_id)->where( 'admin_approval' , 1 )->where( 'type' , $type )->get();
-//            $sum_rates = $total_rates->sum('rate');
-//            $count_rates = count($total_rates);
-//            $new_rate = $sum_rates / $count_rates ;
-//            if($type == 'hall'){
-//                $hall = Hole::findOrFail($request->target_id);
-//                $hall->rate = $new_rate;
-//                $hall->save();
-//            }else if($type == 'coach'){
-//                $hall = Coach::findOrFail($request->target_id);
-//                $hall->rate = $new_rate;
-//                $hall->save();
-//            }
-//        }
+
         $response = APIHelpers::createApiResponse(false , 200 ,  'rate added successfully', 'تم اضافة التقييم بنجاح' , null, $request->lang );
         return response()->json($response , 200);
     }
@@ -223,11 +225,17 @@ class HallsController extends Controller
         return response()->json($response , 200);
     }
     public function excute_store_reservation(Request $request){
-        $validator = Validator::make($request->all(), [
-            'booking_id' => 'required',
-        ]);
+        if($request->type == 'hall') {
+            $validator = Validator::make($request->all(), [
+                'booking_id' => 'required|exists:hole_bookings,id',
+            ]);
+        }else if($request->type == 'coach'){
+            $validator = Validator::make($request->all(), [
+                'booking_id' => 'required|exists:coach_bookings,id',
+            ]);
+        }
         if ($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 ,  'بعض الحقول مفقودة', 'بعض الحقول مفقودة' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first() , null, $request->lang );
             return response()->json($response , 406);
         }
         $user = auth()->user();
@@ -257,7 +265,7 @@ class HallsController extends Controller
                 Reservation_option::create($otion_data);
             }
             $income_Data['price'] = $request->price ;
-            $income_Data['type'] = 'hall' ;
+            $income_Data['type'] = $request->type ;
             $income_Data['user_id'] = $request->user_id ;
             $income_Data['reservation_id'] = $reserve->id ;
             $income_Data['booking_id'] = $request->booking_id ;
