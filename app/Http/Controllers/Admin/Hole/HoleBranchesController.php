@@ -12,6 +12,7 @@ use JD\Cloudder\Facades\Cloudder;
 class HoleBranchesController extends AdminController{
 
     public function show($id){
+
         $data = Hole_branch::where('hole_id',$id)->get();
         return view('hole.hole_users.branches.index' ,compact('data','id'));
     }

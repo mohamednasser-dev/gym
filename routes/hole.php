@@ -26,6 +26,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
 
     Route::get('famous_holes' , 'HoleController@famous_holes')->name('famous_holes');
     Route::resource('branches' , 'HoleBranchesController');
+    Route::get('branches/show_branches/{id}' , 'HoleBranchesController@show')->name('branches.show_new');
     Route::get('branches/create_new/{id}' , 'HoleBranchesController@create')->name('branches.create_new');
     Route::post('branches/update/{id}' , 'HoleBranchesController@update')->name('branches.update');
     Route::get('branches/delete/{id}' , 'HoleBranchesController@destroy');
