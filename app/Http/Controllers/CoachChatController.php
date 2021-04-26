@@ -19,6 +19,7 @@ class CoachChatController extends Controller
     {
         $this->middleware('auth:api', ['except' => ['make_read','my_messages','store' , 'get_ad_message' , 'index','test_exists_conversation','search_conversation']]);
     }
+
     public function test_exists_conversation(Request $request)
     {
         $coach_id = auth()->guard('coach')->user()->id;
@@ -51,7 +52,7 @@ class CoachChatController extends Controller
             return response()->json($response , 406);
         }
         $lang = $request->lang;
-        $data['conversations'] = Participant::where('user_id',$coach->id)
+        $data['conversations'] = Participant::where('user_id',$coach->id)->where('deleted', '0')
                                 ->get()
                                 ->map(function ($convs) use ($coach){
                                     $other_user = Participant::where('conversation_id',$convs->conversation_id)->where('user_id','!=',$coach->id)->first();

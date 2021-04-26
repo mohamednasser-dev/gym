@@ -9,7 +9,7 @@ use App\Setting;
 class SettingController extends Controller
 {
     public function getappnumber(Request $request){
-        $setting = Setting::select('phone','instegram','watsapp')->find(1);
+        $setting = Setting::select('phone','instegram','watsapp','facebook','youtube','twitter','instegram','snap_chat')->find(1);
         $response = APIHelpers::createApiResponse(false , 200 , '', '' , $setting, $request->lang );
         return response()->json($response , 200);
     }

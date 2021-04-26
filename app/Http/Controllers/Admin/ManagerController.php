@@ -13,7 +13,7 @@ class ManagerController extends AdminController{
 
     // get add manager page
     public function AddGet(){
-        $data['permissions'] = Permission::where('order_by_it','!=',0)->orderBy('order_by_it','asc')->get();
+        $data['permissions'] = Permission::where('status','show')->where('order_by_id','!=',0)->orderBy('order_by_id','asc')->get();
         return view('admin.manager_form' , ['data' => $data]);
     }
 
@@ -59,7 +59,7 @@ class ManagerController extends AdminController{
    // get edit manager page
    public function edit(Request $request){
      $data['manager'] = Admin::find($request->id);
-       $data['permissions'] = Permission::where('order_by_it','!=',0)->orderBy('order_by_it','asc')->get();
+       $data['permissions'] = Permission::where('status','show')->where('order_by_id','!=',0)->orderBy('order_by_id','asc')->get();
      $admin_permission = AdminPermission::where('admin_id' , $request->id)->pluck('permission_id');
      $admin_permission  = (array) $admin_permission;
      $admin_permission = array_values($admin_permission);

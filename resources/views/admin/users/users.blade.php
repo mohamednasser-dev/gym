@@ -11,9 +11,10 @@
                         <h4>{{ __('messages.show_users') }}</h4>
                     </div>
                     <div class="col-md-6 pl-0 col-sm-6 col-12 text-right">
-                     <a class="btn btn-success mb-2" id="btn_send" data-toggle="modal" data-target="#zoomup_group_Modal" >
-                         {{ __('messages.send_free_balance_for_all_users') }}
-                     </a>
+                        <a class="btn btn-success mb-2" id="btn_send" data-toggle="modal"
+                           data-target="#zoomup_group_Modal">
+                            {{ __('messages.send_free_balance_for_all_users') }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -133,7 +134,8 @@
                             </svg>
                         </button>
                     </div>
-                    <form action="{{route('users_group.send_group_balance')}}" method="post" enctype="multipart/form-data">
+                    <form action="{{route('users_group.send_group_balance')}}" method="post"
+                          enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
                             <div class="form-group mb-4">

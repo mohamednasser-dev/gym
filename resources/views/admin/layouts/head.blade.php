@@ -89,6 +89,19 @@
         <!--  END setting page  -->
     @endif
            @yield('styles')
+        <style>
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            /* Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+        </style>
         <link href="/admin/plugins/toast-master/css/jquery.toast.css" rel="stylesheet">
         <link href="/admin/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css">
         <link href="/css/new_styles.css" rel="stylesheet" type="text/css">

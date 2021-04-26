@@ -90,8 +90,8 @@
                     </li>
                 @endif
                 @if(in_array(16 , Auth::user()->custom['admin_permission']))
-                    <li class="menu balance_packages">
-                        <a href="{{route('balance_packages.index')}}" class="dropdown-toggle first-link">
+                    <li class="menu points_packages">
+                        <a href="{{route('points_packages.index')}}" class="dropdown-toggle first-link">
                             <div class="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                                 <span>{{ __('messages.points_packages') }}</span>

@@ -113,6 +113,7 @@ use Illuminate\Http\Request;
 
     //my account
     Route::get('/subscriptions/{type}/{lang}/{v}' , 'SubscriptionsController@subscriptions');
+    Route::get('/payments/{lang}/{v}' , 'SubscriptionsController@payments');
 
     //for coaches
     Route::get('/all_coaches/{lang}/{v}' , 'CoachesController@all_coaches')->middleware('checkguest');
@@ -209,6 +210,9 @@ use Illuminate\Http\Request;
 
     //balance package
     Route::get('/balance_packages/{lang}/{v}' , 'HomeController@balance_packages');
+    //points backage
+    Route::get('/points_packages/{lang}/{v}' , 'HomeController@points_packages');
+    Route::get('/exchange/points/{id}/{lang}/{v}' , 'HomeController@exchange_points');
 
     //visitor
     Route::post('/visitor/create/{lang}/{v}' , 'VisitorController@create')->middleware('checkguest');
@@ -226,6 +230,7 @@ use Illuminate\Http\Request;
     Route::get('reservation/store/excute_pay/{lang}/{v}' , 'HallsController@excute_store_reservation');
 
     //coach chat api
+    Route::get('/chat/remove_conversation/{type}/{convers_id}/{lang}/{v}' , 'ChatController@remove_conversation');
     Route::get('/chat/test_exists_conversation/{id}/{lang}/{v}' , 'ChatController@test_exists_conversation');
 
     Route::post('/chat/send_message/{lang}/{v}' , 'ChatController@store');

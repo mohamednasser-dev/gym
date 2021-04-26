@@ -14,3 +14,9 @@ if (!function_exists('media_image_cloudinary_url')){
     }
 }
 
+if (!function_exists('settings')){
+    function settings(){
+        return   App\Setting::where('id',1)->first();
+    }
+}
+

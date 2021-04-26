@@ -516,13 +516,12 @@ class UserController extends Controller
     public function addBalance(Request $request) {
 
         $validator = Validator::make($request->all(), [
-            'package_id' => 'required|exists:balance_packages,id'
+            'amount' => 'required|numeric'
         ]);
         if ($validator->fails()) {
             $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() , $validator->messages()->first() , null , $request->lang);
             return response()->json($response , 406);
         }
-        $package = Balance_package::find($request->package_id);
         $user = auth()->user();
         $root_url = $request->root();
         $path='https://apitest.myfatoorah.com/v2/SendPayment';
@@ -531,13 +530,13 @@ class UserController extends Controller
             'Authorization:' .$token,
             'Content-Type:application/json'
         );
-        $call_back_url = $root_url."/api/wallet/excute_pay?user_id=".$user->id."&balance=".$request->package_id;
+        $call_back_url = $root_url."/api/wallet/excute_pay?user_id=".$user->id."&amount=".$request->amount;
         $error_url = $root_url."/api/pay/error";
 //        dd($call_back_url);
         $fields =array(
             "CustomerName" => $user->name,
             "NotificationOption" => "LNK",
-            "InvoiceValue" => $package->price,
+            "InvoiceValue" => $request->amount,
             "CallBackUrl" => $call_back_url,
             "ErrorUrl" => $error_url,
             "Language" => "AR",
@@ -564,16 +563,16 @@ class UserController extends Controller
 
     // excute pay
     public function excute_pay(Request $request) {
-        $package = Balance_package::findOrFail($request->balance);
-        if ($package != null) {
+
+        if ($request->amount != null) {
             $user = auth()->user();
             $selected_user = User::findOrFail($user->id);
-            $selected_user->my_wallet = $selected_user->my_wallet + $package->amount;
-            $selected_user->payed_balance = $selected_user->payed_balance + $package->amount;
+            $selected_user->my_wallet = $selected_user->my_wallet + $request->amount;
+            $selected_user->payed_balance = $selected_user->payed_balance + $request->amount;
             $selected_user->save();
             WalletTransaction::create([
-                'price' => $package->price,
-                'value' => $package->amount,
+                'price' => $request->amount,
+                'value' => $request->amount,
                 'user_id' => $request->user_id,
                 'package_id' => $request->balance
             ]);

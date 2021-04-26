@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Coach_booking;
 use App\Hole_media;
 use App\Reservation_option;
+use App\Setting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -270,6 +271,13 @@ class HallsController extends Controller
             $income_Data['reservation_id'] = $reserve->id ;
             $income_Data['booking_id'] = $request->booking_id ;
             Income::create($income_Data);
+
+            // to save points after reservation ...
+            $settings = Setting::where('id',1)->first();
+            $points = $settings->points * $request->price ;
+            $selected_user = User::find($user->id);
+            $selected_user->points = $selected_user->points + $points;
+            $selected_user->save();
         }
 
         $response = APIHelpers::createApiResponse(false , 200 ,  'تم الحجز فالاشتراك بنجاح', 'Reservation saves successfully' , null, $request->lang );

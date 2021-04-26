@@ -30,7 +30,7 @@ class SubscriptionsController extends Controller
         $lang = $request->lang ;
         $user_id = auth()->user()->id;
         if($type == 'hall'){
-        $data = Reservation::select('id','booking_id','expire_date','price','user_id')
+        $data = Reservation::select('id','booking_id','expire_date','price','user_id','status')
             ->where('type',$type)
             ->where('user_id',$user_id)
             ->get()
@@ -54,9 +54,10 @@ class SubscriptionsController extends Controller
                 $subscriptions[$key]['reserve_name'] = $row->reserve_name;
                 $subscriptions[$key]['price'] = $row->price;
                 $subscriptions[$key]['expire_date'] = $row->expire_date;
+                $subscriptions[$key]['status'] = $row->status;
             }
         }else if($type == 'coach'){
-            $data = Reservation::select('id','booking_id','expire_date','price','user_id')
+            $data = Reservation::select('id','booking_id','expire_date','price','user_id','status')
                 ->where('type',$type)
                 ->where('user_id',$user_id)
                 ->get()
@@ -79,9 +80,48 @@ class SubscriptionsController extends Controller
                 $subscriptions[$key]['reserve_name'] = $row->reserve_name;
                 $subscriptions[$key]['price'] = $row->price;
                 $subscriptions[$key]['expire_date'] = $row->expire_date;
+                $subscriptions[$key]['status'] = $row->status;
             }
         }
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $subscriptions, $request->lang );
+        return response()->json($response , 200);
+    }
+
+    public function payments( Request $request) {
+        $lang = $request->lang ;
+        $user_id = auth()->user()->id;
+        $my_balance = User::where('id',$user_id)->select('id' , 'my_wallet as my_balance')->first();
+        $data = Reservation::select('id','booking_id','expire_date','price','user_id','created_at','type')
+            ->where('user_id',$user_id)
+            ->orderBy('created_at','desc')
+            ->get()
+            ->map(function($reserv) use ($lang){
+                if($reserv->type == 'hall'){
+                    $reserv->name = $reserv->Booking->Hall->name;
+                    if($lang == 'ar'){
+                        $reserv->reserve_name = $reserv->Booking->name_ar;
+                    }else{
+                        $reserv->reserve_name = $reserv->Booking->name_en;
+                    }
+                }else{
+                    $reserv->name = $reserv->Booking_coach->Coach->name;
+                    if($lang == 'ar'){
+                        $reserv->reserve_name = $reserv->Booking_coach->name_ar;
+                    }else{
+                        $reserv->reserve_name = $reserv->Booking_coach->name_en;
+                    }
+                }
+                return $reserv;
+            });
+
+        foreach ($data as $key => $row){
+            $subscriptions[$key]['id'] = $row->id;
+            $subscriptions[$key]['name'] = $row->name;
+            $subscriptions[$key]['price'] = $row->price;
+            $subscriptions[$key]['created_at'] = $row->created_at;
+        }
+
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , array('my_balance'=> $my_balance , 'history' => $subscriptions) , $request->lang );
         return response()->json($response , 200);
     }
 }
