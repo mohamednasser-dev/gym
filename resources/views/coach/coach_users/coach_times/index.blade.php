@@ -1,6 +1,6 @@
 @extends('hole.app')
 
-@section('title' , __('messages.reserv_data'))
+@section('title' , __('messages.avilable_times'))
 
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
@@ -8,12 +8,12 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>{{ __('messages.reserv_data') }}</h4>
+                        <h4>{{ __('messages.avilable_times') }}</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <a class="btn btn-info" data-toggle="modal" data-target="#add_new_Modal" > {{ __('messages.add') }} </a>
+                        <a class="btn btn-info" href="{{route('coach_times.create',$id)}}"> {{ __('messages.add') }} </a>
                     </div>
                 </div>
             </div>
@@ -24,10 +24,8 @@
                     <thead>
                         <tr>
                             <th class="text-center blue-color">Id</th>
-                            <th class="text-center blue-color">{{ __('messages.name_ar') }}</th>
-                            <th class="text-center blue-color">{{ __('messages.name_en') }}</th>
-                            <th class="text-center blue-color">{{ __('messages.type') }}</th>
-                            <th class="text-center blue-color">{{ __('messages.options') }}</th>
+                            <th class="text-center blue-color">{{ __('messages.from') }}</th>
+                            <th class="text-center blue-color">{{ __('messages.to') }}</th>
                             @if(Auth::user()->update_data)
                                 <th class="text-center">{{ __('messages.edit') }}</th>
                             @endif
@@ -41,31 +39,16 @@
                         @foreach ($data as $row)
                             <tr>
                                 <td class="text-center blue-color"><?=$i;?></td>
-                                <td class="text-center">{{ $row->title_ar }}</td>
-                                <td class="text-center">{{ $row->title_en }}</td>
                                 <td class="text-center">
-                                    @if($row->type == 'y')
-                                        {{ __('messages.mandatory') }}
-                                    @else
-                                        {{ __('messages.choice') }}
-                                    @endif
+                                    {{date('g:i a', strtotime($row->time_from))}}
                                 </td>
-                                <td class="text-center blue-color">
-                                    <a href="{{route('reserv_data.goals',$row->id)}}">
-                                        <div class="">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                 stroke-linejoin="round" class="feather feather-layers">
-                                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                                                <polyline points="2 17 12 22 22 17"></polyline>
-                                                <polyline points="2 12 12 17 22 12"></polyline>
-                                            </svg>
-                                        </div>
-                                    </a>
+                                <td class="text-center">
+                                    {{date('g:i a', strtotime($row->time_to))}}
                                 </td>
                                 @if(Auth::user()->update_data)
                                     <td class="text-center blue-color" >
-                                        <a data-toggle="modal" data-target="#edit_Modal" id="edit_btn" data-type-id="{{$row->id}}" data-title-ar="{{$row->title_ar}}" data-title-en="{{$row->title_en}}" data-type="{{$row->type}}" ><i class="far fa-edit"></i></a></td>
+                                        <a href="{{route('coach_times.edit',$row->id)}}"  ><i class="far fa-edit"></i></a>
+                                    </td>
                                 @endif
                                 @if(Auth::user()->delete_data)
                                     <td class="text-center blue-color" ><a onclick="return confirm('{{ __('messages.are_you_sure') }}');" href="{{ route('reserv.types.delete', $row->id) }}" ><i class="far fa-trash-alt"></i></a></td>
@@ -98,20 +81,19 @@
                 <form action="{{route('reserv.types.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
-                        <div class="form-group mb-4">
-                            <label for="plan_price">{{ __('messages.name_ar') }}</label>
-                            <input required type="text" name="title_ar"  class="form-control" >
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="plan_price">{{ __('messages.name_en') }}</label>
-                            <input required type="text" name="title_en" class="form-control" >
-                        </div>
-                        <div class="form-group">
-                            <label for="sel1">{{ __('messages.type') }}</label>
-                            <select id="ad_type" name="type" class="form-control">
-                                <option value="y">{{ __('messages.mandatory') }}</option>
-                                <option value="n">{{ __('messages.choice') }}</option>
-                            </select>
+                        <div class="form-group row">
+                            <div class="col-md-6" id="special1_cont">
+                                <label for="plan_price">{{ __('messages.from') }}</label>
+                                <div class="form-group mb-0">
+                                    <input id="timeFlatpickr" name="time_from" class="form-control flatpickr flatpickr-input active" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6" id="special2_cont">
+                                <label for="plan_price">{{ __('messages.to') }}</label>
+                                <div class="form-group mb-0">
+                                    <input id="timeFlatpickr_2" name="time_to" class="form-control flatpickr flatpickr-input active" type="text">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -142,21 +124,19 @@
                 <form action="{{route('reserv.types.update')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
-                        <div class="form-group mb-4">
-                            <label for="plan_price">{{ __('messages.name_ar') }}</label>
-                            <input required type="hidden" id="txt_type_id" name="id"  class="form-control" >
-                            <input required type="text" id="txt_title_ar" name="title_ar"  class="form-control" >
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="plan_price">{{ __('messages.name_en') }}</label>
-                            <input required type="text" id="txt_title_en" name="title_en" class="form-control" >
-                        </div>
-                        <div class="form-group">
-                            <label for="sel1">{{ __('messages.type') }}</label>
-                            <select id="cmb_type" name="type" class="form-control">
-                                <option value="y">{{ __('messages.mandatory') }}</option>
-                                <option value="n">{{ __('messages.choice') }}</option>
-                            </select>
+                        <div class="form-group row">
+                            <div class="col-md-6" id="special1_cont">
+                                <label for="plan_price">{{ __('messages.from') }}</label>
+                                <div class="form-group mb-0">
+                                    <input id="timeFlatpickr_4" name="time_from" class="form-control flatpickr flatpickr-input active" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6" id="special2_cont">
+                                <label for="plan_price">{{ __('messages.to') }}</label>
+                                <div class="form-group mb-0">
+                                    <input id="timeFlatpickr_3" name="time_to" class="form-control flatpickr flatpickr-input active" type="text">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -174,10 +154,8 @@
 <script>
     $(document).ready(function () {
         $("#edit_btn").click(function () {
-            $("#txt_type_id").val($(this).data('type-id'));
-            $("#txt_title_ar").val($(this).data('title-ar'));
-            $("#txt_title_en").val($(this).data('title-en'));
-            $("#cmb_type").val($(this).data('type'));
+            $("#timeFlatpickr_4").val($(this).data('from'));
+            $("#timeFlatpickr_3").val($(this).data('to'));
         });
     });
 </script>

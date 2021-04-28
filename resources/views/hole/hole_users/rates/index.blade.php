@@ -26,6 +26,11 @@
                         @endif
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-12">
+                        <h4> {{ __('messages.rate') }} : <code>{{ $hall_rate }}</code>  <span class="fa fa-star checked"></span> </h4>
+                    </div>
+                </div>
             </div>
             <div class="widget-content widget-content-area">
                 <a class="table-responsive">

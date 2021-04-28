@@ -23,6 +23,9 @@
         App.init();
     });
 </script>
+
+<script src="/admin/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="/admin/plugins/highlight/highlight.pack.js"></script>
 <script src="/admin/assets/js/custom.js"></script>
 <!-- END GLOBAL MANDATORY SCRIPTS -->
 <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
@@ -104,9 +107,48 @@
     $("." + currentSection + " ." + pathnameArray[3]).addClass("active")
 </script>
 {{--------------------------- accordation in settings page -------------------------}}
-<script src="/admin/assets/js/scrollspyNav.js"></script>
 <script src="/admin/assets/js/components/ui-accordions.js"></script>
 {{----------------------------------------end -------------------------------------------}}
+
+{{--    create hall scripts--}}
+<script src="/admin/plugins/flatpickr/flatpickr.js"></script>
+<script src="/admin/plugins/noUiSlider/nouislider.min.js"></script>
+<script src="/admin/plugins/flatpickr/custom-flatpickr.js"></script>
+<script src="/admin/plugins/noUiSlider/custom-nouiSlider.js"></script>
+<script src="/admin/plugins/bootstrap-range-Slider/bootstrap-rangeSlider.js"></script>
+<script>
+    var f4 = flatpickr(document.getElementById('timeFlatpickr'), {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i"
+    });
+    var f4 = flatpickr(document.getElementById('timeFlatpickr_2'), {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i"
+    });
+    var f4 = flatpickr(document.getElementById('timeFlatpickr_3'), {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i"
+    });
+    var f4 = flatpickr(document.getElementById('timeFlatpickr_4'), {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i"
+    });
+    var f4 = flatpickr(document.getElementById('timeFlatpickr_5'), {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i"
+    });
+    var f4 = flatpickr(document.getElementById('timeFlatpickr_6'), {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i"
+    });
+</script>
+
 @stack('scripts')
 @yield('scripts')
 

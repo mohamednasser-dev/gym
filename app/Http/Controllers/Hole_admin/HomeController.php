@@ -1,8 +1,12 @@
 <?php
 namespace App\Http\Controllers\Hole_admin;
+use App\Coach_booking;
+use App\Hole_booking;
 use App\Hole_branch;
 use App\Hole_time_work;
 use App\Http\Controllers\Controller;
+use App\Rate;
+use App\Reservation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -13,7 +17,14 @@ class HomeController extends Controller{
 
     // get all contact us messages
     public function home(){
-        return view('hole_admin.home');
+        $id = auth()->guard('hole')->user()->id ;
+        $count_branchs = Hole_branch::where('hole_id',$id)->get()->count();
+        $count_bookings = Hole_booking::where('hole_id',$id)->where('deleted','0')->get()->count();
+
+        $booking_ids = Hole_booking::where('hole_id',$id)->select('id')->get()->toArray();
+        $count_Reservations = Reservation::whereIn('booking_id',$booking_ids)->where('status','start')->where('type','hall')->get()->count();
+        $count_rates = Rate::where('order_id',$id)->where('type','hall')->where('admin_approval',1)->get()->count();
+        return view('hole_admin.home',compact('count_branchs','count_bookings','count_Reservations','count_rates'));
     }
     public function hall_data(){
         $id = auth()->guard('hole')->user()->id;

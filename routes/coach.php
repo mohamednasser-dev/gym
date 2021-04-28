@@ -18,6 +18,13 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::get('make_famous/{id}' , 'CoachController@make_famous')->name('coaches.make_famous');
         Route::get('rates/{id}' , 'CoachController@rates')->name('coaches.rates');
         Route::get('/rate/change_status/{type}/{id}' , 'CoachController@change_rate_status')->name('coaches.change_status');
+
+        // coach times
+        Route::get('times/{id}' , 'Hall_time_worksController@index')->name('coaches.times');
+        Route::get('times/create/{id}' , 'Hall_time_worksController@create')->name('coach_times.create');
+        Route::get('times/edit/{id}' , 'Hall_time_worksController@edit')->name('coach_times.edit');
+        Route::post('times/store' , 'Hall_time_worksController@store')->name('coach_times.store');
+        Route::post('times/update/{id}' , 'Hall_time_worksController@update')->name('coach_times.update');
     });
     Route::get('famous_coaches' , 'CoachController@famous_coaches')->name('famous_coaches');
 });

@@ -51,4 +51,9 @@ class Product extends Model
     public function Views() {
         return $this->hasMany('App\Category_option_value', 'product_id');
     }
+
+    public function Rates() {
+        return $this->hasMany('App\Rate', 'order_id')->where('type','hall');
+    }
+
 }

@@ -9,6 +9,7 @@ class Hole extends Authenticatable
 {
     protected $fillable = [
         'name',
+        'name_en',
         'phone',
         'email',
         'phone_verified_at',
@@ -22,7 +23,12 @@ class Hole extends Authenticatable
         'famous',
         'started_price',
         'about_hole',
+        'about_hole_en',
         'rate',
         'sort',
     ];
+
+    public function Rates() {
+        return $this->hasMany('App\Rate', 'order_id')->where('type','hall')->where('admin_approval',1);
+    }
 }

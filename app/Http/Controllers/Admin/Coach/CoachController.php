@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Coach;
 use App\Coach;
+use App\Coach_time_work;
 use App\Hole;
 use App\Http\Controllers\Admin\AdminController;
 use App\Rate;
@@ -64,15 +65,19 @@ class CoachController extends AdminController
         $data = $this->validate(\request(),
             [
                 'name' => 'required',
+                'name_en' => 'required',
+                'phone' => 'required',
+                'age' => 'required',
+                'exp' => 'required',
                 'email' => 'required',
                 'about_coach' => '',
+                'about_coach_en' => '',
                 'password' => 'required|numeric',
-                'image' => 'required',
-                'time_from' => '',
-                'time_to' => '',
+                'image' => 'required'
             ]);
         if($request->password){
             $data['password'] = Hash::make($request->password);
+            $data['is_confirm'] = 'accepted';
         }else{
             unset($data['password']);
         }
@@ -122,7 +127,8 @@ class CoachController extends AdminController
     public function show($id)
     {
         $data = Coach::where('id',$id)->first();
-        return view('coach.coach_users.details',compact('data'));
+        $time_works = Coach_time_work::where('coach_id',$id)->get();
+        return view('coach.coach_users.details',compact('data','time_works'));
     }
 
     /**
@@ -149,10 +155,13 @@ class CoachController extends AdminController
         $data = $this->validate(\request(),
             [
                 'name' => 'required',
+                'name_en' => 'required',
+                'phone' => 'required',
+                'age' => 'required',
+                'exp' => 'required',
                 'email' => 'required',
                 'about_coach' => '',
-                'time_from' => '',
-                'time_to' => '',
+                'about_coach_en' => ''
             ]);
         if($request->password){
             $data['password'] = Hash::make($request->password);
@@ -198,7 +207,9 @@ class CoachController extends AdminController
 
     public function rates($id){
         $data = Rate::where('order_id',$id)->where('type','coach')->orderBy('admin_approval','desc')->orderBy('created_at','desc')->get();
-        return view('coach.coach_users.rates.index' ,compact('data'));
+        $coach =  Coach::where('id',$id)->first();
+        $coach_rate = $coach->rate ;
+        return view('coach.coach_users.rates.index' ,compact('data','coach_rate'));
     }
 
     public function change_rate_status($type,$id){

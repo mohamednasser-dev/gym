@@ -64,7 +64,7 @@
                             <tr id="id_{{ $row->id }}">
                                 <td class="text-center"><?=$i;?></td>
                                 <td class="text-center"><img src="{{image_cloudinary_url()}}{{ $row->logo }}"/></td>
-                                <td class="text-center">{{ $row->name }}</td>
+                                <td class="text-center"> @if(app()->getLocale() == 'ar') {{ $row->name }} @else {{ $row->name_en }} @endif </td>
                                 <td class="text-center">{{ $row->email }}</td>
                                 <td class="text-center">{{ $row->phone }}</td>
 
@@ -101,18 +101,26 @@
                                            class="btn btn-warning  mb-2 mr-2 rounded-circle"
                                            style="position: absolute;margin-right: -22px;margin-top: -20px;"
                                            data-original-title="Tooltip using BUTTON tag">
-                                            {{$row->rate}}
+                                            @if($row->Rates != null)
+                                                {{count($row->Rates)}}
+                                            @else
+                                                0
+                                            @endif
                                         </a>
                                         <span class="unreadcount" style="position: absolute;margin-top: -27px;margin-right: -28px;" title="{{ __('messages.new_rates') }}">
                                             <span class="insidecount">
-                                                {{count($rates)}}
+                                                    {{ count($rates) }}
                                             </span>
                                         </span>
                                     @else
                                     <a href="{{route('admin_hall_rates.show',$row->id)}}"
                                        class="btn btn-warning  mb-2 mr-2 rounded-circle"
                                        data-original-title="Tooltip using BUTTON tag">
-                                        {{$row->rate}}
+                                        @if($row->Rates != null)
+                                            {{count($row->Rates)}}
+                                        @else
+                                            0
+                                        @endif
                                     </a>
                                     @endif
                                 </td>

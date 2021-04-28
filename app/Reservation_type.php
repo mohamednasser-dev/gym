@@ -7,7 +7,7 @@ use Session;
 
 class Reservation_type extends Model
 {
-    protected $fillable = ['title_ar', 'title_en','deleted'];
+    protected $fillable = ['title_ar', 'title_en','deleted','is_required'];
 
     public function Goals() {
         if(Session::get('api_lang') == 'ar'){

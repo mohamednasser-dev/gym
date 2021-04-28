@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReservationTypesTable extends Migration
+class CreateCoachTimeWorksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateReservationTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('reservation_types', function (Blueprint $table) {
+        Schema::create('coach_time_works', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title_ar');
-            $table->string('title_en');
-            $table->enum('deleted',['0','1'])->default('0');
-            $table->string('is_required')->default('y');
+            $table->time('time_from');
+            $table->time('time_to');
+            $table->bigInteger('coach_id')->unsigned();
+            $table->foreign('coach_id')->references('id')->on('coaches')->onDelete('restrict');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateReservationTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reservation_types');
+        Schema::dropIfExists('coach_time_works');
     }
 }

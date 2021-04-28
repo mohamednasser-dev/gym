@@ -6,6 +6,7 @@ use App\Coach;
 use App\Coach_booking;
 use App\Coach_booking_detail;
 use App\Coach_media;
+use App\Coach_time_work;
 use App\Favorite;
 use App\Hole_booking;
 use App\Hole_media;
@@ -39,25 +40,48 @@ class CoachesController extends Controller
 
     }
     public function all_coaches(Request $request) {
+        $lang = $request->lang ;
         $user = auth()->user();
-        $coaches = Coach::select('id','name','rate','image')
-                        ->where('deleted','0')
-                        ->where('status','active')
-                        ->where('is_confirm','accepted')
-                        ->get()
-                        ->map(function($coaches) use($user){
-                            if($user == null){
-                                $coaches->favorite = false ;
-                            }else{
-                                $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type','coach')->first();
-                                if($fav == null){
-                                    $coaches->favorite = false ;
-                                }else{
-                                    $coaches->favorite = true ;
-                                }
-                            }
-                            return $coaches;
-                        });
+        if($lang == 'ar'){
+            $coaches = Coach::select('id','name','rate','image')
+                ->where('deleted','0')
+                ->where('status','active')
+                ->where('is_confirm','accepted')
+                ->get()
+                ->map(function($coaches) use($user){
+                    if($user == null){
+                        $coaches->favorite = false ;
+                    }else{
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type','coach')->first();
+                        if($fav == null){
+                            $coaches->favorite = false ;
+                        }else{
+                            $coaches->favorite = true ;
+                        }
+                    }
+                    return $coaches;
+                });
+        }else{
+            $coaches = Coach::select('id','name_en as name','rate','image')
+                ->where('deleted','0')
+                ->where('status','active')
+                ->where('is_confirm','accepted')
+                ->get()
+                ->map(function($coaches) use($user){
+                    if($user == null){
+                        $coaches->favorite = false ;
+                    }else{
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type','coach')->first();
+                        if($fav == null){
+                            $coaches->favorite = false ;
+                        }else{
+                            $coaches->favorite = true ;
+                        }
+                    }
+                    return $coaches;
+                });
+        }
+
         //expict favorite and plans num ...
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $coaches, $request->lang );
         return response()->json($response , 200);
@@ -66,7 +90,11 @@ class CoachesController extends Controller
         $lang = $request->lang ;
         Session::put('api_lang',$lang);
         $user = auth()->user();
-        $coach = Coach::select('id','image','name','about_coach','time_from','time_to','rate')->find($id);
+        if($lang == 'ar'){
+            $coach = Coach::select('id','image','name','about_coach','rate')->find($id);
+        }else{
+            $coach = Coach::select('id','image','name_en','about_coach_en as about_coach','rate')->find($id);
+        }
         if($coach != null) {
             if ($user == null) {
                 $data['favorite'] = false;
@@ -105,6 +133,9 @@ class CoachesController extends Controller
                 }
             }
             $data['basic'] = $coach;
+            $data['work_times'] = Coach_time_work::select('id','time_from','time_to')
+                ->where('coach_id',$id)
+                ->get();
             $data['media'] = Coach_media::select('id','image','type')
                 ->where('coach_id',$id)
                 ->get()

@@ -20,7 +20,7 @@
                         <tbody>
                         <tr>
                             <td class="label-table"> {{ __('messages.hole_name') }}</td>
-                            <td>{{ $data->name }}</td>
+                            <td> @if(app()->getLocale() == 'ar') {{ $data->name }} @else {{ $data->name_en }} @endif </td>
                         </tr>
                         <tr>
                             <td class="label-table"> {{ __('messages.email') }} </td>
@@ -29,6 +29,10 @@
                         <tr>
                             <td class="label-table"> {{ __('messages.phone') }} </td>
                             <td> {{ $data->phone }} </td>
+                        </tr>
+                        <tr>
+                            <td class="label-table"> {{ __('messages.about_hole') }} </td>
+                            <td> @if(app()->getLocale() == 'ar') {{ $data->about_hole }} @else {{ $data->about_hole_en }} @endif  </td>
                         </tr>
                         </tbody>
                     </table>

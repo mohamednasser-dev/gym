@@ -25,9 +25,10 @@
                     <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                         <thead>
                         <tr>
-                            <th class="text-center">Id</th>
+                            <th class="text-center">{{ __('messages.booking_number') }}</th>
                             <th class="text-center">{{ __('messages.user_name') }}</th>
                             <th class="text-center">{{ __('messages.booking_name') }}</th>
+                            <th class="text-center">{{ __('messages.booking_date') }}</th>
                             <th class="text-center">{{ __('messages.end_date') }}</th>
                             <th class="text-center">{{ __('messages.personal_data') }}</th>
                             <th class="text-center">{{ __('messages.status') }}</th>
@@ -37,9 +38,10 @@
                         <?php $i = 1; ?>
                         @foreach ($data as $row)
                             <tr>
-                                <td class="text-center"><?=$i;?></td>
+                                <td class="text-center">{{$row->id}}</td>
                                 <td class="text-center"><a href="{{route('subscription.user_data',$row->user_id)}}">{{ $row->User->name }}</a> </td>
                                 <td class="text-center"> @if(app()->getLocale() == 'ar') {{ $row->Booking->name_ar }} @else {{ $row->Booking->name_en }} @endif </td>
+                                <td class="text-center"> {{date('Y-m-d', strtotime($row->created_at))}}</td>
                                 <td class="text-center"> {{date('Y-m-d', strtotime($row->expire_date))}}</td>
                                 <td class="text-center">
                                     <div class="dropdown custom-dropdown">

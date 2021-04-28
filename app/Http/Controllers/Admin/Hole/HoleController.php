@@ -40,9 +40,11 @@ class HoleController extends AdminController{
         $data = $this->validate(\request(),
             [
                 'name' => 'required',
+                'name_en' => 'required',
                 'email' => 'required|unique:holes|unique:users|unique:admins',
                 'phone' => 'required|numeric',
                 'about_hole' => '',
+                'about_hole_en' => '',
                 'password' => 'required|numeric',
                 'logo' => 'required',
                 'cover' => 'required',
@@ -129,9 +131,11 @@ class HoleController extends AdminController{
         $data = $this->validate(\request(),
             [
                 'name' => 'required',
+                'name_en' => 'required',
                 'email' => 'required',
                 'phone' => 'required|numeric',
                 'about_hole' => '',
+                'about_hole_en' => '',
             ]);
         if($request->male == 'male'){
             $this->validate(\request(),
@@ -249,6 +253,7 @@ class HoleController extends AdminController{
         $user->save();
         return redirect()->back();
     }
+
     public function destroy($id){
         $hall = Hole::find($id);
         $hall->deleted = '1';

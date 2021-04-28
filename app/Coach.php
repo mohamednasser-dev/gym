@@ -10,6 +10,7 @@ class Coach extends Authenticatable implements JWTSubject
 {
     protected $fillable = [
         'name',
+        'name_en',
         'email',
         'password',
         'gender',
@@ -29,6 +30,7 @@ class Coach extends Authenticatable implements JWTSubject
         'exp',
         'user_id',
         'phone',
+        'about_coach_en',
         'story'
     ];
 
@@ -45,5 +47,9 @@ class Coach extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function Rates() {
+        return $this->hasMany('App\Rate', 'order_id')->where('type','coach')->where('admin_approval',1);
     }
 }

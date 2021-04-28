@@ -15,8 +15,12 @@
             <form method="post" action="{{route('coaches.update',$data->id)}}" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group mb-4">
-                    <label for="name">{{ __('messages.name') }}</label>
-                    <input required type="text" value="{{$data->name}}" name="name" class="form-control" id="name">
+                    <label for="name">{{ __('messages.name_ar') }}</label>
+                    <input required type="text" value="{{$data->name_ar}}" name="name" class="form-control" id="name">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="name">{{ __('messages.name_en') }}</label>
+                    <input required type="text" value="{{$data->name_en}}" name="name" class="form-control" id="name">
                 </div>
                 <div class="form-group mb-4">
                     <label for="email">{{ __('messages.email') }}</label>
@@ -27,9 +31,27 @@
                     <input type="password" class="form-control" id="password" name="password">
                 </div>
                 <div class="form-group mb-4">
-                    <label for="exampleFormControlTextarea1">{{ __('messages.about_coach') }}</label>
+                    <label for="name">{{ __('messages.phone') }}</label>
+                    <input required type="tel" name="phone" value="{{$data->phone}}" class="form-control" id="name">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="name">{{ __('messages.age') }}</label>
+                    <input required type="number" min="1" name="age" value="{{$data->age}}" class="form-control" id="name">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="name">{{ __('messages.exp_years') }}</label>
+                    <input required type="number" min="0" name="exp" value="{{$ata->exp}}" class="form-control" id="name">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="exampleFormControlTextarea1">{{ __('messages.about_coach_ar') }}</label>
                     <textarea class="form-control" name="about_coach" id="exampleFormControlTextarea1" rows="4">
                         {{$data->about_coach}}
+                    </textarea>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="exampleFormControlTextarea1">{{ __('messages.about_coach_en') }}</label>
+                    <textarea class="form-control" name="about_coach_en" id="exampleFormControlTextarea1" rows="4">
+                        {{$data->about_coach_en}}
                     </textarea>
                 </div>
                 <div class="form-group mb-4 mt-3">
@@ -47,17 +69,6 @@
                             <span class="custom-file-container__custom-file__custom-file-control"></span>
                         </label>
                         <div class="custom-file-container__image-preview"></div>
-                    </div>
-                </div>
-                <h4>{{ __('messages.avilable_times') }}</h4>
-                <div class="form-group row">
-                    <div class="col-md-6" id="special1_cont">
-                        <label for="plan_price">{{ __('messages.from') }}</label>
-                        <input type="time" value="{{$data->time_from}}" name="time_from" class="form-control">
-                    </div>
-                    <div class="col-md-6" id="special2_cont">
-                        <label for="plan_price">{{ __('messages.to') }}</label>
-                        <input type="time" value="{{$data->time_to}}" name="time_to" class="form-control">
                     </div>
                 </div>
                 <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">

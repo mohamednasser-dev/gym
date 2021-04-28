@@ -13,8 +13,12 @@
             <form method="post" action="{{route('halls.update',$data->id)}}" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group mb-4">
-                    <label for="name">{{ __('messages.hole_name') }}</label>
+                    <label for="name">{{ __('messages.hole_name_ar') }}</label>
                     <input required type="text" name="name" value="{{$data->name}}" class="form-control" id="name">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="name">{{ __('messages.hole_name_en') }}</label>
+                    <input required type="text" name="name_en" value="{{$data->name_en}}" class="form-control" id="name">
                 </div>
                 <div class="form-group mb-4">
                     <label for="email">{{ __('messages.email') }}</label>
@@ -29,9 +33,15 @@
                     <input required type="phone" value="{{$data->phone}}" name="phone" class="form-control" id="phone">
                 </div>
                 <div class="form-group mb-4">
-                    <label for="exampleFormControlTextarea1">{{ __('messages.about_hole') }}</label>
+                    <label for="exampleFormControlTextarea1">{{ __('messages.about_hole_ar') }}</label>
                     <textarea class="form-control" name="about_hole" id="exampleFormControlTextarea1" rows="4">
                         {{$data->about_hole}}
+                    </textarea>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="exampleFormControlTextarea1">{{ __('messages.about_hole_en') }}</label>
+                    <textarea class="form-control" name="about_hole_en" id="exampleFormControlTextarea1" rows="4">
+                        {{$data->about_hole_en}}
                     </textarea>
                 </div>
                 <div class="form-group mb-4 mt-3">
@@ -83,11 +93,15 @@
                     </div>
                     <div class="col-md-4" id="special1_cont">
                         <label for="plan_price">{{ __('messages.from') }}</label>
-                        <input  type="time" @if($time_male != null) value="{{$time_male->time_from}}" @endif name="male_hole_from" class="form-control">
+                        <div class="form-group mb-0">
+                            <input id="timeFlatpickr" @if($time_male != null) value="{{$time_male->time_from}}" @endif name="male_hole_from" class="form-control flatpickr flatpickr-input active" type="text" >
+                        </div>
                     </div>
                     <div class="col-md-4" id="special2_cont">
                         <label for="plan_price">{{ __('messages.to') }}</label>
-                        <input  type="time"  @if($time_male != null) value="{{$time_male->time_from}}" @endif name="male_hole_to" class="form-control">
+                        <div class="form-group mb-0">
+                            <input id="timeFlatpickr_2" @if($time_male != null) value="{{$time_male->time_from}}" @endif name="male_hole_to" class="form-control flatpickr flatpickr-input active" type="text" >
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -102,11 +116,15 @@
                     </div>
                     <div class="col-md-4" id="special1_cont">
                         <label for="plan_price">{{ __('messages.from') }}</label>
-                        <input  type="time" @if($time_female != null) value="{{$time_female->time_from}}" @endif name="female_hole_from" class="form-control">
+                        <div class="form-group mb-0">
+                            <input id="timeFlatpickr_3" @if($time_female != null) value="{{$time_female->time_from}}" @endif name="female_hole_from" class="form-control flatpickr flatpickr-input active" type="text" >
+                        </div>
                     </div>
                     <div class="col-md-4" id="special2_cont">
                         <label for="plan_price">{{ __('messages.to') }}</label>
-                        <input  type="time" @if($time_female != null) value="{{$time_female->time_from}}" @endif name="female_hole_to" class="form-control">
+                        <div class="form-group mb-0">
+                            <input id="timeFlatpickr_4" @if($time_female != null) value="{{$time_female->time_from}}" @endif name="female_hole_to" class="form-control flatpickr flatpickr-input active" type="text">
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -121,11 +139,15 @@
                     </div>
                     <div class="col-md-4" id="special1_cont">
                         <label for="plan_price">{{ __('messages.from') }}</label>
-                        <input  type="time" @if($time_mix != null) value="{{$time_mix->time_to}}" @endif name="mix_hole_from" class="form-control">
+                        <div class="form-group mb-0">
+                            <input id="timeFlatpickr_5" @if($time_mix != null) value="{{$time_mix->time_to}}" @endif name="mix_hole_from" class="form-control flatpickr flatpickr-input active" type="text">
+                        </div>
                     </div>
                     <div class="col-md-4" id="special2_cont">
                         <label for="plan_price">{{ __('messages.to') }}</label>
-                        <input  type="time" @if($time_mix != null) value="{{$time_mix->time_to}}" @endif name="mix_hole_to" class="form-control">
+                        <div class="form-group mb-0">
+                            <input id="timeFlatpickr_6" @if($time_mix != null) value="{{$time_mix->time_to}}" @endif name="mix_hole_to" class="form-control flatpickr flatpickr-input active" type="text">
+                        </div>
                     </div>
                 </div>
                 <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">

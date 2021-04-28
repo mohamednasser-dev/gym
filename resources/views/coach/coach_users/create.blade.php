@@ -22,9 +22,14 @@
     <form method="post" action="{{route('coaches.store')}}" enctype="multipart/form-data">
      @csrf
     <div class="form-group mb-4">
-        <label for="name">{{ __('messages.name') }}</label>
+        <label for="name">{{ __('messages.name_ar') }}</label>
         <input required type="text" name="name" class="form-control" id="name">
     </div>
+    <div class="form-group mb-4">
+        <label for="name">{{ __('messages.name_en') }}</label>
+        <input required type="text" name="name_en" class="form-control" id="name">
+    </div>
+
     <div class="form-group mb-4">
         <label for="email">{{ __('messages.email') }}</label>
         <input required type="Email" class="form-control" id="email" name="email">
@@ -34,8 +39,24 @@
         <input required type="password" class="form-control" id="password" name="password">
     </div>
     <div class="form-group mb-4">
-        <label for="exampleFormControlTextarea1">{{ __('messages.about_coach') }}</label>
+        <label for="name">{{ __('messages.phone') }}</label>
+        <input required type="tel" name="phone" class="form-control" id="name">
+    </div>
+    <div class="form-group mb-4">
+        <label for="name">{{ __('messages.age') }}</label>
+        <input required type="number" min="1" name="age" class="form-control" id="name">
+    </div>
+    <div class="form-group mb-4">
+        <label for="name">{{ __('messages.exp_years') }}</label>
+        <input required type="number" min="0" name="exp" class="form-control" id="name">
+    </div>
+    <div class="form-group mb-4">
+        <label for="exampleFormControlTextarea1">{{ __('messages.about_coach_ar') }}</label>
         <textarea class="form-control" name="about_coach" id="exampleFormControlTextarea1" rows="4"></textarea>
+    </div>
+    <div class="form-group mb-4">
+        <label for="exampleFormControlTextarea1">{{ __('messages.about_coach_en') }}</label>
+        <textarea class="form-control" name="about_coach_en" id="exampleFormControlTextarea1" rows="4"></textarea>
     </div>
     <div class="form-group mb-4 mt-3">
         <label for="exampleFormControlFile1">{{ __('messages.image') }}</label>
@@ -47,17 +68,6 @@
                 <span class="custom-file-container__custom-file__custom-file-control"></span>
             </label>
             <div class="custom-file-container__image-preview"></div>
-        </div>
-    </div>
-    <h4>{{ __('messages.avilable_times') }}</h4>
-    <div class="form-group row">
-        <div class="col-md-6" id="special1_cont">
-            <label for="plan_price">{{ __('messages.from') }}</label>
-            <input type="time" name="time_from" class="form-control">
-        </div>
-        <div class="col-md-6" id="special2_cont">
-            <label for="plan_price">{{ __('messages.to') }}</label>
-            <input type="time" name="time_to" class="form-control">
         </div>
     </div>
     <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">

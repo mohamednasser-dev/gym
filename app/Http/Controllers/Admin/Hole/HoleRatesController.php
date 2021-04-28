@@ -14,7 +14,9 @@ class HoleRatesController extends AdminController{
 
     public function show($id){
         $data = Rate::where('order_id',$id)->where('type','hall')->orderBy('admin_approval','desc')->orderBy('created_at','desc')->get();
-        return view('hole.hole_users.rates.index' ,compact('data'));
+        $hall =  Hole::where('id',$id)->first();
+        $hall_rate = $hall->rate ;
+        return view('hole.hole_users.rates.index' ,compact('data','hall_rate'));
     }
     public function all_rates(){
         $data = Rate::where('type','hall')->orderBy('admin_approval','desc')->orderBy('created_at','desc')->get();

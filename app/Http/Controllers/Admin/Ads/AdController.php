@@ -18,7 +18,7 @@ class AdController extends AdminController{
     // type post
     public function AddPost(Request $request){
         $image_name = $request->file('image')->getRealPath();
-        Cloudder::upload($image_name, null);
+        Cloudder::upload($image_name, null, array("timeout" => 600000000));
         $imagereturned = Cloudder::getResult();
         $image_id = $imagereturned['public_id'];
         $image_format = $imagereturned['format'];
@@ -29,13 +29,6 @@ class AdController extends AdminController{
         $ad->title_en = $request->title_en;
         $ad->desc_ar = $request->desc_ar;
         $ad->desc_en = $request->desc_en;
-//        $ad->content = $request->content;
-//        $ad->place = $request->place;
-//        if ($request->input('type') == 1) {
-//            $ad->type = "link";
-//        }else {
-//            $ad->type = "id";
-//        }
         $ad->save();
         session()->flash('success', trans('messages.added_s'));
         return redirect('admin-panel/ads/show');

@@ -88,7 +88,7 @@
         <link href="/admin/assets/css/components/tabs-accordian/custom-accordions.css" rel="stylesheet" type="text/css" />
         <!--  END setting page  -->
     @endif
-           @yield('styles')
+        @yield('styles')
         <style>
             /* Chrome, Safari, Edge, Opera */
             input::-webkit-outer-spin-button,
@@ -105,8 +105,13 @@
         <link href="/admin/plugins/toast-master/css/jquery.toast.css" rel="stylesheet">
         <link href="/admin/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css">
         <link href="/css/new_styles.css" rel="stylesheet" type="text/css">
-
-
-
-
+{{--    ---------------------------------create hall page-----------------------------------------------------------------------}}
+        <link href="/admin/plugins/flatpickr/flatpickr.css" rel="stylesheet" type="text/css">
+        <link href="/admin/plugins/noUiSlider/nouislider.min.css" rel="stylesheet" type="text/css">
+        <link href="/admin/assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/plugins/flatpickr/custom-flatpickr.css" rel="stylesheet" type="text/css">
+        <link href="/admin/plugins/noUiSlider/custom-nouiSlider.css" rel="stylesheet" type="text/css">
+        <link href="/admin/plugins/bootstrap-range-Slider/bootstrap-slider.css" rel="stylesheet" type="text/css">
+        <link href="/admin/assets/css/elements/breadcrumb.css" rel="stylesheet" type="text/css" />
+{{--    ---------------------------------------------------------------------------------------------------------------------------------------}}
 </head>

@@ -17,7 +17,7 @@
                         <tbody>
                         <tr>
                             <td class="label-table"> {{ __('messages.name') }}</td>
-                            <td>{{ $data->name }}</td>
+                            <td> @if(app()->getLocale() == 'ar') {{ $data->name }} @else {{ $data->name_en }} @endif </td>
                         </tr>
                         <tr>
                             <td class="label-table"> {{ __('messages.email') }} </td>
@@ -47,21 +47,25 @@
                         </tr>
                         <tr>
                             <td class="label-table"> {{ __('messages.about_coach') }} </td>
-                            <td>{{ $data->about_coach }}</td>
+                            <td> @if(app()->getLocale() == 'ar') {{ $data->about_coach }} @else {{ $data->about_coach_en }} @endif </td>
                         </tr>
                         </tbody>
                     </table>
                     <h4>{{ __('messages.appointment') }}</h4>
                     <table class="table table-bordered mb-4">
+                        <thead>
+                        <tr>
+                            <th class="text-center">{{ __('messages.from') }}</th>
+                            <th class="text-center">{{ __('messages.to') }}</th>
+                        </tr>
+                        </thead>
                         <tbody>
-                        <tr>
-                            <td class="label-table"> {{ __('messages.from') }}</td>
-                            <td>{{ date('g:i a', strtotime($data->time_from )) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label-table"> {{ __('messages.to') }} </td>
-                            <td>{{ date('g:i a', strtotime($data->time_to )) }}</td>
-                        </tr>
+                        @foreach($time_works as $row)
+                            <tr>
+                                <td class="text-center">{{ date('g:i a', strtotime($row->time_from )) }}</td>
+                                <td class="text-center">{{ date('g:i a', strtotime($row->time_to)) }}</td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                     <h4>{{ __('messages.image') }}</h4>

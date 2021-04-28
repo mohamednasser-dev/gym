@@ -39,6 +39,7 @@ class HallsController extends Controller
         //        --------------------------------------------- end scheduled functions --------------------------------------------------------
     }
     public function all_halls(Request $request,$type) {
+        $lang = $request->lang ;
         $user = auth()->user();
         $halls = Hole_time_work::where('type',$type)->get();
         foreach ($halls as $key => $hall){
@@ -47,7 +48,11 @@ class HallsController extends Controller
                 $data[$key]['id'] = $selected_hall->id;
                 $data[$key]['cover'] = $selected_hall->cover;
                 $data[$key]['logo'] = $selected_hall->logo;
-                $data[$key]['name'] = $selected_hall->name;
+                if($lang == 'ar'){
+                    $data[$key]['name'] = $selected_hall->name;
+                }else{
+                    $data[$key]['name'] = $selected_hall->name_en;
+                }
                 $data[$key]['rate'] = $selected_hall->rate;
 
                 if($user == null){
@@ -87,7 +92,7 @@ class HallsController extends Controller
         $data = null;
         if($lang == 'ar'){
             $data = Reservation_type::with('Goals')
-                ->select('id','title_ar as title')
+                ->select('id','title_ar as title','is_required')
                 ->where('deleted','0')
                 ->get()
                 ->map(function($types){
@@ -100,7 +105,7 @@ class HallsController extends Controller
                 });
         }else{
             $data = Reservation_type::with('Goals')
-                ->select('id','title_en as title')
+                ->select('id','title_en as title','is_required')
                 ->where('deleted','0')
                 ->get()
                 ->map(function($types){
@@ -139,16 +144,22 @@ class HallsController extends Controller
             $response = APIHelpers::createApiResponse(true , 406 ,  'you should login first', 'يجب تسجيل الدخول اولا' , null, $request->lang );
             return response()->json($response , 406);
         }
-        $data['user_id'] = $user->id ;
-        $data['text'] = $request->text ;
-        $data['rate'] = $request->rate ;
-        $data['order_id'] = $request->target_id ;
-        $data['admin_approval'] = 2 ;
-        $data['type'] = $type ;
-        $rating = Rate::create($data);
+        $exist_rate = Rate::where('order_id',$request->target_id)->where('type',$type)->where('user_id', $user->id)->first();
+        if($exist_rate == null){
+            $data['user_id'] = $user->id ;
+            $data['text'] = $request->text ;
+            $data['rate'] = $request->rate ;
+            $data['order_id'] = $request->target_id ;
+            $data['admin_approval'] = 2 ;
+            $data['type'] = $type ;
+            $rating = Rate::create($data);
 
-        $response = APIHelpers::createApiResponse(false , 200 ,  'rate added successfully', 'تم اضافة التقييم بنجاح' , null, $request->lang );
-        return response()->json($response , 200);
+            $response = APIHelpers::createApiResponse(false , 200 ,  'rate added successfully', 'تم اضافة التقييم بنجاح' , null, $request->lang );
+            return response()->json($response , 200);
+        }else{
+            $response = APIHelpers::createApiResponse(true , 406 ,  'you make rate before , you can`t make rate again', 'لقد تم التقييم من قبل لا يمكنك التقييم مره اخرى' , null, $request->lang );
+            return response()->json($response , 406);
+        }
     }
 
     public function store_reservation(Request $request,$type) {
@@ -259,11 +270,13 @@ class HallsController extends Controller
         $data['type'] = $request->type;
         $reserve = Reservation::create($data);
         if($reserve != null){
-            foreach($request->personal_data_types as $key => $row){
-                $otion_data['reservation_id'] = $reserve->id;
-                $otion_data['type_id'] = $row;
-                $otion_data['goal_id'] = $request->personal_data_goals[$key];
-                Reservation_option::create($otion_data);
+            if($request->personal_data_types != null || $request->personal_data_goals != null){
+                foreach($request->personal_data_types as $key => $row){
+                    $otion_data['reservation_id'] = $reserve->id;
+                    $otion_data['type_id'] = $row;
+                    $otion_data['goal_id'] = $request->personal_data_goals[$key];
+                    Reservation_option::create($otion_data);
+                }
             }
             $income_Data['price'] = $request->price ;
             $income_Data['type'] = $request->type ;
@@ -287,7 +300,11 @@ class HallsController extends Controller
         $lang = $request->lang ;
         $user = auth()->user();
         Session::put('api_lang',$lang);
-        $hall = Hole::select('id','cover','logo','name','about_hole','rate')->find($id);
+        if($lang == 'ar' ){
+            $hall = Hole::select('id','cover','logo','name','about_hole','rate')->find($id);
+        }else{
+            $hall = Hole::select('id','cover','logo','name_en as name','about_hole_en as about_hole','rate')->find($id);
+        }
         if($hall != null){
             if($user == null){
                 $data['favorite'] = false ;

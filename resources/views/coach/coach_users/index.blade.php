@@ -45,6 +45,7 @@
                             <th class="text-center">{{ __('messages.name') }}</th>
                             <th class="text-center">{{ __('messages.email') }}</th>
                             <th class="text-center">{{ __('messages.status') }}</th>
+                            <th class="text-center">{{ __('messages.avilable_times') }}</th>
                             <th class="text-center">{{ __('messages.rates') }}</th>
                             <th class="text-center">{{ __('messages.famous_coaches') }}</th>
                             <th class="text-center">{{ __('messages.join_requests') }}</th>
@@ -62,7 +63,7 @@
                                 <td class="text-center">
                                     <img src="{{image_cloudinary_url()}}{{ $row->image }}"/>
                                 </td>
-                                <td class="text-center">{{ $row->name }}</td>
+                                <td class="text-center"> @if(app()->getLocale() == 'ar') {{ $row->name }} @else {{ $row->name_en }} @endif </td>
                                 <td class="text-center">{{ $row->email }}</td>
                                 <td class="text-center">
                                     @if($row->status == 'active')
@@ -75,6 +76,13 @@
                                         </a>
                                     @endif
                                 </td>
+                                <td class="text-center">
+                                    <a href="{{route('coaches.times',$row->id)}}" class="btn btn-info  mb-2 mr-2 rounded-circle">
+                                        <div class="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                        </div>
+                                    </a>
+                                </td>
                                 <td class="text-center blue-color">
                                     @php $rates =  \App\Rate::where('order_id',$row->id)->where('type','coach')->where('admin_approval',2)->get(); @endphp
                                     @if( count($rates) > 0 )
@@ -82,7 +90,11 @@
                                            class="btn btn-warning  mb-2 mr-2 rounded-circle" title=""
                                            style="position: absolute;margin-right: -22px;margin-top: -20px;"
                                            data-original-title="Tooltip using BUTTON tag">
-                                            {{$row->rate}}
+                                            @if($row->Rates != null)
+                                                {{count($row->Rates)}}
+                                            @else
+                                                0
+                                            @endif
                                         </a>
                                         <span class="unreadcount"
                                               style="position: absolute;margin-top: -27px;margin-right: -28px;"
@@ -95,7 +107,11 @@
                                         <a href="{{route('coaches.rates',$row->id)}}"
                                            class="btn btn-warning  mb-2 mr-2 rounded-circle" title=""
                                            data-original-title="Tooltip using BUTTON tag">
-                                            {{$row->rate}}
+                                            @if($row->Rates != null)
+                                                {{count($row->Rates)}}
+                                            @else
+                                                0
+                                            @endif
                                         </a>
                                     @endif
                                 </td>

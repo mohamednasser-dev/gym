@@ -26,7 +26,8 @@ class ReservDataController extends AdminController
         $data = $this->validate(\request(),
             [
                 'title_ar' => 'required',
-                'title_en' => 'required'
+                'title_en' => 'required',
+                'type' => 'required'
             ]);
         Reservation_type::create($data);
         session()->flash('success', trans('messages.added_s'));
@@ -37,7 +38,8 @@ class ReservDataController extends AdminController
         $data = $this->validate(\request(),
             [
                 'title_ar' => 'required',
-                'title_en' => 'required'
+                'title_en' => 'required',
+                'type' => 'required'
             ]);
         Reservation_type::where('id',$request->id)->update($data);
         session()->flash('success', trans('messages.updated_s'));
