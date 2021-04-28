@@ -25,6 +25,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::get('times/edit/{id}' , 'Hall_time_worksController@edit')->name('coach_times.edit');
         Route::post('times/store' , 'Hall_time_worksController@store')->name('coach_times.store');
         Route::post('times/update/{id}' , 'Hall_time_worksController@update')->name('coach_times.update');
+        Route::get('times/delete/{id}' , 'Hall_time_worksController@destroy')->name('coach_times.delete');
     });
     Route::get('famous_coaches' , 'CoachController@famous_coaches')->name('famous_coaches');
 });

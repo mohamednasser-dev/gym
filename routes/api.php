@@ -261,6 +261,12 @@ use Illuminate\Http\Request;
     Route::post('coach/media/store/{lang}/{v}' , 'CoachesController@store_media');
     Route::post('coach/media/delete/{lang}/{v}' , 'CoachesController@delete_media');
 
+    //for time works
+    Route::get('coach/times/{lang}/{v}' , 'CoachesController@times');
+    Route::post('coach/times/store/{lang}/{v}' , 'CoachesController@store_time');
+    Route::post('coach/times/update/{id}/{lang}/{v}' , 'CoachesController@update_time');
+    Route::post('coach/times/delete/{lang}/{v}' , 'CoachesController@delete_time');
+
     //subscribers
     Route::get('coach/{type}/subscribers/{lang}/{v}' , 'CoachesController@subscribers');
 
