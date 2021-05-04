@@ -51,7 +51,8 @@ class HallsController extends Controller
         if ($request->mix == 1) {
             $result = $result->orWhere('type', 'mix');
         }
-        $result = $result = $result->groupBy('hole_id')->get();
+//        ->groupBy('hole_id')
+        $result = $result = $result->get();
         $data = null ;
         foreach ($result as $key => $hall){
             $selected_hall = Hole::findOrFail($hall->hole_id);
