@@ -111,6 +111,13 @@ class HomeController extends Controller
                 }
                 return $coaches;
             });
+        $data['famous_store'] = Coach::select('id', 'image', 'name')
+            ->where('famous', '1')
+            ->where('is_confirm', 'accepted')
+            ->where('status', 'active')
+            ->where('deleted', '0')
+            ->orderBy('sort', 'asc')
+            ->get();
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
         return response()->json($response, 200);
     }

@@ -38,11 +38,22 @@ class HallsController extends Controller
         }
         //        --------------------------------------------- end scheduled functions --------------------------------------------------------
     }
-    public function all_halls(Request $request,$type) {
+    public function all_halls(Request $request) {
         $lang = $request->lang ;
         $user = auth()->user();
-        $halls = Hole_time_work::where('type',$type)->get();
-        foreach ($halls as $key => $hall){
+        $result = Hole_time_work::query();
+        if ($request->male == 1) {
+            $result = $result->orWhere('type', 'male');
+        }
+        if ($request->femal == 1) {
+            $result = $result->orWhere('type', 'female');
+        }
+        if ($request->mix == 1) {
+            $result = $result->orWhere('type', 'mix');
+        }
+        $result = $result = $result->groupBy('hole_id')->get();
+        $data = null ;
+        foreach ($result as $key => $hall){
             $selected_hall = Hole::findOrFail($hall->hole_id);
             if($selected_hall->deleted == '0' && $selected_hall->status == 'active'){
                 $data[$key]['id'] = $selected_hall->id;

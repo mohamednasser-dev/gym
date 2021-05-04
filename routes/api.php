@@ -108,7 +108,7 @@ use Illuminate\Http\Request;
 
     // get home data
     Route::get('/app_home/{lang}/{v}' , 'HomeController@app_home')->middleware('checkguest');
-    Route::get('/all_halls/{type}/{lang}/{v}' , 'HallsController@all_halls')->middleware('checkguest');
+    Route::get('/all_halls/{lang}/{v}' , 'HallsController@all_halls')->middleware('checkguest');
     Route::get('/hall/details/{id}/{lang}/{v}' , 'HallsController@details')->middleware('checkguest');
 
     //my account
