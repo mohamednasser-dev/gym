@@ -52,7 +52,10 @@ class HallsController extends Controller
             $result = $result->orWhere('type', 'mix');
         }
 //        ->groupBy('hole_id')
-        $result = $result = $result->get();
+        $result = $result = $result->groupBy('hole_id')
+            ->orderBy(Hole::select('sort')
+                ->whereColumn('holes.id', 'hole_time_works.hole_id')
+            )->get();
         $data = null ;
         foreach ($result as $key => $hall){
             $selected_hall = Hole::findOrFail($hall->hole_id);
