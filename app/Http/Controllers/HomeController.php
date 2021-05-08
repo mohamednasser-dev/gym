@@ -68,9 +68,9 @@ class HomeController extends Controller
         $lang = $request->lang;
         $user = auth()->user();
         if ($lang == 'ar') {
-            $data['slider_ads'] = Ad::select('id', 'image', 'title_ar as title', 'desc_ar as content')->get();
+            $data['slider_ads'] = Ad::select('id', 'image','type', 'title_ar as title', 'desc_ar as content' , 'content as target')->get();
         } else if ($lang == 'en') {
-            $data['slider_ads'] = Ad::select('id', 'image', 'title_en as title', 'desc_en as content')->get();
+            $data['slider_ads'] = Ad::select('id', 'image' ,'type', 'title_en as title', 'desc_en as content' , 'content as target')->get();
         }
         $data['famous_halls'] = Hole::select('id', 'cover', 'logo', 'name', 'started_price', 'rate')
             ->where('famous', '1')

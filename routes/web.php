@@ -79,7 +79,7 @@ Route::group(['middleware' => 'language', 'prefix' => "admin-panel", 'namespace'
     // Ads Route
     Route::group(["prefix" => "ads"], function ($router) {
         Route::get('add', 'Ads\AdController@AddGet');
-        Route::post('add', 'Ads\AdController@AddPost');
+        Route::post('add', 'Ads\AdController@AddPost')->name('ad.create');
         Route::get('show', 'Ads\AdController@show')->name('ads.index');
         Route::get('edit/{id}', 'Ads\AdController@EditGet');
         Route::post('edit/{id}', 'Ads\AdController@EditPost');

@@ -52,4 +52,22 @@ class Coach extends Authenticatable implements JWTSubject
     public function Rates() {
         return $this->hasMany('App\Rate', 'order_id')->where('type','coach')->where('admin_approval',1);
     }
+
+    protected $appends = ['coachname','about'];
+    public function getCoachnameAttribute()
+    {
+        if ($locale = \app()->getLocale() == "ar") {
+            return $this->name ;
+        } else {
+            return $this->name_en;
+        }
+    }
+    public function getAboutAttribute()
+    {
+        if ($locale = \app()->getLocale() == "ar") {
+            return $this->about_coach ;
+        } else {
+            return $this->about_coach_en;
+        }
+    }
 }

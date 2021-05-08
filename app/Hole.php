@@ -33,11 +33,11 @@ class Hole extends Authenticatable
         return $this->hasMany('App\Rate', 'order_id')->where('type','hall')->where('admin_approval',1);
     }
 
-    protected $appends = ['name','about'];
-    public function getNameAttribute()
+    protected $appends = ['hallname','about'];
+    public function getHallnameAttribute()
     {
         if ($locale = \app()->getLocale() == "ar") {
-            return $this->name_ar ;
+            return $this->name ;
         } else {
             return $this->name_en;
         }

@@ -25,4 +25,12 @@ class Ad extends Model
             return $this->desc_en;
         }
     }
+
+
+    public function Coach() {
+        return $this->belongsTo('App\Coach', 'content');
+    }
+    public function Hall() {
+        return $this->belongsTo('App\Hole', 'content');
+    }
 }
