@@ -29,6 +29,7 @@ class AdController extends AdminController{
         $ad->title_en = $request->title_en;
         $ad->desc_ar = $request->desc_ar;
         $ad->desc_en = $request->desc_en;
+        $ad->type = $request->type;
         $ad->save();
         session()->flash('success', trans('messages.added_s'));
         return redirect('admin-panel/ads/show');

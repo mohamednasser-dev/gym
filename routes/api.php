@@ -80,6 +80,7 @@ use Illuminate\Http\Request;
     // offers
     Route::get('/offers/{lang}/{v}' , 'ProductController@getoffers')->middleware('checkguest');
 
+
     // feature offers
     Route::get('/feature-offers/{lang}/{v}' , 'ProductController@getFeatureOffers')->middleware('checkguest');
 
@@ -215,7 +216,7 @@ use Illuminate\Http\Request;
     Route::get('/exchange/points/{id}/{lang}/{v}' , 'HomeController@exchange_points');
 
     //visitor
-    Route::post('/visitor/create/{lang}/{v}' , 'VisitorController@create')->middleware('checkguest');
+    Route::post('/visitors/create/{lang}/{v}' , 'VisitorController@create')->middleware('checkguest');
 
    //re new my ad   (re publish)
     Route::get('ad/republish_ad/{product_id}/{plan_id}/{lang}/{v}' , 'ProductController@republish_ad');

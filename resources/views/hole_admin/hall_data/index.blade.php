@@ -59,12 +59,22 @@
                     </div>
                 </div>
                 <div class="custom-file-container" data-upload-id="myFirstImage">
-                    <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) <a
-                            href="javascript:void(0)" class="custom-file-container__image-clear"
-                            title="Clear Image">x</a></label>
+                    <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }})</label>
                     <label class="custom-file-container__custom-file">
                         <input type="file" name="cover"
                                class="custom-file-container__custom-file__custom-file-input" accept="image/*">
+                        <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
+                        <span class="custom-file-container__custom-file__custom-file-control"></span>
+                    </label>
+                    <div class="custom-file-container__image-preview"></div>
+                </div>
+                <h4>{{ __('messages.story') }}</h4>
+
+                <div class="custom-file-container" data-upload-id="myFirstImage">
+                    <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) </label>
+                    <label class="custom-file-container__custom-file">
+                        <input type="file" name="story"
+                               class="custom-file-container__custom-file__custom-file-input" accept="video/*">
                         <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
                         <span class="custom-file-container__custom-file__custom-file-control"></span>
                     </label>

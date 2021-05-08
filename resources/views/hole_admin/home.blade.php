@@ -5,7 +5,7 @@
 @section('content')
     <div class="row" >
         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-            <a href="/admin-panel/users/show" >
+            <a href="{{route('branches.index')}}" >
                 <div class="widget widget-card-four">
 
                     <div class="widget-content">
@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-            <a href="{{ route('products.index') }}" >
+            <a href="{{route('booking.index')}}" >
                 <div class="widget widget-card-four">
                     <div class="widget-content">
                         <div class="w-content">
@@ -52,7 +52,7 @@
             </a>
         </div>
         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-            <a href="/admin-panel/contact_us" >
+            <a href="{{route('subscribers','start')}}" >
                 <div class="widget widget-card-four">
                     <div class="widget-content">
                         <div class="w-content">
@@ -75,7 +75,7 @@
             </a>
         </div>
         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-            <a href="{{ route('plans.index') }}" >
+            <a href="{{route('hall_rates.index')}}" >
                 <div class="widget widget-card-four">
                     <div class="widget-content">
                         <div class="w-content">

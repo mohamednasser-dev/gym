@@ -76,9 +76,29 @@
                 <label for="exampleFormControlTextarea1">{{ __('messages.desc_en') }}</label>
                 <textarea class="form-control" name="desc_en" id="exampleFormControlTextarea1" rows="3"></textarea>
             </div>
-<div class="form-group mb-4">
-                <label for="exampleFormControlTextarea1">{{ __('messages.desc_en') }}</label>
-                <textarea class="form-control" name="desc_en" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <div class="form-group">
+                <label for="sel1">{{ __('messages.ad_type') }}</label>
+                <select id="ad_type" name="type" class="form-control">
+                    <option selected>{{ __('messages.select') }}</option>
+                    <option value="link">{{ __('messages.outside_the_app') }}</option>
+                    <option value="hall">{{ __('messages.coach') }}</option>
+                    <option value="coach">{{ __('messages.coach') }}</option>
+                    <option value="seller">{{ __('messages.seller') }}</option>
+                </select>
+            </div>
+            <div style="display: none" class="form-group mb-4 outside">
+                <label for="link">{{ __('messages.link') }}</label>
+                <input required type="text" name="content" class="form-control" id="link" placeholder="{{ __('messages.link') }}" value="" >
+            </div>
+
+            <div style="display: none" class="form-group">
+                <label for="sel1">{{ __('messages.halls') }}</label>
+                <select id="hall_cmb" name="hall_id" class="form-control">
+                    <option selected>{{ __('messages.select') }}</option>
+                    @foreach($halls as $row)
+                        <option value="{{$row->id}}">{{ $row->title }}</option>
+                    @endforeach
+                </select>
             </div>
             <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
         </form>

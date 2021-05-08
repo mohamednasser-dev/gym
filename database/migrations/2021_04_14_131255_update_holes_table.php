@@ -16,6 +16,7 @@ class UpdateHolesTable extends Migration
         Schema::table('holes', function (Blueprint $table) {
             $table->string('name_en');
             $table->string('about_hole_en')->nullable();
+            $table->string('story')->nullable();
         });
     }
 

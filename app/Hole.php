@@ -26,9 +26,28 @@ class Hole extends Authenticatable
         'about_hole_en',
         'rate',
         'sort',
+        'story',
     ];
 
     public function Rates() {
         return $this->hasMany('App\Rate', 'order_id')->where('type','hall')->where('admin_approval',1);
+    }
+
+    protected $appends = ['name','about'];
+    public function getNameAttribute()
+    {
+        if ($locale = \app()->getLocale() == "ar") {
+            return $this->name_ar ;
+        } else {
+            return $this->name_en;
+        }
+    }
+    public function getAboutAttribute()
+    {
+        if ($locale = \app()->getLocale() == "ar") {
+            return $this->about_hole ;
+        } else {
+            return $this->about_hole_en;
+        }
     }
 }

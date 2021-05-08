@@ -22,7 +22,7 @@ class HomeController extends Controller{
         $count_bookings = Hole_booking::where('hole_id',$id)->where('deleted','0')->get()->count();
 
         $booking_ids = Hole_booking::where('hole_id',$id)->select('id')->get()->toArray();
-        $count_Reservations = Reservation::whereIn('booking_id',$booking_ids)->where('status','start')->where('type','hall')->get()->count();
+        $count_Reservations = Reservation::whereIn('booking_id',$booking_ids)->where('deleted','0')->where('type','hall')->get()->count();
         $count_rates = Rate::where('order_id',$id)->where('type','hall')->where('admin_approval',1)->get()->count();
         return view('hole_admin.home',compact('count_branchs','count_bookings','count_Reservations','count_rates'));
     }
@@ -51,6 +51,7 @@ class HomeController extends Controller{
                 'email' => 'required',
                 'phone' => 'required|numeric',
                 'about_hole' => '',
+                'story' => '',
             ]);
 
         if($request->password){
@@ -74,7 +75,17 @@ class HomeController extends Controller{
             $image_new_cover = $image_id.'.'.$image_format;
             $data['cover'] = $image_new_cover ;
         }
-        $hole = Hole::where('id',$id)->update($data);
+        if($request->story != null){
+            $story = $request->file('story')->getRealPath();
+//            $story = $request->story;
+            Cloudder::upload("data:video/mp4;base64,".$story, null);
+            $imagereturned = Cloudder::getResult();
+            $image_id2 = $imagereturned['public_id'];
+            $image_format2 = $imagereturned['format'];
+            $image_new_story = $image_id2.'.'.$image_format2;
+            $data['story'] = $image_new_story ;
+        }
+        Hole::where('id',$id)->update($data);
         session()->flash('success', trans('messages.updated_s'));
         return back();
     }

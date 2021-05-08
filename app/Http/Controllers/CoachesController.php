@@ -326,17 +326,26 @@ class CoachesController extends Controller
                 unset($input['image']);
             }
             if($request->story != null){
-                $uniqueid = uniqid();
-                $original_name = $request->file('story')->getClientOriginalName();
-                $size = $request->file('story')->getSize();
-                $file = $request->file('story');
-                $extension = $request->file('story')->getClientOriginalExtension();
-                $filename = Carbon::now()->format('Ymd') . '_' . $uniqueid . '.' . $extension;
-                $audiopath = url('/storage/uploads/stories/' . $filename);
-                $path = $file->storeAs('public/uploads/stories/', $filename);
-                $file->move(public_path('uploads/stories'), $filename);
-                $all_audios = $audiopath;
-                $input['story'] = $filename;
+//                $uniqueid = uniqid();
+//                $original_name = $request->file('story')->getClientOriginalName();
+//                $size = $request->file('story')->getSize();
+//                $file = $request->file('story');
+//                $extension = $request->file('story')->getClientOriginalExtension();
+//                $filename = Carbon::now()->format('Ymd') . '_' . $uniqueid . '.' . $extension;
+//                $audiopath = url('/storage/uploads/stories/' . $filename);
+//                $path = $file->storeAs('public/uploads/stories/', $filename);
+//                $file->move(public_path('uploads/stories'), $filename);
+//                $all_audios = $audiopath;.
+//                $input['story'] = $filename;
+                ini_set('max_execution_time', 300);
+                $story = $request->story;
+//                "data:video/mp4;base64,".
+                Cloudder::upload("data:video/mp4;base64,".$story, null);
+                $imagereturned = Cloudder::getResult();
+                $story_id = $imagereturned['public_id'];
+                $story_format = $imagereturned['format'];
+                $story_new_name = $story_id.'.'.$story_format;
+                $input['story'] = $story_new_name ;
             }
             $coach = Coach::where('id',$user->id)->update($input);
             $response = APIHelpers::createApiResponse(false, 200, 'updated', 'تم التعديل بنجاح', (object)[] , $request->lang);
