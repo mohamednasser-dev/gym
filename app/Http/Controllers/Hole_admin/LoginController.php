@@ -17,6 +17,8 @@ class LoginController extends Controller{
             return redirect('/admin-panel');
         }else if (\Auth::guard('hole')->check()) {
             return redirect(route('hall.home'));
+        }else if (\Auth::guard('')->check()) {
+            return redirect(route('shop.home'));
         } else {
             return view('hole_admin.login');
         }
@@ -37,7 +39,10 @@ class LoginController extends Controller{
         }else if (Auth::guard('admin')->attempt($credentials)) {
             $user = Auth::guard('admin')->user();
             return redirect('/admin-panel');
-        } else {
+        } else if (Auth::guard('shop')->attempt($credentials)) {
+            $user = Auth::guard('shop')->user();
+            return redirect(route('shop.home'));
+        }else {
             session()->flash('success', trans('messages.email_pass_invalied'));
             return view('hole_admin.login');
         }

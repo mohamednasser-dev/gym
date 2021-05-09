@@ -53,6 +53,11 @@ return [
             'provider' => 'coaches',
             'hash' => false,
         ],
+        'shop' => [
+            'driver' => 'session',
+            'provider' => 'shops',
+            'hash' => false,
+        ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
@@ -94,6 +99,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Coach::class,
         ],
+        'shops' => [
+            'driver' => 'eloquent',
+            'model' => App\Shop::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -130,6 +139,12 @@ return [
         ],
         'coaches' => [
             'provider' => 'coaches',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'shops' => [
+            'provider' => 'shops',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
