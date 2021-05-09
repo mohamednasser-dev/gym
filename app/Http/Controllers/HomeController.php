@@ -11,6 +11,7 @@ use App\Points_package;
 use App\Product_view;
 use App\Reservation;
 use App\Setting;
+use App\Shop;
 use App\User;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
@@ -67,57 +68,100 @@ class HomeController extends Controller
     {
         $lang = $request->lang;
         $user = auth()->user();
-        if ($lang == 'ar') {
-            $data['slider_ads'] = Ad::select('id', 'image','type', 'title_ar as title', 'desc_ar as content' , 'content as target')->get();
-        } else if ($lang == 'en') {
-            $data['slider_ads'] = Ad::select('id', 'image' ,'type', 'title_en as title', 'desc_en as content' , 'content as target')->get();
-        }
-        $data['famous_halls'] = Hole::select('id', 'cover', 'logo', 'name', 'started_price', 'rate')
-            ->where('famous', '1')
-            ->where('status', 'active')
-            ->where('deleted', '0')
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->map(function ($halls) use ($user) {
-                if ($user == null) {
-                    $halls->favorite = false;
-                } else {
-                    $fav = Favorite::where('user_id', $user->id)->where('product_id', $halls->id)->where('type', 'hall')->first();
-                    if ($fav == null) {
+
+        if ($lang == 'ar'){
+            $data['slider_ads'] = Ad::select('id', 'image', 'type', 'title_ar as title', 'desc_ar as content', 'content as target')->get();
+            $data['famous_halls'] = Hole::select('id', 'cover', 'logo', 'name as name', 'started_price', 'rate')
+                ->where('famous', '1')
+                ->where('status', 'active')
+                ->where('deleted', '0')
+                ->orderBy('sort', 'asc')
+                ->get()
+                ->map(function ($halls) use ($user) {
+                    if ($user == null) {
                         $halls->favorite = false;
                     } else {
-                        $halls->favorite = true;
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $halls->id)->where('type', 'hall')->first();
+                        if ($fav == null) {
+                            $halls->favorite = false;
+                        } else {
+                            $halls->favorite = true;
+                        }
                     }
-                }
-                return $halls;
-            });
-        $data['famous_coaches'] = Coach::select('id', 'image', 'available', 'name')
-            ->where('famous', '1')
-            ->where('is_confirm', 'accepted')
-            ->where('status', 'active')
-            ->where('deleted', '0')
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->map(function ($coaches) use ($user) {
-                if ($user == null) {
-                    $coaches->favorite = false;
-                } else {
-                    $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type', 'coach')->first();
-                    if ($fav == null) {
+                    return $halls;
+                });
+            $data['famous_coaches'] = Coach::select('id', 'image', 'available', 'name as name')
+                ->where('famous', '1')
+                ->where('is_confirm', 'accepted')
+                ->where('status', 'active')
+                ->where('deleted', '0')
+                ->orderBy('sort', 'asc')
+                ->get()
+                ->map(function ($coaches) use ($user) {
+                    if ($user == null) {
                         $coaches->favorite = false;
                     } else {
-                        $coaches->favorite = true;
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type', 'coach')->first();
+                        if ($fav == null) {
+                            $coaches->favorite = false;
+                        } else {
+                            $coaches->favorite = true;
+                        }
                     }
-                }
-                return $coaches;
-            });
-        $data['famous_store'] = Coach::select('id', 'image', 'name')
-            ->where('famous', '1')
-            ->where('is_confirm', 'accepted')
-            ->where('status', 'active')
-            ->where('deleted', '0')
-            ->orderBy('sort', 'asc')
-            ->get();
+                    return $coaches;
+                });
+            $data['famous_store'] = Shop::select('id', 'logo as image', 'name_ar as title')
+                ->where('famous', '1')
+                ->where('status', 1)
+                ->orderBy('sort', 'asc')
+                ->get();
+        }else{
+            $data['slider_ads'] = Ad::select('id', 'image', 'type', 'title_en as title', 'desc_en as content', 'content as target')->get();
+            $data['famous_halls'] = Hole::select('id', 'cover', 'logo', 'name_en as name', 'started_price', 'rate')
+                ->where('famous', '1')
+                ->where('status', 'active')
+                ->where('deleted', '0')
+                ->orderBy('sort', 'asc')
+                ->get()
+                ->map(function ($halls) use ($user) {
+                    if ($user == null) {
+                        $halls->favorite = false;
+                    } else {
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $halls->id)->where('type', 'hall')->first();
+                        if ($fav == null) {
+                            $halls->favorite = false;
+                        } else {
+                            $halls->favorite = true;
+                        }
+                    }
+                    return $halls;
+                });
+            $data['famous_coaches'] = Coach::select('id', 'image', 'available', 'name_en as name')
+                ->where('famous', '1')
+                ->where('is_confirm', 'accepted')
+                ->where('status', 'active')
+                ->where('deleted', '0')
+                ->orderBy('sort', 'asc')
+                ->get()
+                ->map(function ($coaches) use ($user) {
+                    if ($user == null) {
+                        $coaches->favorite = false;
+                    } else {
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type', 'coach')->first();
+                        if ($fav == null) {
+                            $coaches->favorite = false;
+                        } else {
+                            $coaches->favorite = true;
+                        }
+                    }
+                    return $coaches;
+                });
+            $data['famous_store'] = Shop::select('id', 'logo as image', 'name_en as title')
+                ->where('famous', '1')
+                ->where('status', 1)
+                ->orderBy('sort', 'asc')
+                ->get();
+        }
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
         return response()->json($response, 200);
     }

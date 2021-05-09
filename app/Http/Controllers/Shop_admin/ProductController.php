@@ -1,26 +1,24 @@
 <?php
-namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Admin\AdminController;
-use Illuminate\Http\Request;
+namespace App\Http\Controllers\Shop_admin;
+
+use App\Http\Controllers\Controller;
 use JD\Cloudder\Facades\Cloudder;
-use App\Product;
-use App\Category;
-use App\Option;
-use App\Brand;
-use App\SubCategory;
+use Illuminate\Http\Request;
+use App\ProductMultiOption;
+use App\ProductProperty;
 use App\ProductImage;
-use App\ProductOption;
+use App\ControlOffer;
+use App\SubCategory;
 use App\HomeSection;
 use App\HomeElement;
-use App\OrderItem;
-use App\ControlOffer;
-use App\ProductProperty;
-use App\ProductMultiOption;
 use App\OptionValue;
-use App\Shop;
 use App\ProductType;
+use App\Category;
+use App\Product;
+use App\Brand;
+use App\Shop;
 
-class ProductController extends AdminController{
+class ProductController extends Controller{
     // show products
     public function show(Request $request) {
         $data['categories'] = Category::where('deleted', 0)->orderBy('id', 'desc')->get();
@@ -36,7 +34,7 @@ class ProductController extends AdminController{
 
 
         $data['encoded_products'] = json_encode($data['products']);
-        return view('admin.products', ['data' => $data]);
+        return view('shop_admin.products.index', ['data' => $data]);
     }
 
     // fetch category brands
@@ -86,7 +84,7 @@ class ProductController extends AdminController{
 
 
 
-        return view('admin.product_edit', ['data' => $data]);
+        return view('shop_admin.products.edit', ['data' => $data]);
     }
 
     // edit post
@@ -308,7 +306,7 @@ class ProductController extends AdminController{
     public function details(Product $product) {
         $data['product'] = $product;
 
-        return view('admin.product_details', ['data' => $data]);
+        return view('shop_admin.products.details', ['data' => $data]);
     }
 
     // delete
@@ -356,9 +354,9 @@ class ProductController extends AdminController{
         if (isset($request->name)) {
             $data['products'] = Product::with('images')->where('title_en', 'like', '%' . $request->name . '%')
                 ->orWhere('title_ar', 'like', '%' . $request->name . '%')->get();
-            return view('admin.searched_products', ['data' => $data]);
+            return view('shop_admin.products.searched_products', ['data' => $data]);
         }else {
-            return view('admin.product_search', ['data' => $data]);
+            return view('shop_admin.products.product_search', ['data' => $data]);
         }
     }
 
@@ -398,7 +396,7 @@ class ProductController extends AdminController{
             $data['cat'] = Category::findOrFail($request->cat);
         }
 
-        return view('admin.product_form', ['data' => $data]);
+        return view('shop_admin.products.create', ['data' => $data]);
     }
 
     // add post
@@ -562,7 +560,7 @@ class ProductController extends AdminController{
         $data['products'] = Product::with('images')->where('deleted' , 0)->where('remaining_quantity' , '<' , 10)->where('category_id', $request->cat)->get();
         $data['cat'] = $request->cat;
 
-        return view('admin.searched_products', ['data' => $data]);
+        return view('shop_admin.products.searched_products', ['data' => $data]);
     }
 
     // fetch sub categories by category
