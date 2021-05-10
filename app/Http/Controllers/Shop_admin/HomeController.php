@@ -23,7 +23,8 @@ class HomeController extends Controller{
     // get profile
     public function profile(){
         $admin = Auth::guard('shop')->user();
-        $data['name'] = $admin->name;
+        $data['name_ar'] = $admin->name_ar;
+        $data['name_en'] = $admin->name_en;
         $data['email'] = $admin->email;
         return view('shop_admin.profile' , ['data' => $data]);
     }
@@ -37,7 +38,8 @@ class HomeController extends Controller{
         }
 
         $current_manager = Shop::find($current_admin_id);
-        $current_manager->name = $request->name;
+        $current_manager->name_ar = $request->name_ar;
+        $current_manager->name_en = $request->name_en;
         $current_manager->email = $request->email;
         if($request->password){
             $current_manager->password = Hash::make($request->password);

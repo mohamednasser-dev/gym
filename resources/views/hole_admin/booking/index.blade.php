@@ -1,7 +1,5 @@
 @extends('hole_admin.app')
-
 @section('title' , __('messages.booking'))
-
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -110,11 +108,15 @@
                                 </td>
                                 <td class="text-center blue-color">
                                     @if($row->common == 1)
-                                        <a href="{{route('booking.common',$row->id)}}" class="btn btn-warning  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('booking.common',$row->id)}}"
+                                           class="btn btn-warning  mb-2 mr-2 rounded-circle" title=""
+                                           data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-star"></i>
                                         </a>
                                     @else
-                                        <a href="{{route('booking.common',$row->id)}}" class="btn btn-dark  mb-2 mr-2 rounded-circle" title="" data-original-title="Tooltip using BUTTON tag">
+                                        <a href="{{route('booking.common',$row->id)}}"
+                                           class="btn btn-dark  mb-2 mr-2 rounded-circle" title=""
+                                           data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-star"></i>
                                         </a>
                                     @endif
@@ -125,7 +127,8 @@
                                     </a>
                                 </td>
                                 <td class="text-center blue-color">
-                                    <a onclick="return confirm('{{ __('messages.delete_confirmation') }}');" href="{{route('booking.destroy',$row->id)}}">
+                                    <a onclick="return confirm('{{ __('messages.delete_confirmation') }}');"
+                                       href="{{route('booking.destroy',$row->id)}}">
                                         <i class="far fa-trash-alt"></i>
                                     </a>
                                 </td>
@@ -138,8 +141,7 @@
             </div>
         </div>
     </div>
-{{--    model--}}
-
+    {{--    model--}}
     <div id="zoomup_group_Modal" class="modal animated zoomInUp custo-zoomInUp" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -161,11 +163,11 @@
                     <div class="modal-body">
                         <div class="form-group mb-4">
                             <label for="plan_price">{{ __('messages.advance_name_ar') }}</label>
-                            <input required type="text"  name="name_ar" class="form-control">
+                            <input required type="text" name="name_ar" class="form-control">
                         </div>
                         <div class="form-group mb-4">
                             <label for="plan_price">{{ __('messages.advance_name_en') }}</label>
-                            <input required type="text"  name="name_en" class="form-control">
+                            <input required type="text" name="name_en" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">

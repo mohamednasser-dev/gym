@@ -1,7 +1,5 @@
 @extends('admin.app')
-
 @section('title' , __('messages.sub_category_fourth'))
-
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -11,9 +9,9 @@
                         <h4>{{ __('messages.sub_category_fifth') }}</h4>
                     </div>
                     <div class="col-md-6 pl-0 col-sm-6 col-12 text-right">
-                     <a href="{{route('sub_five_cat_ads.create_all',$cat_id)}}" class="btn btn-success mb-2"  >
-                         {{ __('messages.add_ad_to_all') }}
-                     </a>
+                        <a href="{{route('sub_five_cat_ads.create_all',$cat_id)}}" class="btn btn-success mb-2">
+                            {{ __('messages.add_ad_to_all') }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -31,12 +29,12 @@
                         <tbody>
                         <?php $i = 1; ?>
                         @foreach ($data as $row)
-                            <tr >
+                            <tr>
                                 <td class="text-center"><?=$i;?></td>
-                                <td class="text-center"><img src="{{image_cloudinary_url()}}{{ $row->image }}"  /></td>
+                                <td class="text-center"><img src="{{image_cloudinary_url()}}{{ $row->image }}"/></td>
                                 <td class="text-center blue-color">{{ app()->getLocale() == 'en' ? $row->title_en : $row->title_ar }}</td>
                                 <td class="text-center blue-color">
-                                    <a href="{{ route('sub_five_cat_ads.show', $row->id) }}" >
+                                    <a href="{{ route('sub_five_cat_ads.show', $row->id) }}">
                                         <i class="far fa-eye"></i>
                                     </a>
                                 </td>
@@ -48,4 +46,5 @@
                 </div>
             </div>
         </div>
+    </div>
 @endsection

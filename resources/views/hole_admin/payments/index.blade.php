@@ -3,14 +3,14 @@
 @push('scripts')
     <script>
         var language = "{{ Config::get('app.locale') }}"
-        $("#area_select").on("change", function() {
+        $("#area_select").on("change", function () {
             $("#areaForm").submit()
         })
-        $("#toDate").on("change", function() {
+        $("#toDate").on("change", function () {
             console.log("test")
             $("#dateForm").submit()
         })
-        $("#payment_select").on("change", function() {
+        $("#payment_select").on("change", function () {
             $("#paymentForm").submit()
         })
     </script>
@@ -19,26 +19,32 @@
             sumTotal = "{{ $data->sum('price') }}",
             totalString = "{{ __('messages.total_with_delivery') }}",
             dinar = "{{ __('messages.dinar') }}"
-        var dTbls = $('#order-tbl').DataTable( {
+        var dTbls = $('#order-tbl').DataTable({
             dom: 'Blfrtip',
             buttons: {
                 buttons: [
-                    { extend: 'excel', className: 'btn', footer: true, exportOptions: {
+                    {
+                        extend: 'excel', className: 'btn', footer: true, exportOptions: {
                             columns: ':visible',
                             rows: ':visible'
-                        } },
-                    { extend: 'print', className: 'btn', footer: true,
+                        }
+                    },
+                    {
+                        extend: 'print', className: 'btn', footer: true,
                         exportOptions: {
                             columns: ':visible',
                             rows: ':visible'
-                        },customize: function(win) {
+                        }, customize: function (win) {
                             $(win.document.body).prepend(`<br /><h4 style="border-bottom: 1px solid; padding : 10px">${priceString} : ${sumPrice} ${dinar} | ${deliveryString} : ${sumDelivery} ${dinar} | ${totalString} : ${sumTotal} ${dinar}</h4>`); //before the table
                         }
                     }
                 ]
             },
             "oLanguage": {
-                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                "oPaginate": {
+                    "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>',
+                    "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>'
+                },
                 "sInfo": "Showing page _PAGE_ of _PAGES_",
                 "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
                 "sSearchPlaceholder": "Search...",
@@ -47,23 +53,29 @@
             "stripeClasses": [],
             "lengthMenu": [50, 100, 1000, 10000, 100000, 1000000, 2000000, 3000000, 4000000, 5000000],
             "pageLength": 50
-        } );
+        });
     </script>
     <script>
         var price = dTbls.column(6).data(),
             delivery = dTbls.column(7).data(),
             total = dTbls.column(8).data(),
             dinar = "{{ __('messages.dinar') }}"
-        var totalPrice = parseFloat(price.reduce(function (a, b) { return parseFloat(a) + parseFloat(b); }, 0)).toFixed(2),
-            totalDelivery = parseFloat(delivery.reduce(function (a, b) { return parseFloat(a) + parseFloat(b); }, 0)).toFixed(2),
-            allTotal = parseFloat(total.reduce(function (a, b) { return parseFloat(a) + parseFloat(b); }, 0)).toFixed(2)
+        var totalPrice = parseFloat(price.reduce(function (a, b) {
+                return parseFloat(a) + parseFloat(b);
+            }, 0)).toFixed(2),
+            totalDelivery = parseFloat(delivery.reduce(function (a, b) {
+                return parseFloat(a) + parseFloat(b);
+            }, 0)).toFixed(2),
+            allTotal = parseFloat(total.reduce(function (a, b) {
+                return parseFloat(a) + parseFloat(b);
+            }, 0)).toFixed(2)
 
         $("#order-tbl tfoot").find('th').eq(6).text(`${totalPrice} ${dinar}`);
         $("#order-tbl tfoot").find('th').eq(7).text(`${totalDelivery} ${dinar}`);
         $("#order-tbl tfoot").find('th').eq(8).text(`${allTotal} ${dinar}`);
     </script>
     <script>
-        $("#payment_select").on("change", function() {
+        $("#payment_select").on("change", function () {
             $("#paymentForm").submit()
         })
     </script>
@@ -78,7 +90,7 @@
                         <h4>{{ __('messages.payments') }}</h4>
                     </div>
                 </div>
-                <div class="row">{{ __('messages.total_payments') }} &nbsp; <code>{{$data->sum('price')}}</code> </div>
+                <div class="row">{{ __('messages.total_payments') }} &nbsp; <code>{{$data->sum('price')}}</code></div>
             </div>
             <div class="widget-content widget-content-area">
                 <div class="form-group col-md-3">
@@ -115,7 +127,7 @@
                         <tbody>
                         <?php $i = 1; ?>
                         @foreach ($data as $row)
-                            <tr >
+                            <tr>
                                 <td class="text-center blue-color"><?=$i;?></td>
                                 <td class="text-center blue-color">{{ $row->User->name }}</td>
                                 <td class="text-center blue-color">{{ $row->price }}</td>
@@ -130,4 +142,5 @@
                 </div>
             </div>
         </div>
+    </div>
 @endsection

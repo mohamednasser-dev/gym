@@ -1,7 +1,5 @@
 @extends('hole.app')
-
 @section('title' , __('messages.branches'))
-
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -13,7 +11,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <a class="btn btn-info" href="{{route('branches.create_new',$id)}}"> {{ __('messages.add') }} </a>
+                        <a class="btn btn-info"
+                           href="{{route('branches.create_new',$id)}}"> {{ __('messages.add') }} </a>
                     </div>
                 </div>
             </div>
@@ -48,16 +47,19 @@
                                     </td>
                                 @endif
                                 @if(Auth::user()->delete_data)
-                                    <td class="text-center blue-color" ><a onclick="return confirm('{{ __('messages.delete_confirmation') }}');" href="/admin-panel/hall_branches/delete/{{ $row->id }}" ><i class="far fa-trash-alt"></i></a></td>
+                                    <td class="text-center blue-color"><a
+                                            onclick="return confirm('{{ __('messages.delete_confirmation') }}');"
+                                            href="/admin-panel/hall_branches/delete/{{ $row->id }}"><i
+                                                class="far fa-trash-alt"></i></a></td>
                                 @endif
                                 <?php $i++; ?>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                </a>
             </div>
         </div>
-    </div>
     </div>
 @endsection
 @section('scripts')

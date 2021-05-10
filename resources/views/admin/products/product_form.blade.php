@@ -26,7 +26,7 @@
                             @endforeach
                         </select>
                     </div>
-{{--                    // 0--}}
+                    {{--                    // 0--}}
                     <div class="form-group">
                         @php $cats = \App\Category::where('deleted',0)->get(); @endphp
                         <label for="sel1">{{ __('messages.category') }}</label>
@@ -41,7 +41,7 @@
                             @endforeach
                         </select>
                     </div>
-{{--                    // 1--}}
+                    {{--                    // 1--}}
                     <div class="form-group" id="sub_cat_cont" style="display:none;">
                         @php $sub_cats = \App\SubCategory::where('deleted',0)->get(); @endphp
                         <label for="sel1">{{ __('messages.sub_category_first') }}</label>
@@ -56,7 +56,7 @@
                             @endforeach
                         </select>
                     </div>
-{{--                    // 2--}}
+                    {{--                    // 2--}}
                     <div class="form-group" id="sub_two_cat_cont" style="display:none;">
                         @php $sub_two_cats = \App\SubTwoCategory::where('deleted',0)->get(); @endphp
                         <label for="sel1">{{ __('messages.sub_category_second') }}</label>
@@ -71,7 +71,7 @@
                             @endforeach
                         </select>
                     </div>
-{{--                    // 3--}}
+                    {{--                    // 3--}}
                     <div class="form-group" id="sub_three_cat_cont" style="display:none;">
                         @php $sub_three_cats = \App\SubThreeCategory::where('deleted',0)->get(); @endphp
                         <label for="sel1">{{ __('messages.sub_category_third') }}</label>
@@ -86,8 +86,8 @@
                             @endforeach
                         </select>
                     </div>
-{{--                    // 4--}}
-                    <div class="form-group" id="sub_four_cat_cont" style="display:none;" >
+                    {{--                    // 4--}}
+                    <div class="form-group" id="sub_four_cat_cont" style="display:none;">
                         @php $sub_four_cats = \App\SubFourCategory::where('deleted',0)->get(); @endphp
                         <label for="sel1">{{ __('messages.sub_category_fourth') }}</label>
                         <select class="form-control" name="sub_category_four_id" id="cmb_sub_four_cat">
@@ -101,7 +101,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group" id="sub_five_cat_cont" style="display:none;" >
+                    <div class="form-group" id="sub_five_cat_cont" style="display:none;">
                         @php $sub_five_cats = \App\SubFiveCategory::where('deleted','0')->get(); @endphp
                         <label for="sel1">{{ __('messages.sub_category_fifth') }}</label>
                         <select class="form-control" name="sub_category_five_id" id="cmb_sub_five_cat">
@@ -126,7 +126,7 @@
                                placeholder="{{ __('messages.product_price') }}" value="">
                     </div>
                     <h4>{{ __('messages.properties') }}</h4>
-                    <div class="form-group" id="brand_cont" style="display:none;" >
+                    <div class="form-group" id="brand_cont" style="display:none;">
                         @php $brands = \App\Category_option_value::where('deleted','0')->get(); @endphp
                         <label for="sel1">{{ __('messages.brand') }}</label>
                         <select required class="form-control" name="options[]" id="cmb_brand_id">
@@ -140,7 +140,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group" id="brand_types_cont" style="display:none;" >
+                    <div class="form-group" id="brand_types_cont" style="display:none;">
                         <label for="sel1">{{ __('messages.brand_type') }}</label>
                         <select required class="form-control" name="options[]" id="cmb_brand_types_id">
                             <option selected>{{ __('messages.choose_brand_type') }}</option>
@@ -153,7 +153,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group" id="model_year_cont" style="display:none;" >
+                    <div class="form-group" id="model_year_cont" style="display:none;">
                         <label for="sel1">{{ __('messages.model_year') }}</label>
                         <select required class="form-control" name="options[]" id="cmb_model_year_id">
                             <option selected>{{ __('messages.choose_model_year') }}</option>
@@ -166,7 +166,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group" id="counter_cont" style="display:none;" >
+                    <div class="form-group" id="counter_cont" style="display:none;">
                         <label for="sel1">{{ __('messages.counter') }}</label>
                         <select required class="form-control" name="options[]" id="cmb_counter_id">
                             <option selected>{{ __('messages.choose_counter') }}</option>
@@ -185,7 +185,7 @@
                                   class="form-control" id="description" rows="5"></textarea>
                     </div>
                     <h4>{{ __('messages.plan') }}</h4>
-                    <div class="form-group" id="plan_cont" style="display:none;" >
+                    <div class="form-group" id="plan_cont" style="display:none;">
                         @php $brands = \App\Plan::where('status','show')->get(); @endphp
                         <select required class="form-control" name="plan_id" id="cmb_plan_id">
                             <option selected>{{ __('messages.choose_plan') }}</option>
@@ -195,10 +195,13 @@
                         <label for="exampleFormControlFile1">{{ __('messages.main_image') }}</label>
 
                         <div class="custom-file-container" data-upload-id="mySecondImage">
-                            <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) <a href="javascript:void(0)" class="custom-file-container__image-clear" title="Clear Image">x</a></label>
-                            <label class="custom-file-container__custom-file" >
-                                <input type="file" required name="main_image" class="custom-file-container__custom-file__custom-file-input" accept="image/*">
-                                <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
+                            <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) <a
+                                    href="javascript:void(0)" class="custom-file-container__image-clear"
+                                    title="Clear Image">x</a></label>
+                            <label class="custom-file-container__custom-file">
+                                <input type="file" required name="main_image"
+                                       class="custom-file-container__custom-file__custom-file-input" accept="image/*">
+                                <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
                                 <span class="custom-file-container__custom-file__custom-file-control"></span>
                             </label>
                             <div class="custom-file-container__image-preview">
@@ -222,8 +225,9 @@
                     <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
                 </form>
             </div>
-
+        </div>
+    </div>
 @endsection
 @section('scripts')
-   <script src="/admin/assets/js/generate_categories.js"></script>
+    <script src="/admin/assets/js/generate_categories.js"></script>
 @endsection

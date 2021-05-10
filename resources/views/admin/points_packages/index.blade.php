@@ -2,7 +2,6 @@
 @section('title' , __('messages.points_packages'))
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
-
         <div class="statbox widget box box-shadow">
             <div class="widget-header">
                 <div class="row">
@@ -16,11 +15,13 @@
                         <div class="col-xl-7 mx-auto">
                             <div class="form-group">
                                 <h4>{{ __('messages.number_dolar') }}</h4>
-                                <input type="number" name="points" class="form-control" id="h-text1" aria-describedby="h-text1" value="{{settings()->points}}">
+                                <input type="number" name="points" class="form-control" id="h-text1"
+                                       aria-describedby="h-text1" value="{{settings()->points}}">
                             </div>
                             @if(Auth::user()->update_data)
                                 <div class="form-group">
-                                    <button type="submit" name="time" class="btn btn-success">{{ __('messages.edit') }}</button>
+                                    <button type="submit" name="time"
+                                            class="btn btn-success">{{ __('messages.edit') }}</button>
                                 </div>
                             @endif
                         </div>

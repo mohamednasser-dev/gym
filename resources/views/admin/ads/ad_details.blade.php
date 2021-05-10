@@ -1,7 +1,5 @@
 @extends('admin.app')
-
 @section('title' , __('messages.ad_details'))
-
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">

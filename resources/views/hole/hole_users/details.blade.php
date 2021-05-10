@@ -1,13 +1,9 @@
 @extends('hole.app')
-
 @section('title' , __('messages.hole_details'))
-
 @section('content')
-
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
             <div class="widget-header">
-
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
                         <h4>{{ __('messages.hole_details') }}</h4>
@@ -40,11 +36,11 @@
                     @php $time_works = \App\Hole_time_work::where('hole_id',$data->id)->get(); @endphp
                     <table class="table table-bordered mb-4">
                         <thead>
-                            <tr>
-                                <th class="text-center">{{ __('messages.type') }}</th>
-                                <th class="text-center">{{ __('messages.from') }}</th>
-                                <th class="text-center">{{ __('messages.to') }}</th>
-                            </tr>
+                        <tr>
+                            <th class="text-center">{{ __('messages.type') }}</th>
+                            <th class="text-center">{{ __('messages.from') }}</th>
+                            <th class="text-center">{{ __('messages.to') }}</th>
+                        </tr>
                         </thead>
                         <tbody>
                         @foreach($time_works as $row)
@@ -99,7 +95,7 @@
                 </div>
             </div>
         </div>
-
+    </div>
 @endsection
 
 

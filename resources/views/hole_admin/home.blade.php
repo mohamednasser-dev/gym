@@ -1,7 +1,5 @@
 @extends('hole_admin.app')
-
 @section('title' , 'Admin Panel Home')
-
 @section('content')
     <div class="row" >
         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
@@ -96,7 +94,6 @@
                 </div>
             </a>
         </div>
-
     </div>
 @endsection
 

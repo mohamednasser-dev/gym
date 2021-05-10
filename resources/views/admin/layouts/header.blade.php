@@ -28,8 +28,9 @@
         <ul class="navbar-item theme-brand flex-row  text-center">
             <li class="nav-item theme-logo">
                 <a href="/admin-panel">
-                    <img style="height: 50px;" src="{{image_cloudinary_url()}}<?=Auth::user()->custom['setting']['logo']?>"
-                        class="navbar-logo" alt="logo">
+                    <img style="height: 50px;"
+                         src="{{image_cloudinary_url()}}<?=Auth::user()->custom['setting']['logo']?>"
+                         class="navbar-logo" alt="logo">
                 </a>
             </li>
             <li class="nav-item theme-text">
@@ -51,9 +52,11 @@
                     @endif
                 </a>
                 <div class="dropdown-menu position-absolute" aria-labelledby="language-dropdown">
-                    <a class="dropdown-item d-flex" href="/setlocale/en"><img src="/admin/assets/img/ca.png" class="flag-width" alt="flag">
+                    <a class="dropdown-item d-flex" href="/setlocale/en"><img src="/admin/assets/img/ca.png"
+                                                                              class="flag-width" alt="flag">
                         <span class="align-self-center">&nbsp;{{ __('messages.english') }}</span></a>
-                    <a class="dropdown-item d-flex" href="/setlocale/ar"><img src="/admin/assets/img/ar.png" class="flag-width" alt="flag">
+                    <a class="dropdown-item d-flex" href="/setlocale/ar"><img src="/admin/assets/img/ar.png"
+                                                                              class="flag-width" alt="flag">
                         <span class="align-self-center">&nbsp;{{ __('messages.arabic') }}</span></a>
                 </div>
             </li>

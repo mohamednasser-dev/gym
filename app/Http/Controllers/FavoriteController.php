@@ -21,7 +21,7 @@ class FavoriteController extends Controller
         }
         $validator = Validator::make($request->all() , [
             'product_id' => 'required',
-            'type' => 'required|in:hall,coach',
+            'type' => 'required|in:hall,coach,shop',
         ]);
         if($validator->fails()) {
             $response = APIHelpers::createApiResponse(true , 406 ,   $validator->errors()->first(), $validator->errors()->first() , null, $request->lang );
@@ -69,6 +69,7 @@ class FavoriteController extends Controller
 
     public function getfavorites(Request $request){
         $user = auth()->user();
+        $lang = $request->lang ;
         if($user->active == 0){
             $response = APIHelpers::createApiResponse(true , 406 ,  'تم حظر حسابك', 'تم حظر حسابك' , null, $request->lang );
             return response()->json($response , 406);
@@ -83,7 +84,11 @@ class FavoriteController extends Controller
             foreach ($hall_favorites as $key => $row){
                 $halls[$key]['id'] = $row->id;
                 $halls[$key]['hall_id'] = $row->product_id;
-                $halls[$key]['title'] = $row->Hall->name;
+                if($lang == 'ar'){
+                    $halls[$key]['title'] = $row->Hall->name;
+                }else{
+                    $halls[$key]['title'] = $row->Hall->name_en;
+                }
                 $halls[$key]['image'] = $row->Hall->image;
                 $halls[$key]['logo'] = $row->Hall->logo;
                 $halls[$key]['rate'] = $row->Hall->rate ;
@@ -99,14 +104,38 @@ class FavoriteController extends Controller
             foreach ($coach_favorites as $key => $row){
                 $coaches[$key]['id'] = $row->id;
                 $coaches[$key]['product_id'] = $row->product_id;
-                $coaches[$key]['title'] = $row->Coach->name;
+                if($lang == 'ar'){
+                    $coaches[$key]['title'] = $row->Coach->name;
+                }else{
+                    $coaches[$key]['title'] = $row->Coach->name_en;
+                }
                 $coaches[$key]['image'] = $row->Coach->image;
                 $coaches[$key]['rate'] = $row->Coach->rate ;
                 $coaches[$key]['available'] = $row->Coach->available ;
                 $coaches[$key]['favorite'] = true;
             }
+
+            $shop_favorites = Favorite::select('id','product_id','user_id')
+                ->with('Shop')
+                ->where('type','shop')
+                ->where('user_id', $user->id)
+                ->orderBy('id','desc')
+                ->get();
+            $shops = [];
+            foreach ($shop_favorites as $key => $row){
+                $shops[$key]['id'] = $row->id;
+                $shops[$key]['product_id'] = $row->product_id;
+                if($lang == 'ar'){
+                    $shops[$key]['title'] = $row->Shop->name_ar;
+                }else{
+                    $shops[$key]['title'] = $row->Shop->name_en;
+                }
+                $shops[$key]['logo'] = $row->Shop->logo;
+                $shops[$key]['cover'] = $row->Shop->cover;
+                $shops[$key]['favorite'] = true;
+            }
             if( count($halls) > 0 ||  count($coaches) > 0 ) {
-                $response = APIHelpers::createApiResponse(false, 200, '', '', array('halls'=> $halls , 'coaches'=> $coaches), $request->lang);
+                $response = APIHelpers::createApiResponse(false, 200, '', '', array('halls'=> $halls , 'coaches'=> $coaches, 'shops'=> $shops), $request->lang);
             }else{
                 $response = APIHelpers::createApiResponse(false, 200, 'no item favorite to show', 'لا يوجد عناصر للعرض', null, $request->lang);
             }

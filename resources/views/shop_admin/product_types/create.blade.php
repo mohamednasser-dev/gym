@@ -1,7 +1,5 @@
 @extends('shop_admin.app')
-
 @section('title' , __('messages.add_new_product_type'))
-
 @section('content')
     <div class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -13,7 +11,6 @@
                 </div>
                 <form action="" method="post" enctype="multipart/form-data">
                     @csrf
-
                     <div class="form-group mb-4">
                         <label for="type_en">{{ __('messages.type_en') }}</label>
                         <input required type="text" name="type_en" class="form-control" id="type_en"

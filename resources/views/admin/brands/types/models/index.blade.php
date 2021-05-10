@@ -13,7 +13,8 @@
                 </div>
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <a class="btn btn-primary" href="{{route('models.create.new',$type_id)}}">{{ __('messages.add_new_model') }}</a>
+                        <a class="btn btn-primary"
+                           href="{{route('models.create.new',$type_id)}}">{{ __('messages.add_new_model') }}</a>
                     </div>
                 </div>
             </div>
@@ -28,21 +29,25 @@
                                 <th class="text-center">{{ __('messages.edit') }}</th>
                             @endif
                             @if(Auth::user()->delete_data)
-                                <th class="text-center" >{{ __('messages.delete') }}</th>
+                                <th class="text-center">{{ __('messages.delete') }}</th>
                             @endif
                         </tr>
                         </thead>
                         <tbody>
                         <?php $i = 1; ?>
                         @foreach ($models as $row)
-                            <tr >
+                            <tr>
                                 <td class="text-center"><?=$i;?></td>
                                 <td class="text-center">{{ $row->year }}</td>
                                 @if(Auth::user()->update_data)
-                                    <td class="text-center blue-color" ><a href="{{ route( 'models.edit', $row->id ) }}" ><i class="far fa-edit"></i></a></td>
+                                    <td class="text-center blue-color"><a href="{{ route( 'models.edit', $row->id ) }}"><i
+                                                class="far fa-edit"></i></a></td>
                                 @endif
                                 @if(Auth::user()->delete_data)
-                                    <td class="text-center blue-color" ><a onclick="return confirm('{{ __('messages.are_you_sure') }}');" href="{{ route('models.delete', $row->id) }}" ><i class="far fa-trash-alt"></i></a></td>
+                                    <td class="text-center blue-color"><a
+                                            onclick="return confirm('{{ __('messages.are_you_sure') }}');"
+                                            href="{{ route('models.delete', $row->id) }}"><i
+                                                class="far fa-trash-alt"></i></a></td>
                                 @endif
                                 <?php $i++; ?>
                             </tr>
@@ -52,19 +57,24 @@
                 </div>
             </div>
         </div>
+    </div>
 @endsection
 @section('scripts')
     <script type="text/javascript">
-        function update_status(el){
-            if(el.checked){
+        function update_status(el) {
+            if (el.checked) {
                 var status = 'show';
-            }else{
+            } else {
                 var status = 'hide';
             }
-            $.post('{{ route('plans.details.showed') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
-                if(data == 1){
+            $.post('{{ route('plans.details.showed') }}', {
+                _token: '{{ csrf_token() }}',
+                id: el.value,
+                status: status
+            }, function (data) {
+                if (data == 1) {
                     toastr.success("{{ __('messages.status_changed') }}");
-                }else{
+                } else {
                     toastr.error("{{trans('admin.status_not_changed')}}");
                 }
             });

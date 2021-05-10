@@ -4,7 +4,6 @@
 @else
     @section('title' , __('messages.rates'))
 @endif
-
 @section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -28,7 +27,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <h4> {{ __('messages.rate') }} : <code>{{ $hall_rate }}</code>  <span class="fa fa-star checked"></span> </h4>
+                        <h4> {{ __('messages.rate') }} : <code>{{ $hall_rate }}</code> <span
+                                class="fa fa-star checked"></span></h4>
                     </div>
                 </div>
             </div>
@@ -111,11 +111,15 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
-                                                <a class="dropdown-item" href="{{route('admin_hall_rate.change_status',['id'=>$row->id , 'type'=>'accept'])}}" style="color: limegreen; text-align: center;">
+                                                <a class="dropdown-item"
+                                                   href="{{route('admin_hall_rate.change_status',['id'=>$row->id , 'type'=>'accept'])}}"
+                                                   style="color: limegreen; text-align: center;">
                                                     {{ __('messages.accept') }}
                                                 </a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="{{route('admin_hall_rate.change_status',['id'=>$row->id , 'type'=>'reject'])}}" style="color: red; text-align: center;">
+                                                <a class="dropdown-item"
+                                                   href="{{route('admin_hall_rate.change_status',['id'=>$row->id , 'type'=>'reject'])}}"
+                                                   style="color: red; text-align: center;">
                                                     {{ __('messages.reject') }}
                                                 </a>
                                             </div>
@@ -136,7 +140,9 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
-                                                <a class="dropdown-item" href="{{route('admin_hall_rate.change_status',['id'=>$row->id , 'type'=>'reject'])}}" style="color: red; text-align: center;">
+                                                <a class="dropdown-item"
+                                                   href="{{route('admin_hall_rate.change_status',['id'=>$row->id , 'type'=>'reject'])}}"
+                                                   style="color: red; text-align: center;">
                                                     {{ __('messages.reject') }}
                                                 </a>
                                             </div>
@@ -157,7 +163,9 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
-                                                <a class="dropdown-item" href="{{route('admin_hall_rate.change_status',['id'=>$row->id , 'type'=>'accept'])}}" style="color: limegreen; text-align: center;">
+                                                <a class="dropdown-item"
+                                                   href="{{route('admin_hall_rate.change_status',['id'=>$row->id , 'type'=>'accept'])}}"
+                                                   style="color: limegreen; text-align: center;">
                                                     {{ __('messages.accept') }}
                                                 </a>
                                             </div>

@@ -1,11 +1,9 @@
 @extends('hole_admin.app')
-
 @if(request()->segment(3) == 'start')
     @section('title' , __('messages.subscribers_current'))
 @elseif(request()->segment(3) == 'ended')
     @section('title' , __('messages.subscribers_ended'))
 @endif
-
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -39,7 +37,9 @@
                         @foreach ($data as $row)
                             <tr>
                                 <td class="text-center">{{$row->id}}</td>
-                                <td class="text-center"><a href="{{route('subscription.user_data',$row->user_id)}}">{{ $row->User->name }}</a> </td>
+                                <td class="text-center"><a
+                                        href="{{route('subscription.user_data',$row->user_id)}}">{{ $row->User->name }}</a>
+                                </td>
                                 <td class="text-center"> @if(app()->getLocale() == 'ar') {{ $row->Booking->name_ar }} @else {{ $row->Booking->name_en }} @endif </td>
                                 <td class="text-center"> {{date('Y-m-d', strtotime($row->created_at))}}</td>
                                 <td class="text-center"> {{date('Y-m-d', strtotime($row->expire_date))}}</td>
@@ -58,7 +58,8 @@
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
                                             <br>
-                                            <table id="html5-extension" class="table table-hover non-hover" style="width: 300px;">
+                                            <table id="html5-extension" class="table table-hover non-hover"
+                                                   style="width: 300px;">
                                                 <tbody>
                                                 @php $options = \App\Reservation_option::where('reservation_id',$row->id)->get(); @endphp
                                                 @foreach($options as $reserve_data)
@@ -109,9 +110,9 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">
                                                 <a class="dropdown-item" href="{{route('subscription.end',$row->id)}}"
                                                    style="color: red; text-align: center;">{{ __('messages.end_subscription') }}</a>
-{{--                                                <div class="dropdown-divider"></div>--}}
-{{--                                                <a class="dropdown-item" href="javascript:void(0);" id="re_new_btn" data-reserve-id="{{$row->id}}" data-toggle="modal" data-target="#choose_booking"--}}
-{{--                                                   style="color: #2196f3; text-align: center;">{{ __('messages.resubscribe') }}</a>--}}
+                                                {{--                                                <div class="dropdown-divider"></div>--}}
+                                                {{--                                                <a class="dropdown-item" href="javascript:void(0);" id="re_new_btn" data-reserve-id="{{$row->id}}" data-toggle="modal" data-target="#choose_booking"--}}
+                                                {{--                                                   style="color: #2196f3; text-align: center;">{{ __('messages.resubscribe') }}</a>--}}
                                             </div>
                                         </div>
                                     @elseif($row->status == 'ended')
@@ -129,10 +130,10 @@
                                                     <polyline points="6 9 12 15 18 9"></polyline>
                                                 </svg>
                                             </button>
-{{--                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">--}}
-{{--                                                <a class="dropdown-item" href="javascript:void(0);" id="re_new_btn" data-reserve-id="{{$row->id}}" data-toggle="modal" data-target="#choose_booking"--}}
-{{--                                                   style="color: #2196f3; text-align: center;">{{ __('messages.resubscribe') }}</a>--}}
-{{--                                            </div>--}}
+                                            {{--                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5">--}}
+                                            {{--                                                <a class="dropdown-item" href="javascript:void(0);" id="re_new_btn" data-reserve-id="{{$row->id}}" data-toggle="modal" data-target="#choose_booking"--}}
+                                            {{--                                                   style="color: #2196f3; text-align: center;">{{ __('messages.resubscribe') }}</a>--}}
+                                            {{--                                            </div>--}}
                                         </div>
                                     @endif
                                 </td>
@@ -145,7 +146,6 @@
             </div>
         </div>
     </div>
-
     <div id="choose_booking" class="modal animated zoomInUp custo-zoomInUp" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -175,19 +175,30 @@
                                         <div class="t-item">
                                             <div class="t-company-name">
                                                 <div class="t-icon">
-                                                    <label class="new-control new-checkbox new-checkbox-rounded checkbox-info">
-                                                        <input type="radio"  name="booking_id" value="{{$row->id}}" class="new-control-input">
+                                                    <label
+                                                        class="new-control new-checkbox new-checkbox-rounded checkbox-info">
+                                                        <input type="radio" name="booking_id" value="{{$row->id}}"
+                                                               class="new-control-input">
                                                         <span class="new-control-indicator"></span> -
                                                     </label>
                                                 </div>
                                                 <div class="t-name">
-                                                    <h4> @if(app()->getLocale() == 'ar') {{$row->name_ar}} @else {{$row->name_en}} @endif  &nbsp; ( {{$row->months_num}} {{ __('messages.month') }} ) </h4>
+                                                    <h4> @if(app()->getLocale() == 'ar') {{$row->name_ar}} @else {{$row->name_en}} @endif
+                                                        &nbsp; ( {{$row->months_num}} {{ __('messages.month') }} ) </h4>
                                                     <p class="meta-date"> @if(app()->getLocale() == 'ar') {{$row->title_ar}} @else {{$row->title_en}} @endif </p>
                                                 </div>
                                             </div>
                                             <div class="t-rate rate-inc">
-                                                <p> <span> @if($row->is_discount == '1') {{ $row->discount_price }} @else {{ $row->price }} @endif </span>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                                <p>
+                                                    <span> @if($row->is_discount == '1') {{ $row->discount_price }} @else {{ $row->price }} @endif </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                         class="feather feather-dollar-sign">
+                                                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                        <path
+                                                            d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                                    </svg>
                                                 </p>
                                             </div>
                                         </div>
@@ -199,8 +210,10 @@
                             <label for="plan_price"> &nbsp; </label>
                             <div class="form-check pl-0">
                                 <div class="custom-control custom-checkbox checkbox-info">
-                                    <input type="checkbox" checked class="custom-control-input" name="add_money" value="add_money" id="add_money">
-                                    <label class="custom-control-label" for="add_money">{{ __('messages.add_money_to_income') }}</label>
+                                    <input type="checkbox" checked class="custom-control-input" name="add_money"
+                                           value="add_money" id="add_money">
+                                    <label class="custom-control-label"
+                                           for="add_money">{{ __('messages.add_money_to_income') }}</label>
                                 </div>
                             </div>
                         </div>

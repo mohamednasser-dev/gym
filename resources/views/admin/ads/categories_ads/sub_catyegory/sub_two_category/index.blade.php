@@ -11,9 +11,9 @@
                         <h4>{{ __('messages.sub_category_second') }}</h4>
                     </div>
                     <div class="col-md-6 pl-0 col-sm-6 col-12 text-right">
-                     <a href="{{route('sub_two_cat_ads.create_all',$cat_id)}}" class="btn btn-success mb-2"  >
-                         {{ __('messages.add_ad_to_all') }}
-                     </a>
+                        <a href="{{route('sub_two_cat_ads.create_all',$cat_id)}}" class="btn btn-success mb-2">
+                            {{ __('messages.add_ad_to_all') }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -32,15 +32,17 @@
                         <tbody>
                         <?php $i = 1; ?>
                         @foreach ($data as $row)
-                            <tr >
+                            <tr>
                                 <td class="text-center"><?=$i;?></td>
-                                <td class="text-center"><img src="{{image_cloudinary_url()}}{{ $row->image }}"  /></td>
+                                <td class="text-center"><img src="{{image_cloudinary_url()}}{{ $row->image }}"/></td>
                                 <td class="text-center blue-color">{{ app()->getLocale() == 'en' ? $row->title_en : $row->title_ar }}</td>
                                 <td class="text-center blue-color">
                                     <a href="{{route('sub_three_cat_ads.index',$row->id)}}">
                                         <div class="">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2"
+                                                 stroke-linecap="round"
                                                  stroke-linejoin="round" class="feather feather-layers">
                                                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                                                 <polyline points="2 17 12 22 22 17"></polyline>
@@ -50,7 +52,7 @@
                                     </a>
                                 </td>
                                 <td class="text-center blue-color">
-                                    <a href="{{ route('sub_two_cat_ads.show', $row->id) }}" >
+                                    <a href="{{ route('sub_two_cat_ads.show', $row->id) }}">
                                         <i class="far fa-eye"></i>
                                     </a>
                                 </td>
@@ -62,4 +64,5 @@
                 </div>
             </div>
         </div>
+    </div>
 @endsection

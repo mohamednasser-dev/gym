@@ -1,7 +1,5 @@
 @extends('hole_admin.app')
-
 @section('title' , __('messages.add'))
-
 @section('content')
     <?php
     $lat = '29.280331923084315';
@@ -43,32 +41,33 @@
                 <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
             </form>
         </div>
-        @endsection
-        @section('scripts')
-            <script>
-                function myMap() {
-                    var mapProp = {
-                        center: new google.maps.LatLng({{$lat}},{{$lng}}),
-                        zoom: 5,
-                    };
-                    var map = new google.maps.Map(document.getElementById("us1"), mapProp);
-                }
-            </script>
-            <script
-                src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDPN_XufKy-QTSCB68xFJlqtUjHQ8m6uUY&callback=myMap"></script>
-            <script src="{{url('/')}}/admin/assets/js/locationpicker.jquery.js"></script>
-            <script>
-                $('#us1').locationpicker({
-                    location: {
-                        latitude: {{$lat}},
-                        longitude: {{$lng}}
-                    },
-                    radius: 300,
-                    markerIcon: "{{url('/images/map-marker.png')}}",
-                    inputBinding: {
-                        latitudeInput: $('#lat'),
-                        longitudeInput: $('#lng')
-                    }
-                });
-            </script>
+    </div>
+@endsection
+@section('scripts')
+    <script>
+        function myMap() {
+            var mapProp = {
+                center: new google.maps.LatLng({{$lat}},{{$lng}}),
+                zoom: 5,
+            };
+            var map = new google.maps.Map(document.getElementById("us1"), mapProp);
+        }
+    </script>
+    <script
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDPN_XufKy-QTSCB68xFJlqtUjHQ8m6uUY&callback=myMap"></script>
+    <script src="{{url('/')}}/admin/assets/js/locationpicker.jquery.js"></script>
+    <script>
+        $('#us1').locationpicker({
+            location: {
+                latitude: {{$lat}},
+                longitude: {{$lng}}
+            },
+            radius: 300,
+            markerIcon: "{{url('/images/map-marker.png')}}",
+            inputBinding: {
+                latitudeInput: $('#lat'),
+                longitudeInput: $('#lng')
+            }
+        });
+    </script>
 @endsection

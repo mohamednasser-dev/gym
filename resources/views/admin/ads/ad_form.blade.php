@@ -1,9 +1,6 @@
 @extends('admin.app')
-
 @section('title' , __('messages.add_new_ad'))
-
 @push('scripts')
-
     <script>
         $("select#users").on("change", function () {
             $('select#products').html("")
@@ -50,7 +47,6 @@
         })
     </script>
 @endpush
-
 @section('content')
     <div class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">

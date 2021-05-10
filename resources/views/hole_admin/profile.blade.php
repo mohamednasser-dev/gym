@@ -1,7 +1,5 @@
 @extends('hole_admin.app')
-
 @section('title' , __('messages.update_profile') )
-
 @section('content')
     <div class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -11,15 +9,12 @@
                         <h4>{{ __('messages.update_profile') }}</h4>
                     </div>
                 </div>
-
-
                 @if (session('status'))
                     <div class="alert alert-danger mb-4" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
                         <strong>Error!</strong> {{ session('status') }} </button>
                     </div>
                 @endif
-
                 <form method="post" action="" >
                     @csrf
                     <div class="form-group mb-4">
@@ -39,5 +34,6 @@
                     <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">
                 </form>
             </div>
-
+        </div>
+    </div>
 @endsection

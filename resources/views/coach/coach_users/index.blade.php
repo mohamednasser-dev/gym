@@ -1,5 +1,4 @@
 @extends('coach.app')
-
 @section('title' , __('messages.coaches'))
 @push('scripts')
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
@@ -77,9 +76,16 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{route('coaches.times',$row->id)}}" class="btn btn-info  mb-2 mr-2 rounded-circle">
+                                    <a href="{{route('coaches.times',$row->id)}}"
+                                       class="btn btn-info  mb-2 mr-2 rounded-circle">
                                         <div class="">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                 stroke-linecap="round" stroke-linejoin="round"
+                                                 class="feather feather-clock">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
                                         </div>
                                     </a>
                                 </td>

@@ -18,4 +18,7 @@ class Favorite extends Model
     public function Coach() {
         return $this->belongsTo('App\Coach', 'product_id');
     }
+    public function Shop() {
+        return $this->belongsTo('App\Shop', 'product_id');
+    }
 }

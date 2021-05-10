@@ -1,7 +1,5 @@
 @extends('hole_admin.app')
-
 @section('title' , __('messages.branches'))
-
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -41,15 +39,18 @@
                                         <i class="far fa-edit"></i>
                                     </a>
                                 </td>
-                                <td class="text-center blue-color" ><a onclick="return confirm('{{ __('messages.delete_confirmation') }}');" href="/admin-panel/branches/delete/{{ $row->id }}" ><i class="far fa-trash-alt"></i></a></td>
+                                <td class="text-center blue-color"><a
+                                        onclick="return confirm('{{ __('messages.delete_confirmation') }}');"
+                                        href="/admin-panel/branches/delete/{{ $row->id }}"><i
+                                            class="far fa-trash-alt"></i></a></td>
                                 <?php $i++; ?>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                </a>
             </div>
         </div>
-    </div>
     </div>
 @endsection
 @section('scripts')

@@ -172,6 +172,8 @@
             "prices_and_inventory" => "الأسعار و المخزون",
             "product_stored_number" => "رقم تخزين المنتج",
             "discount_value" => "قيمة الخصم",
+            "login_to_continue" => "تسجيل الدخول إلى حسابك للمتابعة.",
+            "sign_in" => "تسجيل الدخول",
 
 
 

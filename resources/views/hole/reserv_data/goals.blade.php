@@ -1,7 +1,5 @@
 @extends('hole.app')
-
 @section('title' , __('messages.options'))
-
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -13,7 +11,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <a class="btn btn-info" data-toggle="modal" data-target="#add_new_Modal" > {{ __('messages.add') }} </a>
+                        <a class="btn btn-info" data-toggle="modal"
+                           data-target="#add_new_Modal"> {{ __('messages.add') }} </a>
                     </div>
                 </div>
             </div>
@@ -22,42 +21,46 @@
             <div class="table-responsive">
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
-                        <tr>
-                            <th class="text-center blue-color">Id</th>
-                            <th class="text-center blue-color">{{ __('messages.name_ar') }}</th>
-                            <th class="text-center blue-color">{{ __('messages.name_en') }}</th>
-                            @if(Auth::user()->update_data)
-                                <th class="text-center">{{ __('messages.edit') }}</th>
-                            @endif
-                            @if(Auth::user()->delete_data)
-                                <th class="text-center" >{{ __('messages.delete') }}</th>
-                            @endif
-                        </tr>
+                    <tr>
+                        <th class="text-center blue-color">Id</th>
+                        <th class="text-center blue-color">{{ __('messages.name_ar') }}</th>
+                        <th class="text-center blue-color">{{ __('messages.name_en') }}</th>
+                        @if(Auth::user()->update_data)
+                            <th class="text-center">{{ __('messages.edit') }}</th>
+                        @endif
+                        @if(Auth::user()->delete_data)
+                            <th class="text-center">{{ __('messages.delete') }}</th>
+                        @endif
+                    </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1; ?>
-                        @foreach ($data as $row)
-                            <tr>
-                                <td class="text-center blue-color"><?=$i;?></td>
-                                <td class="text-center">{{ $row->title_ar }}</td>
-                                <td class="text-center">{{ $row->title_en }}</td>
-                                @if(Auth::user()->update_data)
-                                    <td class="text-center blue-color" >
-                                        <a data-toggle="modal" data-target="#edit_Modal" id="edit_btn" data-type-id="{{$row->id}}" data-title-ar="{{$row->title_ar}}" data-title-en="{{$row->title_en}}" ><i class="far fa-edit"></i></a></td>
-                                @endif
-                                @if(Auth::user()->delete_data)
-                                    <td class="text-center blue-color" ><a onclick="return confirm('{{ __('messages.are_you_sure') }}');" href="{{ route('reserv.goals.delete', $row->id) }}" ><i class="far fa-trash-alt"></i></a></td>
-                                @endif
-                                <?php $i++; ?>
-                            </tr>
-                        @endforeach
+                    <?php $i = 1; ?>
+                    @foreach ($data as $row)
+                        <tr>
+                            <td class="text-center blue-color"><?=$i;?></td>
+                            <td class="text-center">{{ $row->title_ar }}</td>
+                            <td class="text-center">{{ $row->title_en }}</td>
+                            @if(Auth::user()->update_data)
+                                <td class="text-center blue-color">
+                                    <a data-toggle="modal" data-target="#edit_Modal" id="edit_btn"
+                                       data-type-id="{{$row->id}}" data-title-ar="{{$row->title_ar}}"
+                                       data-title-en="{{$row->title_en}}"><i class="far fa-edit"></i></a></td>
+                            @endif
+                            @if(Auth::user()->delete_data)
+                                <td class="text-center blue-color"><a
+                                        onclick="return confirm('{{ __('messages.are_you_sure') }}');"
+                                        href="{{ route('reserv.goals.delete', $row->id) }}"><i
+                                            class="far fa-trash-alt"></i></a></td>
+                            @endif
+                            <?php $i++; ?>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
-{{--    add model--}}
+    {{--    add model--}}
     <div id="add_new_Modal" class="modal animated zoomInUp custo-zoomInUp" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -75,16 +78,16 @@
                 </div>
                 <form action="{{route('reserv.goals.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <input required type="hidden" id="txt_type_id" name="type_id" value="{{$id}}"  class="form-control" >
+                    <input required type="hidden" id="txt_type_id" name="type_id" value="{{$id}}" class="form-control">
                     <div class="modal-body">
                         <div class="form-group mb-4">
 
                             <label for="plan_price">{{ __('messages.name_ar') }}</label>
-                            <input required type="text" name="title_ar"  class="form-control" >
+                            <input required type="text" name="title_ar" class="form-control">
                         </div>
                         <div class="form-group mb-4">
                             <label for="plan_price">{{ __('messages.name_en') }}</label>
-                            <input required type="text" name="title_en" class="form-control" >
+                            <input required type="text" name="title_en" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -118,11 +121,11 @@
                         <div class="form-group mb-4">
                             <label for="plan_price">{{ __('messages.name_ar') }}</label>
 
-                            <input required type="text" id="txt_title_ar" name="title_ar"  class="form-control" >
+                            <input required type="text" id="txt_title_ar" name="title_ar" class="form-control">
                         </div>
                         <div class="form-group mb-4">
                             <label for="plan_price">{{ __('messages.name_en') }}</label>
-                            <input required type="text" id="txt_title_en" name="title_en" class="form-control" >
+                            <input required type="text" id="txt_title_en" name="title_en" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -137,13 +140,13 @@
     </div>
 @endsection
 @section('scripts')
-<script>
-    $(document).ready(function () {
-        $("#edit_btn").click(function () {
-            $("#txt_type_id").val($(this).data('type-id'));
-            $("#txt_title_ar").val($(this).data('title-ar'));
-            $("#txt_title_en").val($(this).data('title-en'));
+    <script>
+        $(document).ready(function () {
+            $("#edit_btn").click(function () {
+                $("#txt_type_id").val($(this).data('type-id'));
+                $("#txt_title_ar").val($(this).data('title-ar'));
+                $("#txt_title_en").val($(this).data('title-en'));
+            });
         });
-    });
-</script>
+    </script>
 @endsection

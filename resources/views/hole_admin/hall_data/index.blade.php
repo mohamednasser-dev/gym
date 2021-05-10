@@ -38,14 +38,17 @@
                     <label for="exampleFormControlFile1">{{ __('messages.logo') }}</label>
                     <div class="row">
                         <div class="col-md-2 product_image">
-                            <img style="width: 50%" src="{{image_cloudinary_url()}}{{ $data->logo }}"  />
+                            <img style="width: 50%" src="{{image_cloudinary_url()}}{{ $data->logo }}"/>
                         </div>
                     </div>
                     <div class="custom-file-container" data-upload-id="mySecondImage">
-                        <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) <a href="javascript:void(0)" class="custom-file-container__image-clear" title="Clear Image">x</a></label>
-                        <label class="custom-file-container__custom-file" >
-                            <input type="file" name="logo" class="custom-file-container__custom-file__custom-file-input" accept="image/*">
-                            <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
+                        <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) <a
+                                href="javascript:void(0)" class="custom-file-container__image-clear"
+                                title="Clear Image">x</a></label>
+                        <label class="custom-file-container__custom-file">
+                            <input type="file" name="logo" class="custom-file-container__custom-file__custom-file-input"
+                                   accept="image/*">
+                            <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
                             <span class="custom-file-container__custom-file__custom-file-control"></span>
                         </label>
                         <div class="custom-file-container__image-preview">
@@ -55,7 +58,7 @@
                 <h4>{{ __('messages.cover') }}</h4>
                 <div class="row">
                     <div class="col-md-2 product_image">
-                        <img style="width: 50%" src="{{image_cloudinary_url()}}{{ $data->cover }}"  />
+                        <img style="width: 50%" src="{{image_cloudinary_url()}}{{ $data->cover }}"/>
                     </div>
                 </div>
                 <div class="custom-file-container" data-upload-id="myFirstImage">
@@ -84,27 +87,26 @@
             </form>
         </div>
     </div>
-
 @endsection
-        @section('scripts')
-            <script>
-                $(document).ready(function () {
-                    var i = 0;
-                    $("#addButton").click(function () {
-                        var html = '';
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            var i = 0;
+            $("#addButton").click(function () {
+                var html = '';
 
-                        html += ' <div id="" class="form-group row">';
-                        html += ' ';
-                        //error here
-                        html += '<div class="col-sm-3 "><input  name="branches[' + i + '][title_ar]" type="text" class="form-control"></div>';
-                        html += '<div class="col-sm-3 "><input  name="branches[' + i + '][title_en]" type="text" class="form-control"></div>';
-                        html += '<div class="col-sm-3 "><input  name="branches[' + i + '][longitude]" type="text" class="form-control"></div>';
-                        html += '<div class="col-sm-3 "><input  name="branches[' + i + '][latitude]" type="text" class="form-control"></div>';
-                        html += "</div>";
-                        $('#parent').append(html);
+                html += ' <div id="" class="form-group row">';
+                html += ' ';
+                //error here
+                html += '<div class="col-sm-3 "><input  name="branches[' + i + '][title_ar]" type="text" class="form-control"></div>';
+                html += '<div class="col-sm-3 "><input  name="branches[' + i + '][title_en]" type="text" class="form-control"></div>';
+                html += '<div class="col-sm-3 "><input  name="branches[' + i + '][longitude]" type="text" class="form-control"></div>';
+                html += '<div class="col-sm-3 "><input  name="branches[' + i + '][latitude]" type="text" class="form-control"></div>';
+                html += "</div>";
+                $('#parent').append(html);
 
-                        i++;
-                    });
-                });
-            </script>
+                i++;
+            });
+        });
+    </script>
 @endsection

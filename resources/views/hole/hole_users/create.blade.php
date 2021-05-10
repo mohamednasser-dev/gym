@@ -1,7 +1,5 @@
 @extends('hole.app')
-
 @section('title' , __('messages.add_new_hole'))
-
 @section('content')
     <?php
     $lat = '29.280331923084315';
@@ -94,13 +92,15 @@
                     <div class="col-md-4" id="special1_cont">
                         <label for="plan_price">{{ __('messages.from') }}</label>
                         <div class="form-group mb-0">
-                            <input id="timeFlatpickr" name="male_hole_from" class="form-control flatpickr flatpickr-input active" type="text" >
+                            <input id="timeFlatpickr" name="male_hole_from"
+                                   class="form-control flatpickr flatpickr-input active" type="text">
                         </div>
                     </div>
                     <div class="col-md-4" id="special2_cont">
                         <label for="plan_price">{{ __('messages.to') }}</label>
                         <div class="form-group mb-0">
-                            <input id="timeFlatpickr_2" name="male_hole_to" class="form-control flatpickr flatpickr-input active" type="text" >
+                            <input id="timeFlatpickr_2" name="male_hole_to"
+                                   class="form-control flatpickr flatpickr-input active" type="text">
                         </div>
                     </div>
                 </div>
@@ -119,13 +119,15 @@
                     <div class="col-md-4" id="special1_cont">
                         <label for="plan_price">{{ __('messages.from') }}</label>
                         <div class="form-group mb-0">
-                            <input id="timeFlatpickr_3" name="female_hole_from" class="form-control flatpickr flatpickr-input active" type="text">
+                            <input id="timeFlatpickr_3" name="female_hole_from"
+                                   class="form-control flatpickr flatpickr-input active" type="text">
                         </div>
                     </div>
                     <div class="col-md-4" id="special2_cont">
                         <label for="plan_price">{{ __('messages.to') }}</label>
                         <div class="form-group mb-0">
-                            <input id="timeFlatpickr_4" name="female_hole_to" class="form-control flatpickr flatpickr-input active" type="text">
+                            <input id="timeFlatpickr_4" name="female_hole_to"
+                                   class="form-control flatpickr flatpickr-input active" type="text">
                         </div>
                     </div>
                 </div>
@@ -143,20 +145,20 @@
                     <div class="col-md-4" id="special1_cont">
                         <label for="plan_price">{{ __('messages.from') }}</label>
                         <div class="form-group mb-0">
-                            <input id="timeFlatpickr_5" name="mix_hole_from" class="form-control flatpickr flatpickr-input active" type="text">
+                            <input id="timeFlatpickr_5" name="mix_hole_from"
+                                   class="form-control flatpickr flatpickr-input active" type="text">
                         </div>
                     </div>
                     <div class="col-md-4" id="special2_cont">
                         <label for="plan_price">{{ __('messages.to') }}</label>
                         <div class="form-group mb-0">
-                            <input id="timeFlatpickr_6" name="mix_hole_to" class="form-control flatpickr flatpickr-input active" type="text">
+                            <input id="timeFlatpickr_6" name="mix_hole_to"
+                                   class="form-control flatpickr flatpickr-input active" type="text">
                         </div>
                     </div>
                 </div>
                 <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
             </form>
         </div>
-        @endsection
-        @section('scripts')
-
-        @endsection
+    </div>
+@endsection

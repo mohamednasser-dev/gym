@@ -120,6 +120,10 @@ use Illuminate\Http\Request;
     Route::get('/all_coaches/{lang}/{v}' , 'CoachesController@all_coaches')->middleware('checkguest');
     Route::get('/coachs/details/{id}/{lang}/{v}' , 'CoachesController@details')->middleware('checkguest');
 
+    //for shops
+    Route::get('/all_shops/{lang}/{v}' , 'ShopsController@all_shops')->middleware('checkguest');
+    Route::get('/shops/details/{id}/{lang}/{v}' , 'ShopsController@details')->middleware('checkguest');
+
 // send contact us message
     Route::post('/contactus/{lang}/{v}' , 'ContactUsController@SendMessage')->middleware('checkguest');
 

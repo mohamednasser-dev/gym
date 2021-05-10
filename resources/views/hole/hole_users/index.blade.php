@@ -1,5 +1,4 @@
 @extends('hole.app')
-
 @section('title' , __('messages.holes'))
 @push('scripts')
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
@@ -10,12 +9,12 @@
             }
         });
         $("tbody#sortable").sortable({
-            items : "tr",
-            placeholder : "ui-state-hightlight",
-            update : function () {
+            items: "tr",
+            placeholder: "ui-state-hightlight",
+            update: function () {
                 var ids = $('tbody#sortable').sortable("serialize");
                 var url = "{{ route('halls.sort') }}";
-                $.post(url , ids + "&_token={{ csrf_token() }}");
+                $.post(url, ids + "&_token={{ csrf_token() }}");
             }
         });
     </script>
@@ -107,33 +106,37 @@
                                                 0
                                             @endif
                                         </a>
-                                        <span class="unreadcount" style="position: absolute;margin-top: -27px;margin-right: -28px;" title="{{ __('messages.new_rates') }}">
+                                        <span class="unreadcount"
+                                              style="position: absolute;margin-top: -27px;margin-right: -28px;"
+                                              title="{{ __('messages.new_rates') }}">
                                             <span class="insidecount">
                                                     {{ count($rates) }}
                                             </span>
                                         </span>
                                     @else
-                                    <a href="{{route('admin_hall_rates.show',$row->id)}}"
-                                       class="btn btn-warning  mb-2 mr-2 rounded-circle"
-                                       data-original-title="Tooltip using BUTTON tag">
-                                        @if($row->Rates != null)
-                                            {{count($row->Rates)}}
-                                        @else
-                                            0
-                                        @endif
-                                    </a>
+                                        <a href="{{route('admin_hall_rates.show',$row->id)}}"
+                                           class="btn btn-warning  mb-2 mr-2 rounded-circle"
+                                           data-original-title="Tooltip using BUTTON tag">
+                                            @if($row->Rates != null)
+                                                {{count($row->Rates)}}
+                                            @else
+                                                0
+                                            @endif
+                                        </a>
                                     @endif
                                 </td>
                                 <td class="text-center blue-color">
                                     @if($row->famous == '1' )
                                         <a href="{{route('halls.make_famous',$row->id)}}"
-                                           class="btn btn-danger  mb-2 mr-2 rounded-circle" title="{{ __('messages.famous') }}"
+                                           class="btn btn-danger  mb-2 mr-2 rounded-circle"
+                                           title="{{ __('messages.famous') }}"
                                            data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
                                     @else
                                         <a href="{{route('halls.make_famous',$row->id)}}"
-                                           class="btn btn-dark  mb-2 mr-2 rounded-circle" title="{{ __('messages.not_famous') }}"
+                                           class="btn btn-dark  mb-2 mr-2 rounded-circle"
+                                           title="{{ __('messages.not_famous') }}"
                                            data-original-title="Tooltip using BUTTON tag">
                                             <i class="far fa-heart"></i>
                                         </a>
@@ -160,9 +163,9 @@
                         @endforeach
                         </tbody>
                     </table>
+                </a>
             </div>
         </div>
-    </div>
     </div>
 @endsection
 @section('scripts')

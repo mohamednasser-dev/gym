@@ -1,5 +1,4 @@
 @extends('hole_admin.app')
-
 @section('title' , __('messages.rates'))
 @section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -20,7 +19,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
-                        <h4> {{ __('messages.rate') }} : <code>{{ Auth::guard('hole')->user()->rate }}</code>  </h4>
+                        <h4> {{ __('messages.rate') }} : <code>{{ Auth::guard('hole')->user()->rate }}</code></h4>
                     </div>
                 </div>
             </div>
@@ -79,14 +78,14 @@
                                         <span class="fa fa-star"></span>
                                     @endif
                                 </td>
-                                 <?php $i++; ?>
+                                <?php $i++; ?>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                </a>
             </div>
         </div>
-    </div>
     </div>
 @endsection
 @section('scripts')
