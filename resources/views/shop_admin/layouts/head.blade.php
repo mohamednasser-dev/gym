@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="/admin/assets/css/elements/search.css" rel="stylesheet" type="text/css" />
+    <link href="/admin/plugins/animate/animate.css" rel="stylesheet" type="text/css" />
     @if(app()->getLocale() == 'ar')
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,14 +15,17 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
         <link href="/admin/rtl/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="/admin/rtl/assets/css/plugins.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="/admin/plugins/bootstrap-select/bootstrap-select.min.css">
+        <link rel="stylesheet" type="text/css" href="/admin/plugins/select2/select2.min.css">
         <!-- END GLOBAL MANDATORY STYLES -->
+
         <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-        <link href="/admin/rtl/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
         <link href="/admin/rtl/assets/css/dashboard/dash_2.css" rel="stylesheet" type="text/css">
         <link href="/admin/rtl/assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/rtl/assets/css/components/tabs-accordian/custom-accordions.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="/admin/rtl/assets/css/forms/theme-checkbox-radio.css">
         <link href="/admin/rtl/assets/css/tables/table-basic.css" rel="stylesheet" type="text/css" />
-        <link href="/admin/rtl/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
+
         <link href="/admin/rtl/assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" />
         <link href="/admin/rtl/assets/css/elements/custom-pagination.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/admin/rtl/plugins/font-icons/fontawesome/css/regular.css">
@@ -35,15 +40,11 @@
         <link rel="stylesheet" href="/admin/assets/css/custom.css">
         <link rel="stylesheet" type="text/css" href="https://www.fontstatic.com/f=dubai-medium" />
         <link rel="stylesheet" href="/admin/assets/css/ar.css">
-
-        <!-- BEGIN animate modal PLUGINS -->
-        <link href="/admin/rtl/plugins/animate/animate.css" rel="stylesheet" type="text/css" />
-        <link href="/admin/rtl/assets/css/components/custom-modal.css" rel="stylesheet" type="text/css" />
-        <!-- END animate modal PLUGINS/CUSTOM STYLES -->
-        <!--  BEGIN CUSTOM STYLE FILE  -->
-        <link href="/admin/rtl/assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
-        <link href="/admin/rtl/assets/css/components/tabs-accordian/custom-accordions.css" rel="stylesheet" type="text/css" />
+        <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+        <link href="/admin/rtl/assets/css/components/tabs-accordian/custom-tabs.css" rel="stylesheet" type="text/css" />
         <!--  END CUSTOM STYLE FILE  -->
+        <link rel="stylesheet" type="text/css" href="/admin/rtl/plugins/jquery-step/jquery.steps.css">
+        <link href="/admin/rtl/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
     @endif
     @if (app()->getLocale() == 'en')
         <meta charset="utf-8">
@@ -92,4 +93,5 @@
         <link href="/admin/plugins/toast-master/css/jquery.toast.css" rel="stylesheet">
         <link href="/admin/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css">
         <link href="/css/new_styles.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
 </head>

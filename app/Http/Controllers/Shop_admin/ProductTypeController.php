@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers\Shop_admin;
 
-use App\ProductType;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\ProductType;
 
 class ProductTypeController extends Controller{
 

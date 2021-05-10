@@ -30,18 +30,6 @@ Route::group(['middleware'=>'language','prefix' => "shop-panel",'namespace' => "
     Route::get('/profile' , 'HomeController@profile')->name('shop.profile');
     Route::post('/profile' , 'HomeController@updateprofile');
 
-    // Product types Route
-    Route::group([
-        "prefix" => "product_type"
-    ], function($router){
-        Route::get('show' , 'ProductTypeController@show')->name('product_type.index');
-        Route::get('add' , 'ProductTypeController@AddGet')->name('product_type.add');
-        Route::post('add' , 'ProductTypeController@AddPost');
-        Route::get('edit/{type}' , 'ProductTypeController@EditGet')->name('product_type.edit');
-        Route::post('edit/{type}' , 'ProductTypeController@EditPost');
-        Route::get('delete/{type}' , 'ProductTypeController@delete')->name('product_type.delete');
-    });
-
     // Products Route
     Route::group([
         "prefix" => "products"
@@ -71,6 +59,44 @@ Route::group(['middleware'=>'language','prefix' => "shop-panel",'namespace' => "
         Route::get('getbysubcat' , 'ProductController@get_product_by_sub_cat')->name('products.getbysubcat');
         Route::get('fetchsubcategorybycategory/{category}' , 'ProductController@fetch_sub_categories_by_category');
         Route::get('review/{product}/{status}' , 'ProductController@review_product')->name('products.review');
+    });
+
+    // Offer Control Route
+    Route::group([
+        "prefix" => "offers_control"
+    ], function($router){
+        Route::get('add' , 'OffersControlController@AddGet')->name('offers_control.add');
+        Route::post('add' , 'OffersControlController@AddPost');
+        Route::post('sort' , 'OffersControlController@updateOffersSorting')->name('offers_control.sort');
+        Route::get('edit/{section}' , 'OffersControlController@EditGet')->name('offers_control.edit');
+        Route::post('edit/{section}' , 'OffersControlController@EditPost');
+        Route::get('show' , 'OffersControlController@show')->name('offers_control.index');
+        Route::get('details/{section}' , 'OffersControlController@details')->name('offers_control.details');
+        Route::get('delete/{section}' , 'OffersControlController@delete')->name('offers_control.delete');
+    });
+
+    // Home Properties Route
+    Route::group([
+        "prefix" => "properties"
+    ], function($router){
+        Route::get('show' , 'OptionsController@show')->name('options.index');
+        Route::get('add' , 'OptionsController@AddGet')->name('options.add');
+        Route::post('add' , 'OptionsController@AddPost');
+        Route::get('edit/{option}' , 'OptionsController@EditGet')->name('options.edit');
+        Route::post('edit/{option}' , 'OptionsController@EditPost');
+        Route::get('delete/{option}' , 'OptionsController@delete')->name('options.delete');
+    });
+
+    // Categories Route
+    Route::group([
+        "prefix" => "categories"
+    ], function ($router) {
+        Route::get('add', 'CategoryController@AddGet')->name('shop.categories.create');
+        Route::post('add', 'CategoryController@AddPost')->name('shop.categories.store');
+        Route::get('show', 'CategoryController@show')->name('shop.categories.show');
+        Route::get('edit/{id}', 'CategoryController@EditGet')->name('shop.categories.edit');
+        Route::post('edit/{id}', 'CategoryController@EditPost')->name('shop.categories.update');
+        Route::get('delete/{id}', 'CategoryController@delete')->name('shop.categories.delete');
     });
 
 });

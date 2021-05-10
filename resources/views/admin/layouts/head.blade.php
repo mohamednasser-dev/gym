@@ -35,7 +35,6 @@
         <link rel="stylesheet" href="/admin/assets/css/custom.css">
         <link rel="stylesheet" type="text/css" href="https://www.fontstatic.com/f=dubai-medium" />
         <link rel="stylesheet" href="/admin/assets/css/ar.css">
-
         <!-- BEGIN animate modal PLUGINS -->
         <link href="/admin/rtl/plugins/animate/animate.css" rel="stylesheet" type="text/css" />
         <link href="/admin/rtl/assets/css/components/custom-modal.css" rel="stylesheet" type="text/css" />

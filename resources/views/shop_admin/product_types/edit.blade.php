@@ -12,16 +12,15 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group mb-4">
-                        <label for="type_en">{{ __('messages.type_en') }}</label>
-                        <input required type="text" name="type_en" class="form-control" id="type_en"
-                               placeholder="{{ __('messages.type_en') }}" value="{{ $data['type']['type_en'] }}">
-                    </div>
-                    <div class="form-group mb-4">
                         <label for="type_ar">{{ __('messages.type_ar') }}</label>
                         <input required type="text" name="type_ar" class="form-control" id="type_ar"
                                placeholder="{{ __('messages.type_ar') }}" value="{{ $data['type']['type_ar'] }}">
                     </div>
-
+                    <div class="form-group mb-4">
+                        <label for="type_en">{{ __('messages.type_en') }}</label>
+                        <input required type="text" name="type_en" class="form-control" id="type_en"
+                               placeholder="{{ __('messages.type_en') }}" value="{{ $data['type']['type_en'] }}">
+                    </div>
                     <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">
                 </form>
             </div>

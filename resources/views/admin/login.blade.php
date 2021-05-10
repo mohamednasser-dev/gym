@@ -5,8 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <title>{{ __('messages.sign_in') }}</title>
-    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico"/>
-
+    <link rel="icon" type="image/x-icon" href="/admin/assets/img/favicon.ico"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/earlyaccess/droidarabickufi.css">
+    <style>
+        body {
+            font-family: 'Droid Arabic Kufi', serif !important;
+            font-size: 48px;
+            width:100%;
+            height:100%;
+            overflow-x:hidden;
+            overflow-y:hidden;
+        }
+    </style>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
     <link href="/admin/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
