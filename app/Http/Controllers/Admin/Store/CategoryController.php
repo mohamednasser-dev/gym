@@ -1,12 +1,12 @@
 <?php
 namespace App\Http\Controllers\Admin\Store;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminController;
 use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Http\Request;
 use App\Category;
 
-class CategoryController extends Controller{
+class CategoryController extends AdminController{
     // type : get -> to add new
     public function AddGet(){
         return view('store.categories.create');
@@ -67,5 +67,11 @@ class CategoryController extends Controller{
         $category->deleted = 1;
         $category->save();
         return redirect()->back();
+    }
+
+    // details
+    public function details(Category $category) {
+        $data['category'] = $category;
+        return view('store.categories.category_details', ['data' => $data]);
     }
 }

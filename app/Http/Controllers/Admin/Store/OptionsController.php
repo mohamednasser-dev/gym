@@ -1,14 +1,14 @@
 <?php
 namespace App\Http\Controllers\Admin\Store;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use App\PropertiesCategory;
 use App\OptionValue;
 use App\Category;
 use App\Option;
 
-class OptionsController extends Controller{
+class OptionsController extends AdminController{
     // get all options
     public function show(){
         $data['options'] = Option::orderBy('id' , 'desc')->get();
