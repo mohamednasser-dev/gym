@@ -91,7 +91,7 @@ class OrderController extends Controller{
             }
         }
 
-        $data['shops'] = Shop::orderBy('name', 'desc')->get();
+        $data['shops'] = Shop::orderBy('name_ar', 'desc')->get();
         $data['areas'] = Area::where('deleted', 0)->orderBy('title_ar', 'asc')->get();
         $data['sum_price'] = $data['orders']->sum('subtotal_price');
         $data['sum_delivery'] = $data['orders']->sum('delivery_cost');
@@ -137,7 +137,7 @@ class OrderController extends Controller{
             }
         }
 
-        $data['shops'] = Shop::orderBy('name', 'desc')->get();
+        $data['shops'] = Shop::orderBy('name_ar', 'desc')->get();
         $data['areas'] = Area::where('deleted', 0)->orderBy('title_ar', 'asc')->get();
         $data['sum_price'] = $data['orders']->sum('subtotal_price');
         $data['sum_delivery'] = $data['orders']->sum('delivery_cost');
@@ -178,7 +178,7 @@ class OrderController extends Controller{
             $data['orders'] = $data['orders']
                 ->where('orders.store_id', $request->shop);
         }
-        $data['shops'] = Shop::orderBy('name', 'desc')->get();
+        $data['shops'] = Shop::orderBy('name_ar', 'desc')->get();
         $data['areas'] = Area::where('deleted', 0)->orderBy('title_ar', 'asc')->get();
         $data['sum_price'] = $data['orders']->sum('final_price');
         $data['sum_price'] = number_format((float)$data['sum_price'], 3, '.', '');

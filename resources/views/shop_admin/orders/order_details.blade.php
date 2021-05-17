@@ -1,4 +1,4 @@
-@extends('admin.app')
+@extends('shop_admin.app')
 
 @section('title' , __('messages.order_details'))
 
@@ -19,7 +19,7 @@
             <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>{{ __('messages.order_details') }} 
+                    <h4>{{ __('messages.order_details') }}
                         @if ($data['order']['status'] == 3)
                             ( <a style="color: #1b55e2" target="_blank" href="{{ route('orders.invoice', $data['order']['id']) }}">
                                 {{ __('messages.invoice') }}
@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <div class="table-responsive"> 
+            <div class="table-responsive">
                 <table class="table table-bordered mb-4">
                     <tbody>
                         <tr>
@@ -49,7 +49,7 @@
                             </td>
                         </tr>
                         @endif
-                        
+
                         <tr>
                             <td class="label-table" > {{ __('messages.order_date') }}</td>
                             <td>
@@ -63,7 +63,7 @@
                                     {{ $data['order']->user->name }}
                                 </a>
                             </td>
-                        </tr>  
+                        </tr>
                         <tr>
                             <td class="label-table" > {{ __('messages.payment_method') }} </td>
                             <td>
@@ -75,7 +75,7 @@
                                 {{ __('messages.wallet') }}
                                 @endif
                             </td>
-                        </tr>  
+                        </tr>
                         <tr>
                             <td class="label-table" > {{ __('messages.status') }} </td>
                             <td>
@@ -92,13 +92,13 @@
                                 </a>
                                 @endif
                             </td>
-                        </tr>  
+                        </tr>
                         <tr>
                             <td class="label-table" > {{ __('messages.price') }} </td>
                             <td>
                                 {{ $data['order']['subtotal_price'] . " " . __('messages.dinar') }}
                             </td>
-                        </tr>  
+                        </tr>
                         <tr>
                             <td class="label-table" > {{ __('messages.delivery_cost') }} </td>
                             <td>
@@ -117,7 +117,7 @@
                                 <a style="text-decoration: none" href="https://www.google.com/maps/?q={{ $data['order']->address->latitude }},{{ $data['order']->address->longitude }}" target="_blank"> {{ $data['order']->address->area->title_en . ", " . __('messages.st') . " " . $data['order']->address->street . ", " . __('messages.piece') . " " . $data['order']->address->piece . ", " . __('messages.gaddah') . " " . $data['order']->address->gaddah  }} <br/> {{ __('messages.home') . " " . $data['order']->address->building . ', ' . __('messages.floor') . " "  . $data['order']->address->floor . ', ' . __('messages.apartment') . " " . $data['order']->address->apartment_number }}</a>
                             </td>
                         </tr>
-                       
+
                     </tbody>
                 </table>
                 @foreach ($data['order']->orders as $order)
@@ -132,7 +132,7 @@
                         {{ __('messages.cancel_order') }}
                     </a>
                     @endif
-                    @if(!in_array($order->status, [3, 4, 9])) 
+                    @if(!in_array($order->status, [3, 4, 9]))
                     <form action="{{ route('orders.subo.action', $order->id) }}" >
                         <select id="statusSelect" name="status" class="form-control statusSelect">
                             <option selected>{{ __('messages.select') }}</option>
@@ -217,9 +217,9 @@
                     </tbody>
                 </table>
                 @endforeach
-                
+
             </div>
         </div>
-    </div>  
-    
+    </div>
+
 @endsection

@@ -122,7 +122,7 @@ use Illuminate\Http\Request;
 
     //for shops
     Route::get('/all_shops/{lang}/{v}' , 'ShopsController@all_shops')->middleware('checkguest');
-    Route::get('/shops/details/{id}/{lang}/{v}' , 'ShopsController@details')->middleware('checkguest');
+    Route::get('/shop/details/{id}/{lang}/{v}' , 'ShopsController@details')->middleware('checkguest');
 
 // send contact us message
     Route::post('/contactus/{lang}/{v}' , 'ContactUsController@SendMessage')->middleware('checkguest');

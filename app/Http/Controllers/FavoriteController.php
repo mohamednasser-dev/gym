@@ -21,7 +21,7 @@ class FavoriteController extends Controller
         }
         $validator = Validator::make($request->all() , [
             'product_id' => 'required',
-            'type' => 'required|in:hall,coach,shop',
+            'type' => 'required|in:hall,coach,shop,product',
         ]);
         if($validator->fails()) {
             $response = APIHelpers::createApiResponse(true , 406 ,   $validator->errors()->first(), $validator->errors()->first() , null, $request->lang );

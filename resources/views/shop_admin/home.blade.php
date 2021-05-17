@@ -2,6 +2,7 @@
 
 @section('title' , 'Admin Panel Home')
 
+
 @section('content')
 
 @endsection

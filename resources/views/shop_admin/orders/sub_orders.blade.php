@@ -1,4 +1,4 @@
-@extends('admin.app')
+@extends('shop_admin.app')
 @php
     $title = __('messages.show_orders');
     if (!empty($data['from'])) {
@@ -9,7 +9,7 @@
         }else {
             $title = __('messages.show_orders') . " ( " . $data['area']['title_ar'] . " )";
         }
-        
+
     }else if(isset($data['method'])) {
         if($data['method'] == 1) {
             $title = __('messages.show_orders') . " ( " . __('messages.key_net') . " )";
@@ -33,8 +33,8 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
             $("#form-filter").submit()
         })
     </script>
-    
-    
+
+
 
     <script>
         var ttle = "{{ $title }}",
@@ -61,7 +61,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                         columns: ':visible',
                         rows: ':visible'
                     } },
-                    { extend: 'print', className: 'btn', footer: true, 
+                    { extend: 'print', className: 'btn', footer: true,
                         exportOptions: {
                             columns: ':visible',
                             rows: ':visible'
@@ -80,7 +80,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
             },
             "stripeClasses": [],
             "lengthMenu": [50, 100, 1000, 10000, 100000, 1000000, 2000000, 3000000, 4000000, 5000000],
-            "pageLength": 50  
+            "pageLength": 50
         } );
     </script>
     <script>
@@ -96,11 +96,11 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
         $("#order-tbl tfoot").find('th').eq(9).text(`${totalDelivery} ${dinar}`);
         $("#order-tbl tfoot").find('th').eq(10).text(`${allTotal} ${dinar}`);
     </script>
-    
+
 @endpush
 
 @section('content')
-    <div id="tableSimple" class="col-lg-12 col-12 layout-spacing"> 
+    <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
             <div class="col-lg-12 filtered-list-search mx-auto">
                 <div class="btn-group" role="group" aria-label="Basic example">
@@ -112,14 +112,14 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
             <div class="widget-content widget-content-area">
                 <form id="form-filter" action="">
                     <div class="row">
-                        
+
                             <div class="form-group col-md-3">
                                 <label for="area">{{ __('messages.area') }}</label>
                                 <select required id="area_select" name="area_id" class="form-control">
                                     <option disabled selected>{{ __('messages.select') }}</option>
                                     @foreach ( $data['areas'] as $area )
                                     <option {{ isset($data['area']) && $data['area']['id'] == $area->id ? 'selected' : '' }} value="{{ $area->id }}">{{ App::isLocale('en') ? $area->title_en : $area->title_ar }}</option>
-                                    @endforeach 
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
@@ -138,24 +138,24 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                             </div>
 
                             <div class="form-group col-md-3">
-                                    
+
                                 <label for="payment_select">{{ __('messages.payment_method') }}</label>
                                 <select required id="payment_select" name="method" class="form-control">
                                     <option disabled selected>{{ __('messages.select') }}</option>
-                                    
+
                                     <option {{ isset($data['method']) && $data['method'] == 1 ? 'selected' : '' }} value="1">{{ __('messages.key_net') }}</option>
                                     <option {{ isset($data['method']) && $data['method'] == 2 ? 'selected' : '' }} value="2">{{ __('messages.cash') }}</option>
                                     <option {{ isset($data['method']) && $data['method'] == 3 ? 'selected' : '' }} value="3">{{ __('messages.wallet') }}</option>
-                                    
+
                                 </select>
                             </div>
 
                             <div class="form-group col-md-3">
-                                
+
                                 <label for="orderStatus">{{ __('messages.status') }}</label>
                                 <select required id="orderStatus" name="order_status2" class="form-control">
                                     <option disabled selected>{{ __('messages.select') }}</option>
-                                    
+
                                     <option {{ isset($data['order_status2']) && $data['order_status2'] == 1 ? 'selected' : '' }} value="1">{{ __('messages.in_progress') }}</option>
                                     <option {{ isset($data['order_status2']) && $data['order_status2'] == 2 ? 'selected' : '' }} value="2">{{ __('messages.order_confirmed') }}</option>
                                     <option {{ isset($data['order_status2']) && $data['order_status2'] == 3 ? 'selected' : '' }} value="3">{{ __('messages.delivered') }}</option>
@@ -166,31 +166,31 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                                     <option {{ isset($data['order_status2']) && $data['order_status2'] == 8 ? 'selected' : '' }} value="8">{{ __('messages.received_refund') }}</option>
                                     <option {{ isset($data['order_status2']) && $data['order_status2'] == 9 ? 'selected' : '' }} value="9">{{ __('messages.canceled_from_admin') }}</option>
                                 </select>
-                                        
+
                             </div>
 
                             <div class="form-group col-md-3">
-                                    
+
                                 <label for="payment_select">{{ __('messages.store') }}</label>
                                 <select required id="shop_select" name="shop" class="form-control">
                                     <option disabled selected>{{ __('messages.select') }}</option>
                                     @foreach ($data['shops'] as $shop)
                                     <option {{ isset($data['shop']) && $data['shop'] == $shop->id ? 'selected' : '' }} value="{{ $shop->id }}">{{ $shop->name }}</option>
                                     @endforeach
-                                    
+
                                 </select>
-                                        
+
                             </div>
-                        
+
                     </div>
                 </form>
-        
+
             </div>
-            
+
             <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>{{ __('messages.show_sub_orders') }} 
+                    <h4>{{ __('messages.show_sub_orders') }}
                         @if (isset($data['area']))
                             @if(App::isLocale('en'))
                                 {{ "( " . $data['area']['title_en'] . " )" }}
@@ -227,7 +227,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <div class="table-responsive"> 
+            <div class="table-responsive">
                 <table id="order-tbl" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr>
@@ -247,7 +247,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                         </tr>
                     </thead>
                     <tbody>
-                       
+
                         <?php $i = 1; ?>
                         @foreach ($data['orders'] as $order)
                             <tr>
@@ -302,7 +302,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                                 <td>{{ $order->subtotal_price . " " . __('messages.dinar') }}</td>
                                 <td>{{ $order->delivery_cost . " " . __('messages.dinar') }}</td>
                                 <td>{{ $order->total_price . " " . __('messages.dinar') }}</td>
-                                
+
                                 <td class="text-center blue-color hide_col"><a href="{{ route('orders.sub_order.details', $order->id) }}" ><i class="far fa-eye"></i></a></td>
                                 <td class="text-center blue-color hide_col"><a target="_blank" href="{{ route('webview.store.invoice', $order->id) }}" ><i class="far fa-eye"></i></a></td>
                             </tr>
@@ -328,6 +328,6 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
             </div>
         </div>
 
-    </div>  
+    </div>
 
 @endsection

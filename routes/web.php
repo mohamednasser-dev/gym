@@ -301,4 +301,10 @@ Route::group([
 ], function ($router) {
     Route::get('aboutapp/{lang}', 'WebViewController@getabout');
     Route::get('termsandconditions/{lang}', 'WebViewController@gettermsandconditions');
+
+    //orders webview ...
+    Route::get('main-report-pdfview-admin','WebViewController@getMainOrdersReport')->name('webview.mainReport');
+    Route::get('orders-report-pdfview-admin','WebViewController@getSalesReportAdmin')->name('webview.salesReport');
+    Route::get('delivery-report-pdfview-admin','WebViewController@getDeliveryReport')->name('webview.deliveryReport');
+    Route::get('sales-report-pdfview-admin','WebViewController@getSalesReport2Admin')->name('webview.salesReport2');
 });

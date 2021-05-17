@@ -12,7 +12,6 @@ use App\SubCategory;
 use App\HomeSection;
 use App\HomeElement;
 use App\OptionValue;
-use App\ProductType;
 use App\Category;
 use App\Product;
 use App\Brand;
@@ -68,7 +67,6 @@ class ProductController extends Controller{
         $data['product'] = $product;
         $data['barcode'] = uniqid();
         $data['categories'] = Category::where('deleted', 0)->orderBy('id', 'desc')->get();
-        $data['types'] = ProductType::orderBy('id', 'desc')->get();
         $data['category'] = Category::findOrFail($data['product']['category_id']);
         $data['stores'] = Shop::get();
         $data['options'] = [];
@@ -77,13 +75,6 @@ class ProductController extends Controller{
         $data['Home_sections_ids'] = HomeSection::where('type', 4)->pluck('id');
         $data['elements'] = HomeElement::where('element_id', $product->id)->whereIn('home_id', $data['Home_sections_ids'])->pluck('home_id')->toArray();
         $data['property_values'] = $data['product']->values()->select('option_values.id', 'option_values.option_id')->get();
-        $data['multi_options'] = $data['product']->multiOptions()->pluck('multi_option_value_id')->toArray();
-        $data['encoded_multi_options'] = json_encode($data['multi_options']);
-        $data['multi_options_id'] = $data['product']->multiOptions()->pluck('multi_option_id')->toArray();
-        $data['encoded_multi_options_id'] = json_encode($data['multi_options_id']);
-
-
-
         return view('shop_admin.products.edit', ['data' => $data]);
     }
 
@@ -183,9 +174,6 @@ class ProductController extends Controller{
         }
 
         if (isset($request->total_amount) && is_array($request->total_amount) && isset($request->multi_option_id) && $request->multi_option_id != "none") {
-            if (count($product->multiOptions) > 0) {
-                $product->multiOptions()->delete();
-            }
 
             for ($n = 0; $n < count($request->total_amount); $n ++) {
                 $barcode = "";
@@ -205,17 +193,6 @@ class ProductController extends Controller{
                     $final_price = $request->final_price[$n];
                     $before_discount = $request->final_price[$n];
                 }
-                ProductMultiOption::create([
-                    'product_id' => $product->id,
-                    'multi_option_id' => $request->multi_option_id,
-                    'multi_option_value_id' => $request->multi_option_value_id[$n],
-                    'final_price' => $final_price,
-                    'price_before_offer' => $before_discount,
-                    'total_quatity' => $request->total_amount[$n],
-                    'remaining_quantity' => $request->remaining_amount[$n],
-                    'barcode' => $barcode,
-                    'stored_number' => $stored_number
-                ]);
             }
 
             if (isset($request->offer)) {
@@ -224,9 +201,7 @@ class ProductController extends Controller{
                     'offer_percentage' => (double)$request->offer_percentage,
                     'multi_options' => 1,
                     'final_price' => $request->price_after_discount[0],
-                    'price_before_offer' => $request->final_price[0],
-                    'total_quatity' => $product->multiOptions()->sum('total_quatity'),
-                    'remaining_quantity' => $product->multiOptions()->sum('remaining_quantity')
+                    'price_before_offer' => $request->final_price[0]
                 ]);
             }else {
                 $selected_prod_data['offer'] = 0;
@@ -237,15 +212,10 @@ class ProductController extends Controller{
                     'offer_percentage' => 0,
                     'multi_options' => 1,
                     'final_price' => $request->final_price[0],
-                    'price_before_offer' => $request->final_price[0],
-                    'total_quatity' => $product->multiOptions()->sum('total_quatity'),
-                    'remaining_quantity' => $product->multiOptions()->sum('remaining_quantity')
+                    'price_before_offer' => $request->final_price[0]
                 ]);
             }
         }else {
-            if (count($product->multiOptions) > 0) {
-                $product->multiOptions()->delete();
-            }
             if (isset($request->offer)) {
                 $price_before = (double)$request->price_before_offer;
                 $discount_value = (double)$request->offer_percentage / 100;
@@ -387,7 +357,6 @@ class ProductController extends Controller{
     // add get
     public function addGet(Request $request) {
         $data['categories'] = Category::where('deleted', 0)->orderBy('id', 'desc')->get();
-        $data['types'] = ProductType::orderBy('id', 'desc')->get();
         $data['Home_sections'] = HomeSection::where('type', 4)->get();
         $data['stores'] = Shop::get();
         $data['barcode'] = uniqid();
@@ -508,9 +477,7 @@ class ProductController extends Controller{
                     'offer_percentage' => (double)$request->offer_percentage,
                     'multi_options' => 1,
                     'final_price' => $request->price_after_discount[0],
-                    'price_before_offer' => $request->final_price[0],
-                    'total_quatity' => $selected_product->multiOptions()->sum('total_quatity'),
-                    'remaining_quantity' => $selected_product->multiOptions()->sum('remaining_quantity')
+                    'price_before_offer' => $request->final_price[0]
                 ]);
             }else {
                 $selected_prod_data['offer'] = 0;
@@ -521,9 +488,7 @@ class ProductController extends Controller{
                     'offer_percentage' => 0,
                     'multi_options' => 1,
                     'final_price' => $request->final_price[0],
-                    'price_before_offer' => $request->final_price[0],
-                    'total_quatity' => $selected_product->multiOptions()->sum('total_quatity'),
-                    'remaining_quantity' => $selected_product->multiOptions()->sum('remaining_quantity')
+                    'price_before_offer' => $request->final_price[0]
                 ]);
             }
         }else {

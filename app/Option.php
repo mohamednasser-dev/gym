@@ -22,7 +22,7 @@ class Option extends Model
     }
 
     public function categories() {
-        return $this->belongsToMany('App\Category', 'options_categories', 'option_id', 'category_id');
+        return $this->belongsToMany('App\Category', 'option_categories', 'option_id', 'category_id');
     }
 
     public function values() {

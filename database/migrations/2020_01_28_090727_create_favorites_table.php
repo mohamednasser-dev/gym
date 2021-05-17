@@ -17,7 +17,7 @@ class CreateFavoritesTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('product_id');
-            $table->enum('type',['hall', 'coach', 'shop'])->default('hall');
+            $table->enum('type',['hall', 'coach', 'shop','product'])->default('hall');
             $table->timestamps();
         });
     }

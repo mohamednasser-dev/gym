@@ -23,12 +23,7 @@
 @endpush
 @push('scripts')
     <script>
-        // inisialize multi select
-        $(document).ready(function () {
-            $(".multi_tags").select2({
-                tags: true
-            });
-        })
+
         var language = "{{ Config::get('app.locale') }}",
             select = "{{ __('messages.select') }}"
         $("#category").on("change", function () {
@@ -701,84 +696,6 @@
             }
         })
 
-        // on click prev
-        $(".actions ul").find('li').eq(0).on("click", "a", function () {
-            $("#multi_options_radio .row").on('change', 'input[type="radio"]', function () {
-                if ($(this).val() != "none") {
-                    $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', '#1b55e2')
-                    $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', '#1b55e2')
-                    $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").find('.select2-selection--multiple').css('border', '#bfc9d4 solid 1px')
-                    $("#multi_options_radio").find(".col-sm-4 select[disabled]").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', '#e0e6ed')
-                    $("#multi_options_radio").find(".col-sm-4 select[disabled]").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', '#e0e6ed')
-                    $("#multi_options_radio").find(".col-sm-4 select[disabled]").parent(".col-sm-4").find('.select2-selection--multiple').css('border', '#bfc9d4 solid 1px')
-                    $(".actions ul").find('li').eq(1).on("mouseover", "a", function () {
-                        $(this).attr('href', "#")
-                    })
-                } else {
-                    $("#multi_options_radio").find(".col-sm-4 select[disabled]").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', '#e0e6ed')
-                    $("#multi_options_radio").find(".col-sm-4 select[disabled]").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', '#e0e6ed')
-                    $("#multi_options_radio").find(".col-sm-4 select[disabled]").parent(".col-sm-4").find('.select2-selection--multiple').css('border', '#bfc9d4 solid 1px')
-                    $(".actions ul").find('li').eq(1).on("mouseover", "a", function () {
-                        $(this).attr('href', "#next")
-                    })
-                }
-                var multiId = $(this).data('multi')
-                if ($(this).is(":checked")) {
-                    $("select.multi_tags").prop('disabled', true)
-                    $(`#${multiId}`).prop('disabled', false)
-                    $(`#${multiId}`).prop('required', true)
-                    $(`#${multiId}`).parent('.col-sm-4').siblings('.col-sm-4').children('select').prop('required', false)
-                    $(`#${multiId}`).on("change", function () {
-                        if ($(`#${multiId}`).val().length > 0) {
-                            $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', '#1b55e2')
-                            $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', '#1b55e2')
-                            $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").find('.select2-selection--multiple').css('border', '#bfc9d4 solid 1px')
-                            $(`#${multiId}`).siblings('.offerV-required').remove()
-                            $(".actions ul").find('li').eq(1).on("mouseover", "a", function () {
-                                $(this).attr('href', "#next")
-                            })
-                        } else {
-                            $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', 'red')
-                            $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', 'red')
-                            $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").find('.select2-selection--multiple').css('border', 'red solid 1px')
-
-                        }
-                    })
-                }
-            })
-
-            // on click make select none disabled with danger
-            $(".actions ul").find('li').eq(1).on("click", "a", function () {
-                if ($("#multi_options_radio").find(".col-sm-4").length > 0) {
-                    if ($("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").length > 0 && $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").val().length == 0) {
-                        $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', 'red')
-                        $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', 'red')
-                        $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").find('.select2-selection--multiple').css('border', 'red solid 1px')
-                    } else {
-                        $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', '#1b55e2')
-                        $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', '#1b55e2')
-                        $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").find('.select2-selection--multiple').css('border', '#bfc9d4 solid 1px')
-                    }
-                }
-            })
-            // if select empty prevent next
-            if ($(".steps ul").find('li').eq(2).hasClass('current')) {
-                if ($("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").length > 0) {
-                    $("#multi_options_radio").find(".col-sm-4").on("change", "select:not(:disabled)", function () {
-                        if ($(this).val().length == 0) {
-                            $(".actions ul").find('li').eq(1).on("mouseover", "a", function () {
-                                $(".actions ul").find('li').eq(1).find("a").attr('href', '#')
-                            })
-
-                        } else {
-                            $(".actions ul").find('li').eq(1).on("mouseover", "a", function () {
-                                $(".actions ul").find('li').eq(1).find("a").attr('href', '#next')
-                            })
-                        }
-                    })
-                }
-            }
-        })
 
         /*
         *  show / hide message on change value
@@ -1022,18 +939,6 @@
                                             @if(count($data['stores']) > 0)
                                                 @foreach ($data['stores'] as $store)
                                                     <option value="{{ $store->id }}">{{ $store->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="typeSelect">{{ __('messages.type') }} *</label>
-                                        <select required id="typeSelect" name="type" class="form-control">
-                                            <option value="0" selected>{{ __('messages.select') }}</option>
-                                            @if(count($data['types']) > 0)
-                                                @foreach ($data['types'] as $type)
-                                                    <option
-                                                        value="{{ $type->id }}">{{ App::isLocale('en') ? $type->type_en : $type->type_ar }}</option>
                                                 @endforeach
                                             @endif
                                         </select>

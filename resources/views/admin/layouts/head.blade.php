@@ -88,6 +88,7 @@
         <!--  END setting page  -->
     @endif
         @yield('styles')
+        @stack('styles')
         <style>
             /* Chrome, Safari, Edge, Opera */
             input::-webkit-outer-spin-button,
