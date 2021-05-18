@@ -1,17 +1,18 @@
 <?php
 namespace App\Http\Controllers\Hole_admin;
-use App\Coach_booking;
-use App\Hole_booking;
-use App\Hole_branch;
-use App\Hole_time_work;
+
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use App\Http\Controllers\Controller;
-use App\Rate;
-use App\Reservation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
-use App\Hole;
 use JD\Cloudder\Facades\Cloudder;
+use Illuminate\Http\Request;
+use App\Hole_time_work;
+use App\Hole_booking;
+use App\Hole_branch;
+use App\Reservation;
+use App\Hole;
+use App\Rate;
 
 
 class HomeController extends Controller{
@@ -77,8 +78,13 @@ class HomeController extends Controller{
             $data['cover'] = $image_new_cover ;
         }
         if($request->story != null){
+
             $story = $request->file('story')->getRealPath();
 //            $story = $request->story;
+//            dd($story);
+//            $uploadedFileUrl = Cloudinary::uploadVideo("data:video/mp4;base64,".$story)->getSecurePath();
+            $uploadedFileUrl = Cloudinary::uploadVideo($request->file('story')->getRealPath())->getSecurePath();
+            dd($uploadedFileUrl);
             Cloudder::upload("data:video/mp4;base64,".$story, null);
             $imagereturned = Cloudder::getResult();
             $image_id2 = $imagereturned['public_id'];

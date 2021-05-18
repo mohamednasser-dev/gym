@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "barryvdh/laravel-dompdf": "^0.9.0",
+        "cloudinary-labs/cloudinary-laravel": "^1.0",
         "fideloper/proxy": "^4.0",
         "jrm2k6/cloudder": "^0.6.0",
         "laravel/framework": "^6.2",
