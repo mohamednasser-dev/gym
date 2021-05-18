@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+//use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 
 class Hole extends Authenticatable
 {
 
-    use MediaAlly;
+//    use MediaAlly;
     protected $fillable = [
         'name',
         'name_en',
