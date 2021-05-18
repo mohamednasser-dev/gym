@@ -47,6 +47,8 @@ return [
     "show_delivery_reports" => "عرض تقارير التوصيل",
     "delivery_date" => "تاريخ التوصيل",
     "show_actions" => "أظهر الأوامر",
+    "category_details" => "تفاصيل القسم",
+    "or_search_manually" => "أو قم بالبحث و الإضافة بشكل يدوى",
 
 
 

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Hole;
 use JD\Cloudder\Facades\Cloudder;
 
+
 class HomeController extends Controller{
 
     // get all contact us messages
