@@ -220,7 +220,7 @@ use Illuminate\Http\Request;
     Route::get('/exchange/points/{id}/{lang}/{v}' , 'HomeController@exchange_points');
 
     //visitor
-    Route::post('/visitors/create/{lang}/{v}' , 'VisitorController@create')->middleware('checkguest');
+    Route::post('/visitor/create/{lang}/{v}' , 'VisitorController@create')->middleware('checkguest');
 
    //re new my ad   (re publish)
     Route::get('ad/republish_ad/{product_id}/{plan_id}/{lang}/{v}' , 'ProductController@republish_ad');
