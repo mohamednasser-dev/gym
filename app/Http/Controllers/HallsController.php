@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Coach_booking;
-use App\Hole_media;
-use App\Reservation_option;
-use App\Setting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use App\Reservation_option;
 use App\Helpers\APIHelpers;
-use App\Reservation_goal;
 use App\Reservation_type;
 use App\Hole_time_work;
+use App\Coach_booking;
 use App\Hole_booking;
 use App\Hole_branch;
 use App\Reservation;
+use App\Hole_media;
 use Carbon\Carbon;
 use App\Favorite;
+use App\Setting;
 use App\Income;
 use App\Hole;
 use App\Rate;
@@ -28,14 +27,18 @@ class HallsController extends Controller
     public $personal_data = [];
     public function __construct()
     {
+
         $this->middleware('auth:api' , ['except' => ['excute_store_reservation','store_reservation','all_halls','details','rates','store_rate']]);
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
         $expired = Reservation::where('status','start')->whereDate('expire_date', '<', Carbon::now())->get();
-        foreach ($expired as $row){
-            $product = Reservation::find($row->id);
-            $product->status = 'ended';
-            $product->save();
+        if($expired != null){
+            foreach ($expired as $row){
+                $product = Reservation::find($row->id);
+                $product->status = 'ended';
+                $product->save();
+            }
         }
+        Carbon::parse('Fri Sep 20 2019 00:00:00 GMT+0700');
         //        --------------------------------------------- end scheduled functions --------------------------------------------------------
     }
     public function all_halls(Request $request) {
@@ -51,7 +54,6 @@ class HallsController extends Controller
         if ($request->mix == 1) {
             $result = $result->orWhere('type', 'mix');
         }
-//        ->groupBy('hole_id')
         $result = $result = $result->groupBy('hole_id')
             ->orderBy(Hole::select('sort')
                 ->whereColumn('holes.id', 'hole_time_works.hole_id')

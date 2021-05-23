@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // get permissions of current admin
-        
+
         // View::share('user', $data);
     }
 }

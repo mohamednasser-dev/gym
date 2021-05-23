@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Coach;
-use App\Coach_booking;
-use App\Coach_booking_detail;
-use App\Coach_media;
-use App\Coach_time_work;
-use App\Favorite;
-use App\Hole_booking;
-use App\Hole_media;
-use App\Reservation;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
-use App\Rate;
-use App\User;
-use App\User_caoch_ask;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use App\Helpers\APIHelpers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use JD\Cloudder\Facades\Cloudder;
+use App\Coach_booking_detail;
+use Illuminate\Http\Request;
+use App\Helpers\APIHelpers;
+use App\Coach_time_work;
+use App\User_caoch_ask;
+use App\Coach_booking;
+use App\Reservation;
+use App\Coach_media;
+use Carbon\Carbon;
+use App\Favorite;
+use App\Coach;
+use App\Rate;
+use App\User;
 
 class CoachesController extends Controller
 {
