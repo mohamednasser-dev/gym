@@ -163,6 +163,10 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
         CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::class,
+<<<<<<< HEAD
+=======
+
+>>>>>>> ec4090dcf08b7f9208258d7020e4e5e59c7a57ef
         /*
          * Package Service Providers...
          */
@@ -227,8 +231,14 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
+<<<<<<< HEAD
         'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
         'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
+=======
+        'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
+
+>>>>>>> ec4090dcf08b7f9208258d7020e4e5e59c7a57ef
     ],
 
 ];
