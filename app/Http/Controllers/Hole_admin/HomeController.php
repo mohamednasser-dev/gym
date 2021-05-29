@@ -44,6 +44,19 @@ class HomeController extends Controller{
         $branches = Hole_branch::where('hole_id',$id)->get();
         return view('hole_admin.hall_data.time_works',compact('data','time_male','time_female','time_mix','branches'));
     }
+	
+	public function upload($request)
+	{
+		 $resizedVideo = cloudinary()->uploadVideo($request->getRealPath(), [
+				'folder' => 'uploads',
+				'transformation' => [
+						  'width' => 350,
+						  'height' => 200
+				 ]
+		]);
+		
+		return $resizedVideo;
+	}
 
     public function update_hall_data(Request $request , $id)
     {
@@ -83,15 +96,16 @@ class HomeController extends Controller{
 //            $story = $request->story;
 //            dd($story);
 //            $uploadedFileUrl = Cloudinary::uploadVideo("data:video/mp4;base64,".$story)->getSecurePath();
-            $uploadedFileUrl = Cloudinary::uploadVideo($request->file('story')->getRealPath())->getSecurePath();
-            dd($uploadedFileUrl);
-            Cloudder::upload("data:video/mp4;base64,".$story, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id2 = $imagereturned['public_id'];
-            $image_format2 = $imagereturned['format'];
-            $image_new_story = $image_id2.'.'.$image_format2;
-            $data['story'] = $image_new_story ;
+			if ($request->file('story')->getSize()) {
+				$uploadedFileUrl = $this->upload($request->file('story'));
+				$image_id2 = $uploadedFileUrl->getPublicId();
+				$image_format2 = $uploadedFileUrl->getExtension();
+				$image_new_story = $image_id2.'.'.$image_format2;
+				$data['story'] = $image_new_story ;
+			}
+            
         }
+        dd($data);
         Hole::where('id',$id)->update($data);
         session()->flash('success', trans('messages.updated_s'));
         return back();

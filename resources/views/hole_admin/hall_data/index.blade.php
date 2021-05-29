@@ -129,6 +129,7 @@
                     </label>
                     <div class="custom-file-container__image-preview"></div>
                 </div>
+                
 {{--                <h4>{{ __('messages.story') }}</h4>--}}
 {{--                <div class="custom-file-container" data-upload-id="myFirstImage">--}}
 {{--                    <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) </label>--}}
@@ -142,6 +143,11 @@
 {{--                </div>--}}
                 <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">
             </form>
+            <video width="200" height="200" controls>
+                <source src="https://res.cloudinary.com/dsibvtsiv/video/upload/v1621843606/{{ $data->story }}" type="video/mp4">
+                <source src="movie.ogg" type="video/ogg">
+              Your browser does not support the video tag.
+            </video>
         </div>
     </div>
 @endsection

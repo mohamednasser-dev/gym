@@ -31,11 +31,11 @@
 
             $("#properties-items .row").html("")
             $.ajax({
-                url: "/admin-panel/products/fetchcategoryoptions/" + categoryId,
+                url: "/shop-panel/products/fetchcategoryoptions/" + categoryId,
                 type: 'GET',
                 success: function (data) {
                     $('#properties-items').show()
-
+                    console.log(data)
                     data.forEach(function (option) {
                         var optionName = option.title_en,
                             select = "{{ __('messages.select') }}",
@@ -82,7 +82,7 @@
         @if (isset($data['cat']))
         var categoryId = $("#category").find("option:selected").val()
         $.ajax({
-            url: "/admin-panel/products/fetchcategoryoptions/" + categoryId,
+            url: "/shop-panel/products/fetchcategoryoptions/" + categoryId,
             type: 'GET',
             success: function (data) {
 
@@ -138,7 +138,6 @@
                 if ($("#example tbody").children("tr").length > 0) {
                     $(".th-discount").show()
                     for (var n = 0; n < $("#example tbody").children("tr").length; n++) {
-                        console.log($("#example tbody").children("tr").eq(n).children('td').eq(4).children('input').attr('name'))
                         $("#example tbody").children("tr").eq(n).children('td').eq(3).after(`
                             <td><input type="text" disabled class="form-control" > <input type="hidden" class="form-control" name="price_after_discount[]" ></td>
                             `)
@@ -252,15 +251,13 @@
             var image = $('input[name="images[]"]').val(),
                 categorySelect = $("#category").val(),
                 subCategorySelect = $("#sub_category_select").val(),
-                typeSelect = $("#typeSelect").val(),
-                storeSelect = $("#storeSelect").val(),
                 titleEnInput = $("input[name='title_en']").val(),
                 titleArInput = $("input[name='title_ar']").val(),
                 descriptionEnText = $('textarea[name="description_en"]').val(),
                 descriptionArText = $('textarea[name="description_ar"]').val(),
                 periodInput = $("#order_period").val()
 
-            if (image.length > 0 && categorySelect > 0 && titleEnInput.length > 0 && titleArInput.length > 0 && descriptionEnText.length > 0 && descriptionArText.length > 0 && typeSelect > 0 && storeSelect > 0) {
+            if (image.length > 0 && categorySelect > 0 && titleEnInput.length > 0 && titleArInput.length > 0 && descriptionEnText.length > 0 && descriptionArText.length > 0) {
                 $(this).attr('href', '#next')
                 $(this).addClass('next2')
             } else {
@@ -302,30 +299,6 @@
                 }
             } else {
                 $(".image-required").remove()
-            }
-
-            if (typeSelect > 0) {
-                $(".type-required").remove()
-            } else {
-                if ($(".type-required").length) {
-
-                } else {
-                    $("#typeSelect").after(`
-                        <div style="margin-top:20px" class="alert alert-outline-danger mb-4 type-required" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="alert"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button><i class="flaticon-cancel-12 close" data-dismiss="alert"></i> ${typeRequired}</div>
-                        `)
-                }
-            }
-
-            if (storeSelect > 0) {
-                $(".store-required").remove()
-            } else {
-                if ($(".store-required").length) {
-
-                } else {
-                    $("#storeSelect").after(`
-                        <div style="margin-top:20px" class="alert alert-outline-danger mb-4 store-required" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="alert"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button><i class="flaticon-cancel-12 close" data-dismiss="alert"></i> ${storeRequired}</div>
-                        `)
-                }
             }
 
             if (categorySelect > 0) {
@@ -932,17 +905,7 @@
                                         </label>
                                         <div class="custom-file-container__image-preview"></div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="storeSelect">{{ __('messages.store') }} *</label>
-                                        <select required id="storeSelect" name="store_id" class="form-control">
-                                            <option value="0" selected>{{ __('messages.select') }}</option>
-                                            @if(count($data['stores']) > 0)
-                                                @foreach ($data['stores'] as $store)
-                                                    <option value="{{ $store->id }}">{{ $store->name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
+                                    
                                     <div class="form-group">
                                         <label for="category">{{ __('messages.category') }} *</label>
                                         <select id="category" name="category_id" class="form-control">

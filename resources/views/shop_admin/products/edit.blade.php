@@ -16,12 +16,7 @@
 
 @push('scripts')
     <script>
-        // inisialize multi select
-        $(document).ready(function() {
-            $(".multi_tags").select2({
-                tags: true
-            });
-        })
+        
         var language = "{{ Config::get('app.locale') }}",
             select = "{{ __('messages.select') }}",
             siblingsCont = $("#category_options_sibling").html()
@@ -33,7 +28,7 @@
 
             $("#properties-items .row").html("")
             $.ajax({
-                url : "/admin-panel/products/fetchcategoryoptions/" + categoryId,
+                url : "/shop-panel/products/fetchcategoryoptions/" + categoryId,
                 type : 'GET',
                 success : function (data) {
                     $('#properties-items').show()
@@ -206,15 +201,12 @@
                 var image = $('input[name="images[]"]').val(),
                     categorySelect = $("#category").val(),
                     subCategorySelect = $("#sub_category_select").val(),
-                    typeSelect = $("#typeSelect").val(),
-                    storeSelect = $("#storeSelect").val(),
                     titleEnInput = $("input[name='title_en']").val(),
                     titleArInput = $("input[name='title_ar']").val(),
                     descriptionEnText = $('textarea[name="description_en"]').val(),
-                    descriptionArText = $('textarea[name="description_ar"]').val(),
-                    periodInput = $("#order_period").val()
+                    descriptionArText = $('textarea[name="description_ar"]').val()
 
-                if (categorySelect > 0 && titleEnInput.length > 0 && titleArInput.length > 0 && descriptionEnText.length > 0 && descriptionArText.length > 0 && typeSelect > 0 && storeSelect > 0 && periodInput.length > 0) {
+                if (categorySelect > 0 && titleEnInput.length > 0 && titleArInput.length > 0 && descriptionEnText.length > 0 && descriptionArText.length > 0) {
                     $(this).attr('href', '#next')
                     $(this).addClass('next2')
 
@@ -666,29 +658,7 @@
                             $(this).attr('href', "#next")
                         })
                     }
-                    var multiId = $(this).data('multi')
-                    if ($(this).is(":checked")) {
-                        $("select.multi_tags").prop('disabled', true)
-                        $(`#${multiId}`).prop('disabled', false)
-                        $(`#${multiId}`).prop('required', true)
-                        $(`#${multiId}`).parent('.col-sm-4').siblings('.col-sm-4').children('select').prop('required', false)
-                        $(`#${multiId}`).on("change", function () {
-                            if ($(`#${multiId}`).val().length > 0) {
-                                $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', '#1b55e2')
-                                $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', '#1b55e2')
-                                $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").find('.select2-selection--multiple').css('border', '#bfc9d4 solid 1px')
-                                $(`#${multiId}`).siblings('.offerV-required').remove()
-                                $(".actions ul").find('li').eq(1).on("mouseover", "a", function() {
-                                    $(this).attr('href', "#next")
-                                })
-                            }else {
-                                $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-control-indicator').css('background', 'red')
-                                $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").prev('.col-sm-1').find('.new-chk-content').css('color', 'red')
-                                $("#multi_options_radio").find(".col-sm-4 select:not(:disabled)").parent(".col-sm-4").find('.select2-selection--multiple').css('border', 'red solid 1px')
-
-                            }
-                        })
-                    }
+                    
                 })
 
                 // on click make select none disabled with danger
@@ -998,7 +968,7 @@
                     @foreach ($data['product']->images as $image)
                     <div style="position : relative" class="col-md-2 product_image">
                         <a onclick="return confirm('{{ __('messages.are_you_sure') }}')" style="position : absolute; right : 20px" href="{{ route('productImage.delete', $image->id) }}" class="close">x</a>
-                        <img style="width: 100%" src="https://res.cloudinary.com/dezsm0sg7/image/upload/w_100,q_100/v1581928924/{{ $image->image }}"  />
+                        <img style="width: 100%" src="{{image_cloudinary_url()}}{{ $image->image }}"  />
                     </div>
                     @endforeach
                 @endif
@@ -1017,27 +987,6 @@
                                     <span class="custom-file-container__custom-file__custom-file-control"></span>
                                 </label>
                                 <div class="custom-file-container__image-preview"></div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="storeSelect">{{ __('messages.store') }} *</label>
-                                <select required id="storeSelect" name="store_id" class="form-control">
-                                    <option value="0" selected>{{ __('messages.select') }}</option>
-                                    @if(count($data['stores']) > 0)
-                                        @foreach ($data['stores'] as $store)
-                                            <option {{ $data['product']['store_id'] == $store->id ? 'selected' : '' }} value="{{ $store->id }}">{{ $store->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="typeSelect">{{ __('messages.type') }} *</label>
-                                <select required id="typeSelect" name="type" class="form-control">
-                                    <option value="0" selected>{{ __('messages.select') }}</option>
-                                    @foreach ($data['types'] as $type)
-                                    <option {{ $type->id == $data['product']['type'] ? 'selected' : '' }} value="{{ $type->id }}">{{ App::isLocale('en') ? $type->type_en : $type->type_ar }}</option>
-                                    @endforeach
-                                </select>
                             </div>
 
                             <div class="form-group">

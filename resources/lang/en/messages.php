@@ -504,6 +504,11 @@ return [
     "upload_main_image" => "Upload Main Image",
     "product_images" => "Product Images",
     "show_buy" => "Show Buy Button",
-
+    "another_choice" => "Add Another Choice",
+    "remaining_q_less_total" => "Remaining Quantity must less than or equal ",
+    "visible" => "Visible",
+    "hide_product" => "Hide Product",
+    "created_successfully" => "Created Successfully",
+    "publish" => "Publish",
 ];
 ?>

@@ -37,7 +37,6 @@
                     var i = 1
 
                     data.forEach(function(element) {
-                        console.log(element)
                         var elementName = element.title_en,
                             cat = element.category.title_en
                         if (language == 'ar') {
@@ -121,100 +120,6 @@
 
         })
 
-        $("#store-filter").on("change", function() {
-            var storeId = $(this).val()
-
-
-            dTbls.clear().draw();
-
-            $.ajax({
-                url : "fetchproductsbystore/" + storeId,
-                type : 'GET',
-                success : function (data) {
-                    var i = 1
-
-                    data.forEach(function(element) {
-                        console.log(element)
-                        var elementName = element.title_en,
-                            cat = element.category.title_en
-                        if (language == 'ar') {
-                            elementName = element.title_ar
-                            cat = element.category.title_ar
-
-                        }
-
-                        var permition = [],
-                            detailsLink = "/admin-panel/products/details/" + element.id,
-                            editLink = "/admin-panel/products/edit/" + element.id,
-                            deleteLink = "/admin-panel/products/delete/" + element.id,
-                            dinar = "{{ __('messages.dinar') }}",
-                            visibilityStatus = "{{ __('messages.visible') }}",
-                            reviewLink = "",
-                            publish = "{{ __('messages.publish') }}"
-                            hideShoProduct = "{{ __('messages.hide_product') }}",
-                            hideShowLink = "/admin-panel/products/hide/" + element.id + "/" + 1
-
-                            if (element.hidden == 1) {
-                                hideShoProduct = "{{ __('messages.show_product') }}"
-                                hideShowLink = "/admin-panel/products/hide/" + element.id + "/" + 0
-                                visibilityStatus = "{{ __('messages.hidden') }}"
-                            }
-                        permition[0] = `<a class="dropdown-item" href="${editLink}">${edit}</a>`
-                        if (element.reviewed == 0) {
-                            reviewLink = `<a class="dropdown-item" onclick='return confirm("{{ __('messages.are_you_sure') }}");' href="/admin-panel/products/review/${element.id}/1">${publish}</a>`
-                        }
-                        permition[1] = `<a class="dropdown-item"  onclick='return confirm("{{ __('messages.are_you_sure') }}");' href="${deleteLink}">${delte}</a>`
-                        permition[2] = `<a class="dropdown-item" onclick='return confirm("{{ __('messages.are_you_sure') }}");' href="${hideShowLink}">${hideShoProduct}</a>`
-                        $("#html5-extension tbody").parent('.form-group').show()
-                        var priceBeforeOffer = element.price_before_offer,
-                            finalPrice = element.final_price,
-                            startFrom = "{{ __('messages.start_from') }}"
-                        if (element.multi_options == 1) {
-                            priceBeforeOffer = startFrom + " " + element.multi_optionss[0].price_before_offer,
-                            finalPrice = startFrom + " " + element.multi_optionss[0].final_price
-                        }
-                        var rowNode = dTbls.row.add( [
-                            `${i}`,
-                            `<img src="https://res.cloudinary.com/dezsm0sg7/image/upload/w_50,q_50/v1581928924/${ (element.main_image.image) ? element.main_image.image : '' }"  />`,
-                            `${elementName}`,
-                            `${cat}`,
-                            `${element.store.name}`,
-                            `${element.total_quatity}`,
-                            `${element.remaining_quantity}`,
-                            `${element.sold_count}`,
-                            `${priceBeforeOffer} ${dinar}`,
-                            `${finalPrice} ${dinar}`,
-                            `${element.updated_at}`,
-                            `${element.barcode}`,
-                            `<td class="hide_col">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-dark btn-sm">${visibilityStatus}</button>
-                                    <button type="button" class="btn btn-dark btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference5" style="will-change: transform;">
-                                      <a class="dropdown-item" href="${detailsLink}">${details}</a>
-                                      ${(reviewLink) ? reviewLink : ''}
-                                      ${(permition[0]) ? permition[0] : ''}
-                                      ${(permition[1]) ? permition[1] : ''}
-                                      <div class="dropdown-divider"></div>
-                                      ${(permition[2]) ? permition[2] : ''}
-                                    </div>
-                                  </div>
-                            </td>`
-                        ] ).draw().node();
-
-                        $( rowNode ).find('td').eq(1).addClass('hide_col');
-
-                        $( rowNode ).find('td').eq(10).addClass('hide_col');
-                        i ++
-                    })
-
-                }
-            })
-
-        })
-
 
     </script>
 @endpush
@@ -233,15 +138,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group col-md-4">
-                    <label for="store-filter">{{ __('messages.store') }}</label>
-                    <select required id="store-filter" name="store" class="form-control">
-                        <option disabled selected>{{ __('messages.select') }}</option>
-                        @foreach ( $data['stores'] as $store )
-                        <option value="{{ $store->id }}">{{ $store->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                
             </div>
             @if($data['expire'] == 'no')
             <a class="btn btn-primary" href="/admin-panel/products/show?expire=soon">{{ __('messages.expired_soon') }}</a>
@@ -272,7 +169,6 @@
                             <th>Id</th>
                             <th class="hide_col">{{ __('messages.image') }}</th>
                             <th>{{ __('messages.product_title') }}</th>
-                            <th>{{ __('messages.store') }}</th>
                             <th>{{ __('messages.category') }}</th>
                             <th>{{ __('messages.total_quatity') }}</th>
                             <th>{{ __('messages.remaining_quantity') }}</th>
@@ -289,9 +185,8 @@
                         @foreach ($data['products'] as $product)
                             <tr>
                                 <td><?=$i;?></td>
-                                <td class="hide_col"><img src="https://res.cloudinary.com/dezsm0sg7/image/upload/w_50,q_50/v1581928924/{{ isset($product->mainImage->image) ? $product->mainImage->image : '' }}"  /></td>
+                                <td class="hide_col"><img src="{{image_cloudinary_url()}}{{ isset($product->mainImage->image) ? $product->mainImage->image : '' }}"  /></td>
                                 <td>{{ App::isLocale('en') ? $product->title_en : $product->title_ar }}</td>
-                                <td>{{ $product->store->name }}</td>
                                 <td>{{ App::isLocale('en') ?  $product->category->title_en : $product->category->title_ar }}</td>
                                 <td>{{ $product->multi_options == 0 ? $product->total_quatity : $product->multiOptions->sum("total_quatity") }}</td>
                                 <td>{{ $product->multi_options == 0 ? $product->remaining_quantity : $product->multiOptions->sum("remaining_quantity") }}</td>

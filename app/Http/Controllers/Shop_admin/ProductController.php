@@ -16,6 +16,7 @@ use App\Category;
 use App\Product;
 use App\Brand;
 use App\Shop;
+use Cloudinary;
 
 class ProductController extends Controller{
     // show products
@@ -24,10 +25,10 @@ class ProductController extends Controller{
         $data['brands'] = Brand::where('deleted', 0)->orderBy('id', 'desc')->get();
         $data['stores'] = Shop::where('status', 1)->orderBy('id', 'desc')->get();
         if($request->expire){
-            $data['products'] = Product::where('deleted', 0)->where('remaining_quantity' , '<' , 10)->orderBy('id' , 'desc')->get();
+            $data['products'] = Product::where('deleted', 0)->where('store_id', auth()->guard('shop')->user()->id)->where('remaining_quantity' , '<' , 10)->orderBy('id' , 'desc')->get();
             $data['expire'] = 'soon';
         }else{
-            $data['products'] = Product::where('deleted', 0)->orderBy('id' , 'desc')->get();
+            $data['products'] = Product::where('deleted', 0)->where('store_id', auth()->guard('shop')->user()->id)->orderBy('id' , 'desc')->get();
             $data['expire'] = 'no';
         }
 
@@ -90,9 +91,7 @@ class ProductController extends Controller{
             'category_id' => 'required'
         ]);
         $product_post = $request->except(['images', 'option', 'value_en', 'value_ar', 'home_section', 'option_id', 'property_value_id', 'multi_option_id', 'multi_option_value_id', 'total_quatity', 'remaining_quantity', 'final_price', 'total_amount', 'remaining_amount', 'price_after_discount', 'barcodes', 'stored_numbers']);
-        if (empty($product_post['brand_id'])) {
-            $product_post['brand_id'] = 0;
-        }
+        
 
         if (isset($request->home_section) && !empty($request->home_section)) {
             $data['Home_sections_ids'] = HomeSection::where('type', 4)->pluck('id')->toArray();
@@ -124,10 +123,10 @@ class ProductController extends Controller{
         if ( $images = $request->file('images') ) {
             foreach ($images as $image) {
                 $image_name = $image->getRealPath();
-                Cloudder::upload($image_name, null);
-                $imagereturned = Cloudder::getResult();
-                $image_id = $imagereturned['public_id'];
-                $image_format = $imagereturned['format'];
+                $img = Cloudinary::upload($image_name);
+                // $imagereturned = Cloudder::getResult();
+                $image_id = $img->getPublicId();
+                $image_format = $img->getExtension();
                 $image_new_name = $image_id.'.'.$image_format;
                 ProductImage::create(["image" => $image_new_name, "product_id" => $product->id]);
             }
@@ -173,73 +172,31 @@ class ProductController extends Controller{
             }
         }
 
-        if (isset($request->total_amount) && is_array($request->total_amount) && isset($request->multi_option_id) && $request->multi_option_id != "none") {
-
-            for ($n = 0; $n < count($request->total_amount); $n ++) {
-                $barcode = "";
-                $stored_number = "";
-
-                if (isset($request->barcodes[$n])) {
-                    $barcode = $request->barcodes[$n];
-                }
-
-                if (isset($request->stored_numbers[$n])) {
-                    $stored_number = $request->stored_numbers[$n];
-                }
-                if (isset($request->offer)) {
-                    $final_price = $request->price_after_discount[$n];
-                    $before_discount = $request->final_price[$n];
-                }else {
-                    $final_price = $request->final_price[$n];
-                    $before_discount = $request->final_price[$n];
-                }
-            }
-
-            if (isset($request->offer)) {
-                $product->update([
-                    'offer' => 1,
-                    'offer_percentage' => (double)$request->offer_percentage,
-                    'multi_options' => 1,
-                    'final_price' => $request->price_after_discount[0],
-                    'price_before_offer' => $request->final_price[0]
-                ]);
-            }else {
-                $selected_prod_data['offer'] = 0;
-                $selected_prod_data['offer_percentage'] = 0;
-                $selected_prod_data['price_before_offer'] = 0;
-                $product->update([
-                    'offer' => 0,
-                    'offer_percentage' => 0,
-                    'multi_options' => 1,
-                    'final_price' => $request->final_price[0],
-                    'price_before_offer' => $request->final_price[0]
-                ]);
-            }
-        }else {
-            if (isset($request->offer)) {
-                $price_before = (double)$request->price_before_offer;
-                $discount_value = (double)$request->offer_percentage / 100;
-                $price_value = $price_before * $discount_value;
-                $selected_prod_data['final_price'] = $price_before - $price_value;
-            }
-
-            if (!isset($request->offer)) {
-                $selected_prod_data['final_price'] = $request->price_before_offer;
-            }
-
-            if (isset($request->offer)) {
-                $selected_prod_data['offer'] = 1;
-                $selected_prod_data['offer_percentage'] = (double)$request->offer_percentage;
-            }else {
-                $selected_prod_data['offer'] = 0;
-                $selected_prod_data['offer_percentage'] = 0;
-                $selected_prod_data['price_before_offer'] = $request->price_before_offer;
-            }
-            $selected_prod_data['total_quatity'] = $request->total_quatity;
-            $selected_prod_data['remaining_quantity'] = $request->remaining_quantity;
-            $selected_prod_data['multi_options'] = 0;
-            $product->update($selected_prod_data);
+        
+        if (isset($request->offer)) {
+            $price_before = (double)$request->price_before_offer;
+            $discount_value = (double)$request->offer_percentage / 100;
+            $price_value = $price_before * $discount_value;
+            $selected_prod_data['final_price'] = $price_before - $price_value;
         }
+
+        if (!isset($request->offer)) {
+            $selected_prod_data['final_price'] = $request->price_before_offer;
+        }
+
+        if (isset($request->offer)) {
+            $selected_prod_data['offer'] = 1;
+            $selected_prod_data['offer_percentage'] = (double)$request->offer_percentage;
+        }else {
+            $selected_prod_data['offer'] = 0;
+            $selected_prod_data['offer_percentage'] = 0;
+            $selected_prod_data['price_before_offer'] = $request->price_before_offer;
+        }
+        $selected_prod_data['total_quatity'] = $request->total_quatity;
+        $selected_prod_data['remaining_quantity'] = $request->remaining_quantity;
+        $selected_prod_data['multi_options'] = 0;
+        $product->update($selected_prod_data);
+        
 
         return redirect()->route('products.index');
 
@@ -305,6 +262,7 @@ class ProductController extends Controller{
     // fetch category options
     public function fetch_category_options(Category $category) {
         $rows = $category->optionsWithValues;
+        
         $data = json_decode(($rows));
 
         return response($data, 200);
@@ -381,7 +339,7 @@ class ProductController extends Controller{
         ]);
 
         $product_post = $request->except(['images', 'option', 'value_en', 'value_ar', 'home_section', 'option_id', 'property_value_id', 'multi_option_id', 'multi_option_value_id', 'total_quatity', 'remaining_quantity', 'final_price', 'total_amount', 'remaining_amount', 'price_after_discount', 'barcodes', 'stored_numbers']);
-        $product_post['reviewed'] = 1;
+        $product_post['store_id'] = auth()->guard('shop')->user()->id;
         $createdProduct = Product::create($product_post);
 
         if (isset($request->home_section)) {
@@ -389,14 +347,20 @@ class ProductController extends Controller{
         }
 
         if ( $images = $request->file('images') ) {
+            $g = 0;
             foreach ($images as $image) {
                 $image_name = $image->getRealPath();
-                Cloudder::upload($image_name, null);
-                $imagereturned = Cloudder::getResult();
-                $image_id = $imagereturned['public_id'];
-                $image_format = $imagereturned['format'];
+                $img = Cloudinary::upload($image_name);
+                // $imagereturned = Cloudder::getResult();
+                $image_id = $img->getPublicId();
+                $image_format = $img->getExtension();
                 $image_new_name = $image_id.'.'.$image_format;
-                ProductImage::create(["image" => $image_new_name, "product_id" => $createdProduct['id']]);
+                $mainImage = 0;
+                if ($g == 0) {
+                    $mainImage = 1;
+                }
+                ProductImage::create(["image" => $image_new_name, "product_id" => $createdProduct['id'], "main" => $mainImage]);
+                $g ++;
             }
 
             $productImages = ProductImage::where('product_id', $createdProduct['id'])->select('id', 'main')->get();
@@ -436,88 +400,33 @@ class ProductController extends Controller{
 
         $selected_product = Product::where('id', $createdProduct['id'])->first();
 
-        if (isset($request->total_amount) && is_array($request->total_amount) && isset($request->multi_option_id) && $request->multi_option_id != "none") {
-
-            for ($n = 0; $n < count($request->total_amount); $n ++) {
-                if (isset($request->offer)) {
-                    $final_price = $request->price_after_discount[$n];
-                    $before_discount = $request->final_price[$n];
-                }else {
-                    $final_price = $request->final_price[$n];
-                    $before_discount = $request->final_price[$n];
-                }
-                $barcode = "";
-                $stored_number = "";
-
-                if (isset($request->barcodes[$n])) {
-                    $barcode = $request->barcodes[$n];
-                }
-
-                if (isset($request->stored_numbers[$n])) {
-                    $stored_number = $request->stored_numbers[$n];
-                }
-
-                ProductMultiOption::create([
-                    'product_id' => $createdProduct['id'],
-                    'multi_option_id' => $request->multi_option_id,
-                    'multi_option_value_id' => $request->multi_option_value_id[$n],
-                    'final_price' => $final_price,
-                    'price_before_offer' => $before_discount,
-                    'total_quatity' => $request->total_amount[$n],
-                    'remaining_quantity' => $request->remaining_amount[$n],
-                    'barcode' => $barcode,
-                    'stored_number' => $stored_number
-                ]);
-            }
-
-
-            if (isset($request->offer)) {
-                $selected_product->update([
-                    'offer' => 1,
-                    'offer_percentage' => (double)$request->offer_percentage,
-                    'multi_options' => 1,
-                    'final_price' => $request->price_after_discount[0],
-                    'price_before_offer' => $request->final_price[0]
-                ]);
-            }else {
-                $selected_prod_data['offer'] = 0;
-                $selected_prod_data['offer_percentage'] = 0;
-                $selected_prod_data['price_before_offer'] = 0;
-                $selected_product->update([
-                    'offer' => 0,
-                    'offer_percentage' => 0,
-                    'multi_options' => 1,
-                    'final_price' => $request->final_price[0],
-                    'price_before_offer' => $request->final_price[0]
-                ]);
-            }
-        }else {
-            if (isset($request->offer)) {
-                $price_before = (double)$request->price_before_offer;
-                $discount_value = (double)$request->offer_percentage / 100;
-                $price_value = $price_before * $discount_value;
-                $selected_prod_data['final_price'] = $price_before - $price_value;
-            }
-
-            if (!isset($request->offer)) {
-                $selected_prod_data['final_price'] = $request->price_before_offer;
-            }
-
-            if (isset($request->offer)) {
-                $selected_prod_data['offer'] = 1;
-                $selected_prod_data['offer_percentage'] = (double)$request->offer_percentage;
-            }else {
-                $selected_prod_data['offer'] = 0;
-                $selected_prod_data['offer_percentage'] = 0;
-                $selected_prod_data['price_before_offer'] = $request->price_before_offer;
-            }
-            $selected_prod_data['total_quatity'] = $request->total_quatity;
-            $selected_prod_data['remaining_quantity'] = $request->remaining_quantity;
-            $selected_product->update($selected_prod_data);
+        
+        if (isset($request->offer)) {
+            $price_before = (double)$request->price_before_offer;
+            $discount_value = (double)$request->offer_percentage / 100;
+            $price_value = $price_before * $discount_value;
+            $selected_prod_data['final_price'] = $price_before - $price_value;
         }
 
+        if (!isset($request->offer)) {
+            $selected_prod_data['final_price'] = $request->price_before_offer;
+        }
+
+        if (isset($request->offer)) {
+            $selected_prod_data['offer'] = 1;
+            $selected_prod_data['offer_percentage'] = (double)$request->offer_percentage;
+        }else {
+            $selected_prod_data['offer'] = 0;
+            $selected_prod_data['offer_percentage'] = 0;
+            $selected_prod_data['price_before_offer'] = $request->price_before_offer;
+        }
+        $selected_prod_data['total_quatity'] = $request->total_quatity;
+        $selected_prod_data['remaining_quantity'] = $request->remaining_quantity;
+        $selected_product->update($selected_prod_data);
+        
+
         return redirect()->route('products.index')
-            ->with('success', __('Created successfully'));
+            ->with('success', __('messages.created_successfully'));
     }
 
     // get products by subcat

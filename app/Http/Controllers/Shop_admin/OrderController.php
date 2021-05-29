@@ -18,40 +18,60 @@ use PDF;
 class OrderController extends Controller{
     // get all orders
     public function show(Request $request){
-        if (isset($request->order_status)) {
-            $statusArray = [1];
-            if ($request->order_status == 'closed') {
-                $statusArray = [3, 4, 9];
+        $data['store_id'] = auth()->guard('shop')->user()->id;
+        $data['area_id'] = "";
+        $data['from'] = "";
+        $data['to'] = "";
+        $data['method'] = "";
+        $data['order_status'] = "";
+        if(isset($request->status) && $request->status != 0) {
+            $statusArray = [1, 2, 5];
+            if ($request->status == 2) {
+                $statusArray = [3, 4, 6, 7, 8, 9];
             }
-            $data['order_status'] = $request->order_status;
-            $data['orders'] = MainOrder::whereIn('status', $statusArray);
-        }else{
-            $data['orders'] = MainOrder::join('user_addresses', 'user_addresses.id', '=', 'main_orders.address_id');
-            if(isset($request->order_status2)){
-                $data['order_status2'] = $request->order_status2;
-                $data['orders'] = $data['orders']->where('status', $request->order_status2);
-            }
-            if(isset($request->area_id)){
-                $data['area'] = Area::where('id', $request->area_id)->select('id', 'title_en', 'title_ar')->first();
+            $data['status'] = $request->status;
+            $data['orders'] = Order::whereIn('status', $statusArray)->where('store_id', auth()->guard('shop')->user()->id);
+        }else {
+            $data['orders'] = Order::join('user_addresses', 'user_addresses.id', '=', 'orders.address_id')
+                ->where('store_id', auth()->guard('shop')->user()->id);
+            if (isset($request->area_id)) {
+                $data['orders'] = $data['orders']
+                ->where('area_id', $request->area_id);
                 $data['area_id'] = $request->area_id;
-                $data['orders'] = $data['orders']->where('area_id', $request->area_id);
             }
-            if(isset($request->from) && isset($request->to)){
+            if(isset($request->from) && isset($request->to)) {
                 $data['from'] = $request->from;
                 $data['to'] = $request->to;
-                $data['orders'] = $data['orders']->whereBetween('main_orders.created_at', array($request->from, $request->to));
+                $data['orders'] = $data['orders']->whereBetween('orders.created_at', array($request->from, $request->to));
             }
-            if(isset($request->method)){
+            if(isset($request->method)) {
                 $data['method'] = $request->method;
-                $data['orders'] = $data['orders']->where('main_orders.payment_method', $request->method);
+                $data['orders'] = $data['orders']->where('orders.payment_method', $request->method);
+            }
+            if(isset($request->order_status)) {
+                $statusArray = [1, 2, 5];
+                if ($request->order_status == 2) {
+                    $statusArray = [3, 4, 6, 7, 8, 9];
+                }
+                $data['order_status'] = $request->order_status;
+                if ($request->order_status != 0) {
+                    $data['orders'] = $data['orders']->whereIn('orders.status', $statusArray);
+                }
             }
         }
-
-        $data['areas'] = Area::where('deleted', 0)->orderBy('title_ar', 'asc')->get();
-        $data['sum_price'] = $data['orders']->sum('subtotal_price');
-        $data['sum_delivery'] = $data['orders']->sum('delivery_cost');
-        $data['sum_total'] = $data['orders']->sum('total_price');
-        $data['orders'] = $data['orders']->select('main_orders.*')->orderBy('main_orders.id', 'desc')->get();
+        
+        $data['orders'] = $data['orders']->select('orders.*')->orderBy('id', 'desc')->simplePaginate(16);
+        
+        for ($i = 0; $i < count($data['orders']); $i ++) {
+            if (in_array($data['orders'][$i]['status'], [1, 2, 5])) {
+                $data['orders'][$i]['status'] = 1;
+            }
+            if (in_array($data['orders'][$i]['status'], [3, 4, 6, 7, 8, 9])) {
+                $data['orders'][$i]['status'] = 2;
+            }
+            $data['orders'][$i]['date'] = $data['orders'][$i]['created_at']->format('Y-m-d'); 
+            $data['orders'][$i]['time'] = $data['orders'][$i]['created_at']->format('g:i A');
+        }
 
         return view('shop_admin.orders.orders' , ['data' => $data]);
     }

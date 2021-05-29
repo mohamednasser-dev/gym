@@ -544,5 +544,11 @@ return [
     "upload_main_image" => "رفع الصورة الرئيسية",
     "product_images" => "صور اعلان المستخدم",
     "show_buy" => "اظهار الشراء",
+    "another_choice" => "إضافة خيار آخر",
+    "remaining_q_less_total" => "الكمية المتبقية يجب أن تساوى أو تقل عن ",
+    "visible" => "مرئى",
+    "hide_product" => "إخفاء المنتج",
+    "created_successfully" => "تمت الإضافة بنجاح",
+    "publish" => "نشر",
 ];
 ?>

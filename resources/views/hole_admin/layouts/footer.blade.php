@@ -89,6 +89,8 @@
 <script>
     var firstUpload = new FileUploadWithPreview('myFirstImage')
     var secondUpload = new FileUploadWithPreview('mySecondImage')
+    var thirdUpload = new FileUploadWithPreview('myThirdImage')
+    
 </script>
 <script>
     $(".menu a").removeAttr("data-active");
