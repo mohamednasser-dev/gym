@@ -335,7 +335,8 @@ class CoachesController extends Controller
 //                $input['story'] = $story_new_name ;
 
 
-                $uploadedFileUrl = $this->upload($request->file('story'));
+                $uploadedFileUrl = $this->uploadFromApi($request->story);
+				//dd($uploadedFileUrl);
                 $image_id2 = $uploadedFileUrl->getPublicId();
                 $image_format2 = $uploadedFileUrl->getExtension();
                 $image_new_story = $image_id2.'.'.$image_format2;
