@@ -89,7 +89,7 @@ class FavoriteController extends Controller
                 }else{
                     $halls[$key]['title'] = $row->Hall->name_en;
                 }
-                $halls[$key]['image'] = $row->Hall->image;
+                $halls[$key]['cover'] = $row->Hall->cover;
                 $halls[$key]['logo'] = $row->Hall->logo;
                 $halls[$key]['rate'] = $row->Hall->rate ;
                 $halls[$key]['favorite'] = true;
@@ -109,7 +109,7 @@ class FavoriteController extends Controller
                 }else{
                     $coaches[$key]['title'] = $row->Coach->name_en;
                 }
-                $coaches[$key]['image'] = $row->Coach->image;
+                $coaches[$key]['cover'] = $row->Coach->image;
                 $coaches[$key]['rate'] = $row->Coach->rate ;
                 $coaches[$key]['available'] = $row->Coach->available ;
                 $coaches[$key]['favorite'] = true;
