@@ -50,16 +50,16 @@ class FavoriteController extends Controller
         }
         $validator = Validator::make($request->all() , [
             'fav_id' => 'required',
+            'type' => 'required|in:hall,coach,shop,product',
         ]);
         if($validator->fails()) {
             $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first(), null, $request->lang );
             return response()->json($response , 406);
         }
-
-        $favorite = Favorite::where('id' , $request->fav_id)->first();
+        $favorite = Favorite::where('product_id' , $request->fav_id)->where('type',$request->type)->first();
         if($favorite){
             $favorite->delete();
-            $response = APIHelpers::createApiResponse(false , 200 ,  'Deteted ', 'تم الحذف' , null, $request->lang);
+            $response = APIHelpers::createApiResponse(false , 200 ,  'Deleted ', 'تم الحذف' , null, $request->lang);
             return response()->json($response , 200);
         }else{
             $response = APIHelpers::createApiResponse(true , 406 ,  'this favorite not exist', 'هذا المفضل غير موجود بالمفضله' , null, $request->lang );
