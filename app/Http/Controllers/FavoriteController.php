@@ -49,14 +49,14 @@ class FavoriteController extends Controller
             return response()->json($response , 406);
         }
         $validator = Validator::make($request->all() , [
-            'fav_id' => 'required',
+            'product_id' => 'required',
             'type' => 'required|in:hall,coach,shop,product',
         ]);
         if($validator->fails()) {
             $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first(), null, $request->lang );
             return response()->json($response , 406);
         }
-        $favorite = Favorite::where('product_id' , $request->fav_id)->where('type',$request->type)->first();
+        $favorite = Favorite::where('product_id' , $request->product_id)->where('type',$request->type)->first();
         if($favorite){
             $favorite->delete();
             $response = APIHelpers::createApiResponse(false , 200 ,  'Deleted ', 'تم الحذف' , null, $request->lang);
