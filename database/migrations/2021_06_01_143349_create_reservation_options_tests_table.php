@@ -16,7 +16,7 @@ class CreateReservationOptionsTestsTable extends Migration
         Schema::create('reservation_options_tests', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('option_id');
-            $table->integer('value');
+            $table->string('value');
             $table->integer('bill_num');
             $table->string('is_done')->default('0');
             $table->timestamps();

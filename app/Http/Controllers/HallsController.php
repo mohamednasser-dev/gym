@@ -294,7 +294,7 @@ class HallsController extends Controller
                 foreach($res_test as $key => $row){
                     $otion_data['reservation_id'] = $reserve->id;
                     $otion_data['type_id'] = $row->option_id;
-                    $otion_data['goal_id'] = $row->option_value;
+                    $otion_data['goal_id'] = $row->value;
                     Reservation_option::create($otion_data);
                 }
                 $updat_data_done['is_done'] = '1';
