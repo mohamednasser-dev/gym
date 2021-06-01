@@ -49,21 +49,21 @@ class HoleController extends AdminController{
                 'logo' => 'required',
                 'cover' => 'required',
             ]);
-        if($request->male == 'male'){
+        if ($request->male == 'male') {
             $this->validate(\request(),
                 [
                     'male_hole_from' => 'required',
                     'male_hole_to' => 'required'
                 ]);
         }
-        if($request->female == 'female'){
+        if ($request->female == 'female') {
             $this->validate(\request(),
                 [
                     'female_hole_from' => 'required',
                     'female_hole_to' => 'required'
                 ]);
         }
-        if($request->mix == 'mix'){
+        if ($request->mix == 'mix') {
             $this->validate(\request(),
                 [
                     'mix_hole_from' => 'required',
@@ -71,26 +71,26 @@ class HoleController extends AdminController{
                 ]);
         }
 
-        if($request->password){
+        if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }
-        if($request->logo != null){
+        if ($request->logo != null) {
             $logo = $request->file('logo')->getRealPath();
-            Cloudder::upload($logo, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_logo = $image_id.'.'.$image_format;
-            $data['logo'] = $image_new_logo ;
+
+            $imagereturned = Cloudinary::upload($logo);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_logo = $image_id . '.' . $image_format;
+            $data['logo'] = $image_new_logo;
         }
-        if($request->cover != null){
+        if ($request->cover != null) {
             $logo = $request->file('cover')->getRealPath();
-            Cloudder::upload($logo, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_cover = $image_id.'.'.$image_format;
-            $data['cover'] = $image_new_cover ;
+
+            $imagereturned = Cloudinary::upload($logo);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_cover = $image_id . '.' . $image_format;
+            $data['cover'] = $image_new_cover;
         }
         $hole = Hole::create($data);
 //
@@ -102,29 +102,29 @@ class HoleController extends AdminController{
 //                }
 //            }
 //        }
-        if($request->male == 'male'){
+        if ($request->male == 'male') {
             $male_data['time_from'] = $request->male_hole_from;
             $male_data['time_to'] = $request->male_hole_to;
             $male_data['type'] = 'male';
-            $male_data['hole_id'] = $hole->id ;
+            $male_data['hole_id'] = $hole->id;
             Hole_time_work::create($male_data);
         }
-        if($request->female == 'female'){
+        if ($request->female == 'female') {
             $male_data['time_from'] = $request->female_hole_from;
             $male_data['time_to'] = $request->female_hole_to;
             $male_data['type'] = 'female';
-            $male_data['hole_id'] = $hole->id ;
+            $male_data['hole_id'] = $hole->id;
             Hole_time_work::create($male_data);
         }
-        if($request->mix == 'mix'){
+        if ($request->mix == 'mix') {
             $male_data['time_from'] = $request->mix_hole_from;
             $male_data['time_to'] = $request->mix_hole_to;
             $male_data['type'] = 'mix';
-            $male_data['hole_id'] = $hole->id ;
+            $male_data['hole_id'] = $hole->id;
             Hole_time_work::create($male_data);
         }
         session()->flash('success', trans('messages.added_s'));
-        return redirect( route('halls.show'));
+        return redirect(route('halls.show'));
     }
     public function update(Request $request , $id)
     {
