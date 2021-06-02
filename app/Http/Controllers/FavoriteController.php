@@ -85,13 +85,15 @@ class FavoriteController extends Controller
                 $halls[$key]['id'] = $row->id;
                 $halls[$key]['hall_id'] = $row->product_id;
                 if($lang == 'ar'){
-                    $halls[$key]['title'] = $row->Hall->name;
+                    $halls[$key]['hallname'] = $row->Hall->name;
                 }else{
-                    $halls[$key]['title'] = $row->Hall->name_en;
+                    $halls[$key]['hallname'] = $row->Hall->name_en;
                 }
                 $halls[$key]['cover'] = $row->Hall->cover;
+                $halls[$key]['about'] = $row->Hall->about;
                 $halls[$key]['logo'] = $row->Hall->logo;
                 $halls[$key]['rate'] = $row->Hall->rate ;
+                $halls[$key]['started_price'] = $row->Hall->started_price ;
                 $halls[$key]['favorite'] = true;
             }
             $coach_favorites = Favorite::select('id','product_id','user_id')
@@ -137,7 +139,7 @@ class FavoriteController extends Controller
             if( count($halls) > 0 ||  count($coaches) > 0 ) {
                 $response = APIHelpers::createApiResponse(false, 200, '', '', array('halls'=> $halls , 'coaches'=> $coaches, 'shops'=> $shops), $request->lang);
             }else{
-                $response = APIHelpers::createApiResponse(false, 200, 'no item favorite to show', 'لا يوجد عناصر للعرض', null, $request->lang);
+                $response = APIHelpers::createApiResponse(false, 200, 'no item favorite to show', 'لا يوجد عناصر للعرض', (object)[], $request->lang);
             }
             return response()->json($response, 200);
         }

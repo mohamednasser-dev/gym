@@ -48,17 +48,22 @@ class OrderController extends Controller{
                 $data['method'] = $request->method;
                 $data['orders'] = $data['orders']->where('orders.payment_method', $request->method);
             }
-            if(isset($request->order_status)) {
+            if(isset($request->order_status2)) {
                 $statusArray = [1, 2, 5];
-                if ($request->order_status == 2) {
+                if ($request->order_status2 == 2) {
                     $statusArray = [3, 4, 6, 7, 8, 9];
                 }
-                $data['order_status'] = $request->order_status;
-                if ($request->order_status != 0) {
+                $data['order_status'] = $request->order_status2;
+                if ($request->order_status2 != 0) {
                     $data['orders'] = $data['orders']->whereIn('orders.status', $statusArray);
                 }
             }
         }
+
+        $data['areas'] = Area::where('deleted', 0)->orderBy('title_ar', 'asc')->get();
+        $data['sum_price'] = $data['orders']->sum('subtotal_price');
+        $data['sum_delivery'] = $data['orders']->sum('delivery_cost');
+        $data['sum_total'] = $data['orders']->sum('total_price');
         
         $data['orders'] = $data['orders']->select('orders.*')->orderBy('id', 'desc')->simplePaginate(16);
         
@@ -72,6 +77,7 @@ class OrderController extends Controller{
             $data['orders'][$i]['date'] = $data['orders'][$i]['created_at']->format('Y-m-d'); 
             $data['orders'][$i]['time'] = $data['orders'][$i]['created_at']->format('g:i A');
         }
+
 
         return view('shop_admin.orders.orders' , ['data' => $data]);
     }

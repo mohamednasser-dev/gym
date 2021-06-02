@@ -510,5 +510,19 @@ return [
     "hide_product" => "Hide Product",
     "created_successfully" => "Created Successfully",
     "publish" => "Publish",
+    "orders" => "Orders",
+    "debit_card" => "Debit Card",
+    "added_to_offer_buy_two_get_one" => "Added To Offer Buy Two Get One",
+    "removed_from_offer_buy_two_get_one" => "Removed From Offer Buy Two Get One",
+    "add_to_offer" => "Add to offer",
+    "remove_from_offer" => "Remove from offer",
+    "offers" => "Offers",
+    "show_offers" => "Show Offers",
+    "canceled_from_user" => "Canceled From User",
+    "canceled_from_admin" => "Canceled From Admin",
+    "opened" => "Opened Order",
+    "closed" => "Closed Order",
+    "edit_offer_image" => "Edit Offer Image",
+    "show_products" => "Show Products"
 ];
 ?>

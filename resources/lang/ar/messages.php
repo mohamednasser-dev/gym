@@ -550,5 +550,19 @@ return [
     "hide_product" => "إخفاء المنتج",
     "created_successfully" => "تمت الإضافة بنجاح",
     "publish" => "نشر",
+    "orders" => "الطلبات",
+    "debit_card" => "بطاقة إئتمان",
+    "added_to_offer_buy_two_get_one" => "تمت إضافة المنتج إلى عرض اشترى 2 واحصل على 1 مجاناً",
+    "removed_from_offer_buy_two_get_one" => "تم حذف المنتج من عرض اشترى 2 واحصل على 1 مجاناً",
+    "add_to_offer" => "إضافة الى العرض",
+    "remove_from_offer" => "حذف من العرض",
+    "offers" => "العروض",
+    "show_offers" => "عرض العروض",
+    "canceled_from_user" => "ملغى من قبل المستخدم",
+    "canceled_from_admin" => "ملغى من قبل المدير",
+    "opened" => "طلب مفتوح",
+    "closed" => "طلب مغلق",
+    "edit_offer_image" => "تعديل صورة العروض",
+    "show_products" => "عرض المنتجات"
 ];
 ?>

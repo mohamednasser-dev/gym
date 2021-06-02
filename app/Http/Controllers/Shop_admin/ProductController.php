@@ -15,6 +15,7 @@ use App\OptionValue;
 use App\Category;
 use App\Product;
 use App\Brand;
+use App\Setting;
 use App\Shop;
 use Cloudinary;
 
@@ -501,5 +502,27 @@ class ProductController extends Controller{
         return redirect()->back();
     }
 
+    // action free product (add - remove)
+    public function actionFreeProduct(Product $product, $status) {
+        
+        $product->free = $status;
+        $product->save();
+        $statusText = __('messages.added_to_offer_buy_two_get_one');
+        if ($status == 0) {
+            $statusText = __('messages.removed_from_offer_buy_two_get_one');
+        }
+
+        return redirect()->route('products.offers')
+            ->with('success', $statusText);
+    }
+
+    // get offers
+    public function getOffers() {
+        $data['products'] = Product::where('deleted', 0)->where('free', 1)->where('store_id', auth()->guard('shop')->user()->id)->orderBy('id' , 'desc')->get();
+
+        return view('shop_admin.products.offers', ['data' => $data]);
+    }
+
+    
 
 }

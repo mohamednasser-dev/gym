@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Hash;
 use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Http\Request;
 use App\Shop;
+use App\Setting;
+use App\Product;
+use Cloudinary;
 
 class ShopController extends AdminController{
 
@@ -138,6 +141,45 @@ class ShopController extends AdminController{
         $store->update(['status' => $status]);
 
         return redirect()->back();
+    }
+
+    // get product offers
+    public function getProductOffers() {
+        $data['offer_image'] = Setting::where('id', 1)->select('offer_image')->first()['offer_image'];
+        $data['products'] = Product::where('deleted', 0)->where('free', 1)->orderBy('id' , 'desc')->get();
+
+        return view('store.product.offers', ['data' => $data]);
+    }
+
+    // update offer image
+    public function updateOfferImage(Request $request) {
+        $setting = Setting::where('id', 1)->select('id', 'offer_image')->first();
+        if($request->offer_image != null){
+			if ($request->file('offer_image')->getSize()) {
+				$uploadedFileUrl = Cloudinary::upload($request->file('offer_image')->getRealPath());
+				$image_id2 = $uploadedFileUrl->getPublicId();
+				$image_format2 = $uploadedFileUrl->getExtension();
+				$image_new_story = $image_id2.'.'.$image_format2;
+				$setting->offer_image = $image_new_story ;
+                $setting->save();
+			}
+        }
+
+        return redirect()->back()->with('success', __('messages.updated_s'));
+    }
+
+    // action free product (add - remove)
+    public function actionFreeProduct(Product $product, $status) {
+        
+        $product->free = $status;
+        $product->save();
+        $statusText = __('messages.added_to_offer_buy_two_get_one');
+        if ($status == 0) {
+            $statusText = __('messages.removed_from_offer_buy_two_get_one');
+        }
+
+        return redirect()->route('shops.products.offers')
+            ->with('success', $statusText);
     }
 
 
