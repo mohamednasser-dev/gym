@@ -1,4 +1,4 @@
-@extends('shop_admin.app')
+@extends('store.app')
 
 @section('title' , __('messages.show_products'))
 
@@ -24,7 +24,6 @@
             edit = "{{ __('messages.edit') }}",
             delte = "{{ __('messages.delete') }}"
         $("#category").on("change", function () {
-            console.log("test2")
             var categoryId = $(this).val()
 
 
@@ -54,8 +53,6 @@
                             reviewLink = "",
                             publish = "{{ __('messages.publish') }}"
                             hideShoProduct = "{{ __('messages.hide_product') }}",
-                            addToOffer = "{{ __('messages.add_to_offer') }}",
-                            removeFromOffer = "{{ __('messages.remove_from_offer') }}",
                             hideShowLink = "/admin-panel/products/hide/" + element.id + "/" + 1
 
                             if (element.hidden == 1) {
@@ -74,15 +71,16 @@
                         $("#html5-extension tbody").parent('.form-group').show()
                         var priceBeforeOffer = element.price_before_offer,
                             finalPrice = element.final_price,
-                            startFrom = "{{ __('messages.start_from') }}"
+                            startFrom = "{{ __('messages.start_from') }}",
+                            imageSrc = "{{image_cloudinary_url()}}"
                         if (element.multi_options == 1) {
                             priceBeforeOffer = startFrom + " " + element.multi_optionss[0].price_before_offer,
                             finalPrice = startFrom + " " + element.multi_optionss[0].final_price
                         }
-
+                        
                         var rowNode = dTbls.row.add( [
                             `${i}`,
-                            `<img src="https://res.cloudinary.com/dezsm0sg7/image/upload/w_50,q_50/v1581928924/${ (element.main_image.image) ? element.main_image.image : '' }"  />`,
+                            `<img src="${imageSrc}${ (element.main_image.image) ? element.main_image.image : '' }"  />`,
                             `${elementName}`,
                             `${cat}`,
                             `${element.store.name}`,
@@ -172,6 +170,7 @@
                             <th class="hide_col">{{ __('messages.image') }}</th>
                             <th>{{ __('messages.product_title') }}</th>
                             <th>{{ __('messages.category') }}</th>
+                            <th>{{ __('messages.store') }}</th>
                             <th>{{ __('messages.total_quatity') }}</th>
                             <th>{{ __('messages.remaining_quantity') }}</th>
                             <th>{{ __('messages.sold_quantity') }}</th>
@@ -190,6 +189,7 @@
                                 <td class="hide_col"><img style="width: 50px" src="{{image_cloudinary_url()}}{{ isset($product->mainImage->image) ? $product->mainImage->image : '' }}"  /></td>
                                 <td>{{ App::isLocale('en') ? $product->title_en : $product->title_ar }}</td>
                                 <td>{{ App::isLocale('en') ?  $product->category->title_en : $product->category->title_ar }}</td>
+                                <td>{{ App::isLocale('en') ?  $product->store->name_en : $product->store->name_ar }}</td>
                                 <td>{{ $product->multi_options == 0 ? $product->total_quatity : $product->multiOptions->sum("total_quatity") }}</td>
                                 <td>{{ $product->multi_options == 0 ? $product->remaining_quantity : $product->multiOptions->sum("remaining_quantity") }}</td>
                                 <td>{{ $product->sold_count }}</td>

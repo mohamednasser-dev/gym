@@ -32,6 +32,9 @@
                         <li class="show" >
                             <a href="{{ route('products.index') }}"> {{ __('messages.show') }} </a>
                         </li>
+                        <li class="action-offer" >
+                            <a href="{{ route('products.offers') }}"> {{ __('messages.offers') }} </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="menu orders">
@@ -46,7 +49,7 @@
                     </a>
                     <ul class="collapse submenu list-unstyled show" id="orders" data-parent="#accordionExample">
                         <li class="active show">
-                            <a href="{{ route('orders.index') }}"> {{ __('messages.main_orders') }} </a>
+                            <a href="{{ route('orders.index') }}"> {{ __('messages.orders') }} </a>
                         </li>
                         <li class="sub-orders" >
                             <a href="{{ route('orders.subOrders.index') }}"> {{ __('messages.sub_orders') }} </a>

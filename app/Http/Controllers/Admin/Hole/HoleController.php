@@ -164,19 +164,19 @@ class HoleController extends AdminController{
         }
         if($request->logo != null){
             $logo = $request->file('logo')->getRealPath();
-            Cloudder::upload($logo, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
+            
+            $imagereturned = Cloudinary::upload($logo);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
             $image_new_logo = $image_id.'.'.$image_format;
             $data['logo'] = $image_new_logo ;
         }
         if($request->cover != null){
             $logo = $request->file('cover')->getRealPath();
-            Cloudder::upload($logo, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
+            
+            $imagereturned = Cloudinary::upload($logo);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
             $image_new_cover = $image_id.'.'.$image_format;
             $data['cover'] = $image_new_cover ;
         }

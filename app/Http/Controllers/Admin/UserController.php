@@ -217,4 +217,12 @@ class UserController extends AdminController{
 
         return view('admin.products.products', ['data' => $data]);
     }
+
+    // get user addresses
+    public function get_user_addresses(User $user) {
+        $data['addresses'] = $user->addresses;
+        $data['username'] = $user->name;
+
+        return view('admin.addresses', ['data' => $data]);
+    }
 }

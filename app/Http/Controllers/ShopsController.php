@@ -13,17 +13,20 @@ use App\Hole_media;
 use App\Favorite;
 use App\Shop;
 use App\Hole;
+use App\Product;
 use App\Rate;
 use App\User;
+use App\Setting;
 
 class ShopsController extends Controller
 {
     public $personal_data = [];
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['all_shops','details']]);
+        $this->middleware('auth:api' , ['except' => ['all_shops','details', 'getOfferImage']]);
 
     }
+
     public function all_shops(Request $request) {
         $lang = $request->lang ;
         $user = auth()->user();
