@@ -232,7 +232,7 @@ use Illuminate\Http\Request;
 
     Route::post('reservation/{type}/store/{lang}/{v}' , 'HallsController@store_reservation');
     Route::get('reservation/options/{lang}/{v}' , 'HallsController@reservation_types');
-    Route::get('reservation/store/excute_pay/{lang}/{v}' , 'HallsController@excute_store_reservation');
+    Route::get('reservation/store/excute_pay' , 'HallsController@excute_store_reservation');
 
     //coach chat api
     Route::get('/chat/remove_conversation/{type}/{convers_id}/{lang}/{v}' , 'ChatController@remove_conversation');

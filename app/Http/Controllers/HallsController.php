@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Admin;
 use App\Reservation_options_test;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
@@ -20,6 +19,7 @@ use Carbon\Carbon;
 use App\Favorite;
 use App\Setting;
 use App\Income;
+use App\Admin;
 use App\Hole;
 use App\Rate;
 use App\User;
