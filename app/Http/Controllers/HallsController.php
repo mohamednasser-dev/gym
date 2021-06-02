@@ -198,8 +198,8 @@ class HallsController extends Controller
             $price = $booking->price ;
         }
         $user = auth()->user();
-       $admin_data =  Admin::find(1);
-       $bill_num = $admin_data->options_bill_num ;
+        $admin_data =  Admin::find(1);
+        $bill_num = $admin_data->options_bill_num ;
 
         //save options selected in database
         foreach ($request->option_id as $key => $row){
@@ -220,7 +220,7 @@ class HallsController extends Controller
         );
 
 
-        $call_back_url = $root_url."/api/reservation/excute_pay?user_id=".$user->id."&booking_id=".$request->booking_id.
+        $call_back_url = $root_url."/api/reservation/store/excute_pay?user_id=".$user->id."&booking_id=".$request->booking_id.
             "&bill_num=".$bill_num.
             "&price=".$price.
             "&type=".$type;
@@ -291,6 +291,7 @@ class HallsController extends Controller
         if($reserve != null){
             if($request->bill_num != null){
                 $res_test = Reservation_options_test::where('bill_num',$request->bill_num)->get();
+
                 foreach($res_test as $key => $row){
                     $otion_data['reservation_id'] = $reserve->id;
                     $otion_data['type_id'] = $row->option_id;
@@ -310,7 +311,7 @@ class HallsController extends Controller
             // to save points after reservation ...
             $settings = Setting::where('id',1)->first();
             $points = $settings->points * $request->price ;
-            $selected_user = User::find($user->id);
+            $selected_user = User::find($data['user_id']);
             $selected_user->points = $selected_user->points + $points;
             $selected_user->save();
         }
@@ -340,21 +341,21 @@ class HallsController extends Controller
             }
             $data['basic'] = $hall;
             $data['work_times'] = Hole_time_work::select('id','time_from','time_to','type')
-                                                ->where('hole_id',$id)
-                                                ->get()
-                                                ->map(function($time) use ($lang){
-                                                    if($lang == 'ar'){
-                                                        if($time->type == 'male'){
-                                                            $time->type = 'الرجالية';
-                                                        }else if($time->type == 'female'){
-                                                            $time->type = 'النسائية';
-                                                        }else if($time->type == 'mix'){
-                                                            $time->type = 'المختلط';
-                                                        }
-                                                    }
+                ->where('hole_id',$id)
+                ->get()
+                ->map(function($time) use ($lang){
+                    if($lang == 'ar'){
+                        if($time->type == 'male'){
+                            $time->type = 'الرجالية';
+                        }else if($time->type == 'female'){
+                            $time->type = 'النسائية';
+                        }else if($time->type == 'mix'){
+                            $time->type = 'المختلط';
+                        }
+                    }
 //                                                    $time->rate =
-                                                    return $time;
-                                                });
+                    return $time;
+                });
 
             $data['media'] = Hole_media::select('id','image','type')
                 ->where('hole_id',$id)
@@ -385,30 +386,30 @@ class HallsController extends Controller
             $data['stars_count']['five'] = $rates_five;
 
             $data['all_rates'] = Rate::select('text','rate','user_id as user_name','created_at')->where('type','hall')
-                                    ->where('order_id',$id)
-                                    ->where('admin_approval',1)
-                                    ->get()
-                                    ->map(function($rate) use ($lang){
-                                        $user = User::where('id',$rate->user_name)->first();
-                                        $rate->user = $user->name;
+                ->where('order_id',$id)
+                ->where('admin_approval',1)
+                ->get()
+                ->map(function($rate) use ($lang){
+                    $user = User::where('id',$rate->user_name)->first();
+                    $rate->user = $user->name;
                     //                $rate->created_at = APIHelpers::get_month_year($rate->created_at, $lang);
-                                        return $rate;
-                                    });
+                    return $rate;
+                });
             $data['rates_count'] = count($data['all_rates']);
             if($lang == 'ar'){
                 $data['reservations'] = Hole_booking::with('Details')
-                                                    ->select('id','name_ar as name','title_ar as description','price','is_discount','discount','discount_price','common')
-                                                    ->where('hole_id',$id)
-                                                    ->where('deleted','0')
-                                                    ->orderBy('common','desc')
-                                                    ->get();
+                    ->select('id','name_ar as name','title_ar as description','price','is_discount','discount','discount_price','common')
+                    ->where('hole_id',$id)
+                    ->where('deleted','0')
+                    ->orderBy('common','desc')
+                    ->get();
             }else{
                 $data['reservations'] = Hole_booking::with('Details')
-                                                    ->select('id','name_en as name','title_en as description','price','is_discount','discount','discount_price','common')
-                                                    ->where('hole_id',$id)
-                                                    ->where('deleted','0')
-                                                    ->orderBy('common','desc')
-                                                    ->get();
+                    ->select('id','name_en as name','title_en as description','price','is_discount','discount','discount_price','common')
+                    ->where('hole_id',$id)
+                    ->where('deleted','0')
+                    ->orderBy('common','desc')
+                    ->get();
             }
         }
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
