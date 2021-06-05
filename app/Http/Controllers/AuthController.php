@@ -32,6 +32,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = request(['phone', 'password']);
+        // dd(auth()->attempt($credentials));
         if (! $token = auth()->attempt($credentials)) {
             $response  = APIHelpers::createApiResponse(true , 401 , 'Invalid phone or password' , 'يرجي التاكد من رقم الهاتف او كلمة المرور' , null , $request->lang);
             return response()->json($response, 401);
@@ -40,6 +41,7 @@ class AuthController extends Controller
             $response = APIHelpers::createApiResponse(true , 406 , 'Missing Required Fields' , 'بعض الحقول مفقودة' , null , $request->lang);
             return response()->json($response , 406);
         }
+        
         $user = auth()->user();
         $user->fcm_token = $request->fcm_token;
         $user->save();

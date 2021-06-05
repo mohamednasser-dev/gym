@@ -54,18 +54,18 @@
         buttons: {
             buttons: [
                 { extend: 'copy', className: 'btn', footer: true, exportOptions: {
-                        columns: ':visible',
-                        rows: ':visible'
-                    } },
+                    columns: ':visible',
+                    rows: ':visible'
+                } },
                 { extend: 'csv', className: 'btn', footer: true, exportOptions: {
-                        columns: ':visible',
-                        rows: ':visible'
-                    } },
+                    columns: ':visible',
+                    rows: ':visible'
+                } },
                 { extend: 'excel', className: 'btn', footer: true, exportOptions: {
-                        columns: ':visible',
-                        rows: ':visible'
-                    } },
-                { extend: 'print', className: 'btn', footer: true,
+                    columns: ':visible',
+                    rows: ':visible'
+                } },
+                { extend: 'print', className: 'btn', footer: true, 
                     exportOptions: {
                         columns: ':visible',
                         rows: ':visible'
@@ -81,13 +81,14 @@
             "sInfo": "Showing page _PAGE_ of _PAGES_",
             "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
             "sSearchPlaceholder": "Search...",
-            "sLengthMenu": "Results :  _MENU_",
+           "sLengthMenu": "Results :  _MENU_",
         },
         "stripeClasses": [],
         "lengthMenu": [50, 100, 1000, 10000, 100000, 1000000, 2000000, 3000000, 4000000, 5000000],
-        "pageLength": 50
+        "pageLength": 50 
     } );
 </script>
+
 <script>
     var tbl = $('#without-print').DataTable( {
         "scrollX": true,

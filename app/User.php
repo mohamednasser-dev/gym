@@ -25,7 +25,8 @@ class User extends Authenticatable implements JWTSubject
         'free_balance',
         'payed_balance',
         'points',
-        'watsapp'
+        'watsapp',
+        'main_address_id'
       ];
     use Notifiable;
 
@@ -53,5 +54,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function products() {
         return $this->hasMany('App\Product', 'user_id')->where('publish','Y')->where('status',1)->where('deleted',0);
+    }
+
+    public function addresses() {
+        return $this->hasMany('App\UserAddress', 'user_id')->where('deleted', 0);
     }
 }

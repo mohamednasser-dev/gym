@@ -14,18 +14,20 @@ class Order extends Model
         'delivery_cost',
         'total_price',
         'status',   // 1 => in progress
-        // 2 => delivery service
-        // 3 => delivered
-        // 4 => canceled from user
-        // 5 => refund request
-        // 6 => refund accepted
-        // 7 => refund refused
-        // 9 => canceled from admin
+                    // 2 => delivery service
+                    // 3 => delivered
+                    // 4 => canceled from user
+                    // 5 => refund request
+                    // 6 => refund accepted
+                    // 7 => refund refused
+                    // 9 => canceled from admin
         'order_number',
         'store_id',
         'from_deliver_date',
         'to_deliver_date',
-        'main_id'
+        'main_id',
+        'arrival_from',
+        'arrival_to'
     ];
 
     protected $dates = ['from_deliver_date', 'to_deliver_date'];

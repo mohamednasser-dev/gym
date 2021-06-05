@@ -19,7 +19,18 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::get('action/{store}/{status}' , 'ShopController@action')->name('shops.action');
     });
     Route::get('shops_famous' , 'ShopController@famous')->name('shops_famous');
-
+    
+    // Shops Route
+    Route::group([
+        "prefix" => "products"
+    ] , function($router){
+        Route::get('/show' , 'ProductController@show')->name('shops.products.show');
+        Route::get('/offers' , 'ShopController@getProductOffers')->name('shops.products.offers');
+        Route::post('/offers' , 'ShopController@updateOfferImage')->name('shops.products.update_image');
+        Route::get('fetchcategoryproducts/{category}' , 'ProductController@fetch_category_products');
+        Route::get('action-offer/{product}/{status}' , 'ShopController@actionFreeProduct')->name('shops.products.action.offer');
+        
+    });
     // Categories Route
     Route::group([
         "prefix" => "categories"
@@ -84,6 +95,8 @@ Route::group(['middleware'=>'language','prefix' => "shop-panel",'namespace' => "
         Route::get('getbysubcat' , 'ProductController@get_product_by_sub_cat')->name('products.getbysubcat');
         Route::get('fetchsubcategorybycategory/{category}' , 'ProductController@fetch_sub_categories_by_category');
         Route::get('review/{product}/{status}' , 'ProductController@review_product')->name('products.review');
+        Route::get('action-offer/{product}/{status}' , 'ProductController@actionFreeProduct')->name('products.action.offer');
+        Route::get('action-offer' , 'ProductController@getOffers')->name('products.offers');
     });
 
     // Offer Control Route

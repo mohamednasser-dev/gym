@@ -93,9 +93,7 @@ class HomeController extends Controller{
         if($request->story != null){
 
             $story = $request->file('story')->getRealPath();
-//            $story = $request->story;
-//            dd($story);
-//            $uploadedFileUrl = Cloudinary::uploadVideo("data:video/mp4;base64,".$story)->getSecurePath();
+
 			if ($request->file('story')->getSize()) {
 				$uploadedFileUrl = $this->upload($request->file('story'));
 				$image_id2 = $uploadedFileUrl->getPublicId();

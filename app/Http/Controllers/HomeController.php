@@ -27,7 +27,7 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['exchange_points', 'points_packages', 'balance_packages', 'gethome', 'app_home', 'check_ad', 'main_ad']]);
+        $this->middleware('auth:api', ['except' => ['exchange_points', 'points_packages', 'balance_packages', 'gethome', 'app_home', 'check_ad', 'main_ad', 'getOfferImage']]);
     }
 
     public function gethome(Request $request)
@@ -237,5 +237,14 @@ class HomeController extends Controller
                 'الباقة المختاره غير موجوده', null, $request->lang);
             return response()->json($response, 406);
         }
+    }
+
+    // get offer image
+    public function getOfferImage(Request $request) {
+        $offer_image = Setting::where('id', 1)->select('offer_image')->first()['offer_image'];
+        
+
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $offer_image, $request->lang );
+        return response()->json($response , 200);
     }
 }

@@ -173,7 +173,6 @@ class HoleController extends AdminController{
         }
         if($request->cover != null){
             $logo = $request->file('cover')->getRealPath();
-
             $imagereturned = Cloudinary::upload($logo);
             $image_id = $imagereturned->getPublicId();
             $image_format = $imagereturned->getExtension();

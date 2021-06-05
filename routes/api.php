@@ -27,6 +27,44 @@ use Illuminate\Http\Request;
     Route::get('/invalid/{lang}/{v}', [ 'as' => 'invalid', 'uses' => 'AuthController@invalid']);
 
 
+    // visitors
+    Route::group([
+        'middleware' => 'api',
+        'prefix' => 'visitors'
+    ], function($router){
+        Route::post('create/{lang}/{v}' , 'VisitorController@create')->middleware('checkguest');
+        Route::post('cart/add/{lang}/{v}' , 'VisitorController@add')->middleware('checkguest');
+        Route::delete('cart/delete/{lang}/{v}' , 'VisitorController@delete')->middleware('checkguest');
+        Route::post('cart/get/{lang}/{v}' , 'VisitorController@get')->middleware('checkguest');
+        Route::post('cart/getbeforeorder/{lang}/{v}' , 'VisitorController@get_cart_before_order');
+        Route::put('cart/changecount/{lang}/{v}' , 'VisitorController@changecount')->middleware('checkguest');
+        Route::post('cart/count/{lang}/{v}' , 'VisitorController@getcartcount')->middleware('checkguest');
+    });
+
+    Route::group([
+        'middleware' => 'api',
+        'prefix' => 'orders'
+    ] , function($router){
+        Route::post('create/{lang}/{v}' , 'OrderController@create');
+        Route::get('{lang}/{v}' , 'OrderController@getorders');
+        Route::get('{id}/{lang}/{v}' , 'OrderController@orderdetails');
+    });
+
+    // address
+    Route::group([
+        'middleware' => 'api',
+        'prefix' => 'addresses'
+    ] , function($router){
+        Route::get('/{lang}/{v}' , 'AddressController@getaddress');
+        Route::post('/{lang}/{v}' , 'AddressController@addaddress');
+        Route::delete('/{lang}/{v}' , 'AddressController@removeaddress');
+        Route::post('/setdefault/{lang}/{v}' , 'AddressController@setmain');
+        Route::get('/areas/{lang}/{v}' , 'AddressController@getareas')->middleware('checkguest');
+        Route::get('/details/{id}/{lang}/{v}' , 'AddressController@getdetails');
+    });
+
+    Route::get('offer_image/{lang}/{v}' , 'HomeController@getOfferImage');
+
     // users apis group
     Route::group([
         'middleware' => 'api',

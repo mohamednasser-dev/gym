@@ -32,7 +32,7 @@ class Product extends Model
         'order_period',
         'video',
         'reviewed', // 0 => reviewed // 1 => under review
-        'type'  // 1 => ready-made clothes // 2 => Tailoring clothes
+        'free'  // 1 => offer 1 more // default = 0
     ];
 
     protected $hidden = ['pivot'];
