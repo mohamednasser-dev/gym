@@ -29,7 +29,7 @@ class SubscriptionsController extends Controller
     public function subscriptions( Request $request , $type) {
         $lang = $request->lang ;
         $user_id = auth()->user()->id;
-        $subscriptions[] = null;
+        $subscriptions[] = (object)[];
         if($type == 'hall'){
         $data = Reservation::select('id','booking_id','expire_date','price','user_id','status')
             ->where('type',$type)
