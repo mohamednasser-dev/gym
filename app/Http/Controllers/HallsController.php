@@ -316,8 +316,7 @@ class HallsController extends Controller
             $selected_user->save();
         }
 
-        $response = APIHelpers::createApiResponse(false , 200 ,  'تم الحجز فالاشتراك بنجاح', 'Reservation saves successfully' , null, $request->lang );
-        return response()->json($response , 200);
+        return redirect('api/pay/success');
     }
     public function details(Request $request,$id) {
         $lang = $request->lang ;
