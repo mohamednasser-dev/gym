@@ -1,5 +1,5 @@
 @extends('hole_admin.app')
-@section('title' , __('messages.rates'))
+@section('title' , __('messages.videos_images'))
 @section('styles')
     <!-- BEGIN PAGE LEVEL STYLES -->
     <link rel="stylesheet" type="text/css" href="/admin//admin/assets/css/forms/theme-checkbox-radio.css">

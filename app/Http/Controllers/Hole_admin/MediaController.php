@@ -19,20 +19,31 @@ class MediaController extends Controller{
         $id = auth()->guard('hole')->user()->id;
         $data = $this->validate(\request(),
             [
-                'images' => 'required',
-                'type' => 'required|in:image,video',
+                'images' => 'required'
             ]);
-        if($request->type == 'image'){
 
-        }
         foreach ($request->images as $image){
-            $image_name = $image->getRealPath();
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_name = $image_id.'.'.$image_format;
-            $data_image['hole_id'] = $id ;
-            $data_image['image'] = $image_new_name ;
+            $extension = $image->getClientOriginalExtension();
+
+            $list_video_ext = array('flv','mp4','m3u8','ts','3gp','mov','avi','wmv');
+            if(in_array($extension, $list_video_ext )){
+                $story = $image->getRealPath();
+                if ($image->getSize()) {
+                    $uploadedFileUrl = $this->upload($image);
+                    $image_id2 = $uploadedFileUrl->getPublicId();
+                    $image_format2 = $uploadedFileUrl->getExtension();
+                    $image_new_story = $image_id2.'.'.$image_format2;
+                    $data_image['image'] = $image_new_story ;
+                }
+            }else{
+                $image_name = $image->getRealPath();
+                $imagereturned = Cloudder::getResult();
+                $image_id = $imagereturned['public_id'];
+                $image_format = $imagereturned['format'];
+                $image_new_name = $image_id.'.'.$image_format;
+                $data_image['hole_id'] = $id ;
+                $data_image['image'] = $image_new_name ;
+            }
             Hole_media::create($data_image);
         }
         session()->flash('success', trans('messages.added_s'));
