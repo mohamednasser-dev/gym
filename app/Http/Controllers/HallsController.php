@@ -116,12 +116,13 @@ class HallsController extends Controller
         $rates_four = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',4)->get()->count();
         $rates_five = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',5)->get()->count();
 
-        $data['stars_count']['one'] = $rates_one;
-        $data['stars_count']['tow'] = $rates_tow;
-        $data['stars_count']['three'] = $rates_three;
-        $data['stars_count']['four'] = $rates_four;
-        $data['stars_count']['five'] = $rates_five;
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,array('rate'=>$rate,'stars_count'=>$data,'rates_count'=>$rates_count,'rates'=>$rates), $request->lang );
+        $stars_count['one'] = $rates_one;
+        $stars_count['tow'] = $rates_tow;
+        $stars_count['three'] = $rates_three;
+        $stars_count['four'] = $rates_four;
+        $stars_count['five'] = $rates_five;
+        
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,array('rate'=>$rate,'stars_count'=>$stars_count,'rates_count'=>$rates_count,'rates'=>$rates), $request->lang );
         return response()->json($response , 200);
     }
 
