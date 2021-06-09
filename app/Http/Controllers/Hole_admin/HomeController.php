@@ -79,7 +79,7 @@ class HomeController extends Controller{
         }
         if($request->logo != null){
             $logo = $request->file('logo')->getRealPath();
-            Cloudder::upload($logo, null);
+
             $imagereturned = Cloudinary::upload($logo);
             $image_id = $imagereturned->getPublicId();
             $image_format = $imagereturned->getExtension();
@@ -89,7 +89,7 @@ class HomeController extends Controller{
         }
         if($request->cover != null){
             $logo = $request->file('cover')->getRealPath();
-            Cloudder::upload($logo, null);
+
             $imagereturned = Cloudinary::upload($logo);
             $image_id = $imagereturned->getPublicId();
             $image_format = $imagereturned->getExtension();

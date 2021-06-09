@@ -27,7 +27,6 @@ class MediaController extends Controller{
         }
         foreach ($request->images as $image){
             $image_name = $image->getRealPath();
-            Cloudder::upload($image_name, null);
             $imagereturned = Cloudder::getResult();
             $image_id = $imagereturned['public_id'];
             $image_format = $imagereturned['format'];
