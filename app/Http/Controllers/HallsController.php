@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Coach;
 use App\Reservation_options_test;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
@@ -90,8 +91,9 @@ class HallsController extends Controller
     }
     public function rates(Request $request) {
         $lang = $request->lang ;
+        $id =$request->id ;
         $rates = Rate::select('text','rate','user_id as user_name','created_at')->where('type',$request->type)
-            ->where('order_id',$request->id)
+            ->where('order_id',$id)
             ->where('admin_approval',1)
             ->get()
             ->map(function($rate) use ($lang){
@@ -100,7 +102,26 @@ class HallsController extends Controller
 //                $rate->created_at = APIHelpers::get_month_year($rate->created_at, $lang);
                 return $rate;
             });
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $rates, $request->lang );
+        $rates_count = count($rates);
+        if($request->type == 'hall'){
+            $rate = Hole::whereId($request->id)->first()->rate;
+        }else{
+            $rate = Coach::whereId($request->id)->first()->rate;
+        }
+
+
+        $rates_one = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',1)->get()->count();
+        $rates_tow = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',2)->get()->count();
+        $rates_three = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',3)->get()->count();
+        $rates_four = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',4)->get()->count();
+        $rates_five = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',5)->get()->count();
+
+        $data['stars_count']['one'] = $rates_one;
+        $data['stars_count']['tow'] = $rates_tow;
+        $data['stars_count']['three'] = $rates_three;
+        $data['stars_count']['four'] = $rates_four;
+        $data['stars_count']['five'] = $rates_five;
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,array('rate'=>$rate,'stars_count'=>$data,'rates_count'=>$rates_count,'rates'=>$rates), $request->lang );
         return response()->json($response , 200);
     }
 
@@ -138,6 +159,7 @@ class HallsController extends Controller
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
     }
+
     public function store_rate(Request $request,$type){
         $validator = Validator::make($request->all(), [
             'text' => 'required',
@@ -254,7 +276,6 @@ class HallsController extends Controller
         return response()->json($response , 200);
     }
 
-
     public function excute_store_reservation(Request $request){
         if($request->type == 'hall') {
             $validator = Validator::make($request->all(), [
@@ -318,6 +339,7 @@ class HallsController extends Controller
 
         return redirect('api/pay/success');
     }
+
     public function details(Request $request,$id) {
         $lang = $request->lang ;
         $user = auth()->user();
