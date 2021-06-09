@@ -1,7 +1,12 @@
 <?php
 namespace App\Http\Controllers\Hole_admin;
 
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+//use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
+
+
+
+use Cloudinary;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -44,7 +49,7 @@ class HomeController extends Controller{
         $branches = Hole_branch::where('hole_id',$id)->get();
         return view('hole_admin.hall_data.time_works',compact('data','time_male','time_female','time_mix','branches'));
     }
-	
+
 	public function upload($request)
 	{
 		 $resizedVideo = cloudinary()->uploadVideo($request->getRealPath(), [
@@ -54,7 +59,7 @@ class HomeController extends Controller{
 						  'height' => 200
 				 ]
 		]);
-		
+
 		return $resizedVideo;
 	}
 
@@ -75,35 +80,33 @@ class HomeController extends Controller{
         if($request->logo != null){
             $logo = $request->file('logo')->getRealPath();
             Cloudder::upload($logo, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
+            $imagereturned = Cloudinary::upload($logo);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+
             $image_new_logo = $image_id.'.'.$image_format;
             $data['logo'] = $image_new_logo ;
         }
         if($request->cover != null){
             $logo = $request->file('cover')->getRealPath();
             Cloudder::upload($logo, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
+            $imagereturned = Cloudinary::upload($logo);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+
             $image_new_cover = $image_id.'.'.$image_format;
             $data['cover'] = $image_new_cover ;
         }
         if($request->story != null){
-
             $story = $request->file('story')->getRealPath();
-
 			if ($request->file('story')->getSize()) {
 				$uploadedFileUrl = $this->upload($request->file('story'));
-				$image_id2 = $uploadedFileUrl->getPublicId();
-				$image_format2 = $uploadedFileUrl->getExtension();
+                $image_id2 = $uploadedFileUrl->getPublicId();
+                $image_format2 = $uploadedFileUrl->getExtension();
 				$image_new_story = $image_id2.'.'.$image_format2;
 				$data['story'] = $image_new_story ;
 			}
-            
         }
-        dd($data);
         Hole::where('id',$id)->update($data);
         session()->flash('success', trans('messages.updated_s'));
         return back();

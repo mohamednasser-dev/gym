@@ -19,8 +19,12 @@ class MediaController extends Controller{
         $id = auth()->guard('hole')->user()->id;
         $data = $this->validate(\request(),
             [
-                'images' => 'required'
+                'images' => 'required',
+                'type' => 'required|in:image,video',
             ]);
+        if($request->type == 'image'){
+
+        }
         foreach ($request->images as $image){
             $image_name = $image->getRealPath();
             Cloudder::upload($image_name, null);

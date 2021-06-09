@@ -121,7 +121,7 @@ class HallsController extends Controller
         $stars_count['three'] = $rates_three;
         $stars_count['four'] = $rates_four;
         $stars_count['five'] = $rates_five;
-        
+
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,array('rate'=>$rate,'stars_count'=>$stars_count,'rates_count'=>$rates_count,'rates'=>$rates), $request->lang );
         return response()->json($response , 200);
     }
