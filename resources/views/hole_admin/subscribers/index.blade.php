@@ -75,10 +75,14 @@
                                                         </td>
                                                         <td class="text-center">
                                                             @if($reserve_data->goal_id > 0)
-                                                                @if(app()->getLocale() == 'ar')
-                                                                    {{$reserve_data->Goal->title_ar}}
+                                                                @if(count($reserve_data->Type->Goals)  > 0 )
+                                                                    @if(app()->getLocale() == 'ar')
+                                                                        {{$reserve_data->Goal->title_ar}}
+                                                                    @else
+                                                                        {{$reserve_data->Goal->title_en}}
+                                                                    @endif
                                                                 @else
-                                                                    {{$reserve_data->Goal->title_en}}
+                                                                    {{$reserve_data->goal_id}}
                                                                 @endif
                                                             @else
                                                                 {{$reserve_data->goal_id}}
