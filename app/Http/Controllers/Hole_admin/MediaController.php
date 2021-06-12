@@ -39,6 +39,7 @@ class MediaController extends Controller
                     $image_format2 = $uploadedFileUrl->getExtension();
                     $image_new_story = $image_id2 . '.' . $image_format2;
                     $data_image['image'] = $image_new_story;
+                    $data_image['type'] = 'video';
                 }
             } else {
                 $image_name = $image->getRealPath();

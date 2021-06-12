@@ -28,13 +28,21 @@
         <div class="widget-content widget-content-area">
             <div id="demo-test-gallery container" class="demo-gallery" data-pswp-uid="1">
                 @foreach($data as $row)
-                    <a id="btn_media" data-media-id="{{$row->id}}" class="img-1"
-                       href="{{media_image_cloudinary_url()}}{{ $row->image }}" data-size="1600x1068"
-                       data-med="{{media_image_cloudinary_url()}}{{ $row->image }}" data-med-size="1024x683"
-                       data-author="Samuel Rohl">
-                        <img style="height: 350px;" src="{{media_image_cloudinary_url()}}{{ $row->image }}"
-                             alt="image-gallery">
-                    </a>
+                    @if($row->type == 'image')
+                        <a id="btn_media" data-media-id="{{$row->id}}" class="img-1"
+                           href="{{media_image_cloudinary_url()}}{{ $row->image }}" data-size="1600x1068"
+                           data-med="{{media_image_cloudinary_url()}}{{ $row->image }}" data-med-size="1024x683"
+                           data-author="Samuel Rohl">
+                            <img style="height: 350px;" src="{{media_image_cloudinary_url()}}{{ $row->image }}"
+                                 alt="image-gallery">
+                        </a>
+                    @else
+                        <video width="400" height="350" controls>
+                            <source src="https://res.cloudinary.com/dsibvtsiv/video/upload/v1621843606/{{ $row->image }}" type="video/mp4">
+                            <source src="movie.ogg" type="video/ogg">
+                            Your browser does not support the video tag.
+                        </video>
+                    @endif
                 @endforeach
             </div>
             <!-- Root element of PhotoSwipe. Must have class pswp. -->
