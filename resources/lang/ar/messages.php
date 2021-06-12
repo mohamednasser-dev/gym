@@ -1,7 +1,12 @@
 <?php
 return [
     //new
-    "orders" => "الطلبات",
+
+
+
+
+
+
     "main_order_number" => "رقم الطلب الرئيسى",
     "main_orders_count" => "عدد الطلبات الرئيسية",
     "main_orders" => "الطلبات الرئيسية",
@@ -14,8 +19,6 @@ return [
     "inprogress" => "جارى",
     "inprogress_orders" => "طلبات جارية",
     "delivered_orders" => "طلبات تم تسليمها",
-    "opened" => "طلب مفتوح",
-    "closed" => "طلب مغلق",
     "products_orders" => "طلبات المنتجات",
     "show_products_orders" => "عرض طلبات المنتجات",
     "sales_report" => "تقرير مبيعات",
@@ -49,12 +52,6 @@ return [
     "show_actions" => "أظهر الأوامر",
     "category_details" => "تفاصيل القسم",
     "or_search_manually" => "أو قم بالبحث و الإضافة بشكل يدوى",
-
-
-
-
-
-
 
     'walllet_balance' => "رصيد المحفظة",
     'holes' => "الصالات",

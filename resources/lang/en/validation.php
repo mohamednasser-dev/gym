@@ -169,6 +169,9 @@ return [
         "mix_hole_from"=>'from hour to mix',
         "mix_hole_to"=>'to hour to mix',
         "rate"=>'rate',
+        "email"=>'email',
+        "months_num"=>'months num',
+        "product_id"=>'ad',
     ],
 
 ];
