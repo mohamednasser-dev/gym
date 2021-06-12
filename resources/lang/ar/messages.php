@@ -3,8 +3,8 @@ return [
     //new
 
 
-
-
+     "add_image" => "اضافة صورة",
+     "add_video" => "اضافة فيديو",
 
 
     "main_order_number" => "رقم الطلب الرئيسى",

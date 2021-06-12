@@ -19,14 +19,15 @@
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-12">
                     <a class="btn btn-info" data-toggle="modal"
-                       data-target="#add_new_Modal"> {{ __('messages.add') }} </a>
+                       data-target="#add_new_Modal"> {{ __('messages.add_image') }} </a>
+{{--                    <a class="btn btn-info" data-toggle="modal"--}}
+{{--                       data-target="#add_new_video_Modal"> {{ __('messages.add_video') }} </a>--}}
                 </div>
             </div>
         </div>
         <div class="widget-content widget-content-area">
             <div id="demo-test-gallery container" class="demo-gallery" data-pswp-uid="1">
                 @foreach($data as $row)
-
                     <a id="btn_media" data-media-id="{{$row->id}}" class="img-1"
                        href="{{media_image_cloudinary_url()}}{{ $row->image }}" data-size="1600x1068"
                        data-med="{{media_image_cloudinary_url()}}{{ $row->image }}" data-med-size="1024x683"
@@ -113,6 +114,47 @@
                             <label class="custom-file-container__custom-file">
                                 <input type="file" required name="images[]" multiple
                                        class="custom-file-container__custom-file__custom-file-input" accept="image/*">
+                                <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
+                                <span class="custom-file-container__custom-file__custom-file-control"></span>
+                            </label>
+                            <div class="custom-file-container__image-preview"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal">
+                            <i class="flaticon-cancel-12"></i> {{ __('messages.cancel') }}
+                        </button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.add') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="add_new_video_Modal" class="modal animated zoomInUp custo-zoomInUp" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('messages.add_new_media') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <form action="{{route('media.store.video')}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="custom-file-container" data-upload-id="myFirstImage">
+                            <label>{{ __('messages.upload') }} ({{ __('messages.multiple_images') }}) <a
+                                    href="javascript:void(0)" class="custom-file-container__image-clear"
+                                    title="Clear Image">x</a></label>
+                            <label class="custom-file-container__custom-file">
+                                <input type="file" required name="video" multiple
+                                       class="custom-file-container__custom-file__custom-file-input" accept="video/*">
                                 <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
                                 <span class="custom-file-container__custom-file__custom-file-control"></span>
                             </label>

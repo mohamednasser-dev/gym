@@ -63,6 +63,7 @@ Route::group(['middleware'=> ['language','hole'],'prefix' => "hall-panel",'names
 
     Route::resource('hall_rates' , 'RatesController');
     Route::resource('media' , 'MediaController');
+    Route::post('media/store_video' , 'MediaController@store_video')->name('media.store.video');
     Route::post('media/delete' , 'MediaController@destroy')->name('media.delete');
 
     Route::get('subscribers/{type}' , 'SubscribersController@index')->name('subscribers');

@@ -20,7 +20,7 @@ class SubscribersController extends Controller{
         $id = auth()->guard('hole')->user()->id;
         $bookings = Hole_booking::where('hole_id',$id)->where('deleted','0')->get();
         $booking_ids = Hole_booking::where('hole_id',$id)->select('id')->get()->toArray();
-        $data = Reservation::whereIn('booking_id',$booking_ids)->where('type','hall')->where('status',$type)->orderBy('created_at','desc')->get();
+        $data = Reservation::whereIn('booking_id',$booking_ids)->where('type','hall')->where('status',$type)->orderBy('created_at','asc')->get();
 
         return view('hole_admin.subscribers.index' ,compact('data','bookings'));
     }
