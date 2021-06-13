@@ -379,7 +379,7 @@ class HallsController extends Controller
                     return $time;
                 });
 
-            $data['media'] = Hole_media::select('id','image','type')
+            $data['media'] = Hole_media::select('id','image','type', 'thumbnail')
                 ->where('hole_id',$id)
                 ->get();
             if($lang == 'ar') {
