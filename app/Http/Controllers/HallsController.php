@@ -381,14 +381,7 @@ class HallsController extends Controller
 
             $data['media'] = Hole_media::select('id','image','type')
                 ->where('hole_id',$id)
-                ->get()
-                ->map(function($media){
-                    if($media->type == 'video'){
-                        $media->image = env('APP_URL') . '/public/uploads/hall_media'. $media->image ;
-                    }
-                    return $media;
-
-                });
+                ->get();
             if($lang == 'ar') {
                 $data['branches'] = Hole_branch::select('id', 'title_ar as title', 'latitude', 'longitude')->where('hole_id', $id)->get();
             }else{
