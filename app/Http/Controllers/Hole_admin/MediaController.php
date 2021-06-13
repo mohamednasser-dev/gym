@@ -6,6 +6,7 @@ use App\Hole_media;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
+use Cloudinary as Clou;
 
 class MediaController extends Controller
 {
@@ -27,6 +28,7 @@ class MediaController extends Controller
             ]);
 
         $data_image['hole_id'] = $id;
+        $i = 0;
         foreach ($request->images as $image) {
             $extension = $image->getClientOriginalExtension();
 
@@ -40,6 +42,14 @@ class MediaController extends Controller
                     $image_new_story = $image_id2 . '.' . $image_format2;
                     $data_image['image'] = $image_new_story;
                     $data_image['type'] = 'video';
+                    if (count($request->thumbnail) > 0) {
+                        $thumbImage = Clou::upload($request->thumbnail[$i]->getRealPath());
+                        $publicThumb = $thumbImage->getPublicId();
+                        $formatThumb = $thumbImage->getExtension();
+                        $data_image['thumbnail'] = $publicThumb . '.' . $formatThumb;
+                    }
+                    
+
                 }
             } else {
                 $image_name = $image->getRealPath();
@@ -48,8 +58,11 @@ class MediaController extends Controller
                 $image_format = $imagereturned['format'];
                 $image_new_name = $image_id . '.' . $image_format;
                 $data_image['image'] = $image_new_name;
+                
+
             }
             Hole_media::create($data_image);
+            $i ++;
         }
         session()->flash('success', trans('messages.added_s'));
         return back();

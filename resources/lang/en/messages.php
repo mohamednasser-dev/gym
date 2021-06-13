@@ -570,6 +570,7 @@ return [
     "opened" => "Opened Order",
     "closed" => "Closed Order",
     "edit_offer_image" => "Edit Offer Image",
-    "show_products" => "Show Products"
+    "show_products" => "Show Products",
+    "video_thumbnail" => "Video Thumbnail"
 ];
 ?>

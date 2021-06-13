@@ -20,6 +20,7 @@ use App\Favorite;
 use App\Coach;
 use App\Rate;
 use App\User;
+// use Cloudinary;
 
 class CoachesController extends Controller
 {
@@ -340,7 +341,15 @@ class CoachesController extends Controller
                 $image_id2 = $uploadedFileUrl->getPublicId();
                 $image_format2 = $uploadedFileUrl->getExtension();
                 $image_new_story = $image_id2.'.'.$image_format2;
-                $data['story'] = $image_new_story ;
+                $input['story'] = $image_new_story ;
+                if ($request->thumbnail) {
+                    Cloudder::upload("data:image/jpeg;base64,".$request->thumbnail, null);
+                    $thumbImage = Cloudder::getResult();
+                    $publicThumb = $thumbImage['public_id'];
+                    $formatThumb = $thumbImage['format'];
+                    $input['thumbnail'] = $publicThumb . '.' . $formatThumb;
+                }
+                
             }
             $coach = Coach::where('id',$user->id)->update($input);
             $response = APIHelpers::createApiResponse(false, 200, 'updated', 'تم التعديل بنجاح', (object)[] , $request->lang);

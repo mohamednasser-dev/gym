@@ -214,7 +214,21 @@
                                     </label>
                                     <div class="custom-file-container__image-preview"></div>
                                 </div>
+                                <div class="custom-file-container" data-upload-id="mySecondImage">
+                                    <label>{{ __('messages.upload') }} ({{ __('messages.video_thumbnail') }}) <a
+                                            href="javascript:void(0)" class="custom-file-container__image-clear"
+                                            title="Clear Image">x</a></label>
+                                    <label class="custom-file-container__custom-file">
+                                        <input type="file" required name="thumbnail[]" multiple
+                                               class="custom-file-container__custom-file__custom-file-input"
+                                               accept="image/*">
+                                        <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
+                                        <span class="custom-file-container__custom-file__custom-file-control"></span>
+                                    </label>
+                                    <div class="custom-file-container__image-preview"></div>
+                                </div>
                             </div>
+                            
                             <div class="modal-footer">
                                 <button class="btn" data-dismiss="modal">
                                     <i class="flaticon-cancel-12"></i> {{ __('messages.cancel') }}

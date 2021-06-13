@@ -30,7 +30,8 @@ class Coach extends Authenticatable implements JWTSubject
         'user_id',
         'phone',
         'about_coach_en',
-        'story'
+        'story',
+        'thumbnail'
     ];
 
     public function getJWTIdentifier()
