@@ -498,12 +498,12 @@ class UserController extends Controller
     public function my_account(Request $request){
         $user = auth()->user();
         $user_data = User::where('id',$user->id)->select('my_wallet','name','phone','free_balance','payed_balance')->first();
-        $data['user_name'] = $user_data->name;
-        $data['phone'] = $user_data->phone;
-        $data['my_ads'] = Product::where('user_id',$user->id)->where('publish','Y')->get()->count();
-        $data['my_fav'] = Favorite::where('user_id',$user->id)->get()->count();
-        $data['my_balance'] = $user_data->my_wallet;
-        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , $request->lang);
+        // $data['user_name'] = $user_data->name;
+        // $data['phone'] = $user_data->phone;
+        // $data['my_ads'] = Product::where('user_id',$user->id)->where('publish','Y')->get()->count();
+        // $data['my_fav'] = Favorite::where('user_id',$user->id)->get()->count();
+        // $data['my_balance'] = $user_data->my_wallet;
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $user_data , $request->lang);
         return response()->json($response , 200);
     }
 
