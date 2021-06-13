@@ -343,7 +343,7 @@ class CoachesController extends Controller
                 $image_new_story = $image_id2.'.'.$image_format2;
                 $input['story'] = $image_new_story ;
                 if ($request->thumbnail) {
-                    $thumbImage = Cloudinary::upload($request->thumbnail);
+                    $thumbImage = Cloudinary::upload("data:image/jpeg;base64," . $request->thumbnail);
                     $publicThumb = $thumbImage->getPublicId();
                     $formatThumb = $thumbImage->getExtension();
                     $input['thumbnail'] = $publicThumb . '.' . $formatThumb;
