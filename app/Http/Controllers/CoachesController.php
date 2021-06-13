@@ -315,10 +315,10 @@ class CoachesController extends Controller
         }else {
             if($request->image != null){
                 $image = $request->image;
-                Cloudder::upload("data:image/jpeg;base64,".$image, null);
-                $imagereturned = Cloudder::getResult();
-                $image_id = $imagereturned['public_id'];
-                $image_format = $imagereturned['format'];
+                
+                $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+                $image_id = $imagereturned->getPublicId();
+                $image_format = $imagereturned->getExtension();
                 $image_new_name = $image_id.'.'.$image_format;
                 $input['image'] = $image_new_name;
             }else{
