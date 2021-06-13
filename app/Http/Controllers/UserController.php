@@ -566,7 +566,7 @@ class UserController extends Controller
 
         if ($request->amount != null) {
             $user = auth()->user();
-            $selected_user = User::findOrFail($user->id);
+            $selected_user = User::findOrFail($request->user_id);
             $selected_user->my_wallet = $selected_user->my_wallet + $request->amount;
             $selected_user->payed_balance = $selected_user->payed_balance + $request->amount;
             $selected_user->save();
