@@ -90,9 +90,9 @@ class CoachesController extends Controller
         Session::put('api_lang',$lang);
         $user = auth()->user();
         if($lang == 'ar'){
-            $coach = Coach::select('id','image','name','about_coach','rate')->find($id);
+            $coach = Coach::select('id','image', 'thumbnail', 'name','about_coach','rate')->find($id);
         }else{
-            $coach = Coach::select('id','image','name_en','about_coach_en as about_coach','rate')->find($id);
+            $coach = Coach::select('id','image','name_en', 'thumbnail', 'about_coach_en as about_coach','rate')->find($id);
         }
         if($coach != null) {
             if ($user == null) {
