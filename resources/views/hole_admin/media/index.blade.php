@@ -39,7 +39,7 @@
                                        data-med="{{media_image_cloudinary_url()}}{{ $row->image }}"
                                        data-med-size="1024x683"
                                        data-author="Samuel Rohl">
-                                        <img style="height: 350px; width: 400px;"
+                                        <img style="height: 250px; width: 400px;"
                                              src="{{media_image_cloudinary_url()}}{{ $row->image }}"
                                              alt="image-gallery">
                                     </a>
