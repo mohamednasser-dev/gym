@@ -225,7 +225,9 @@ class HomeController extends Controller
                 $user->payed_balance = $user->payed_balance + $package->price;
                 $user->points = $user->points - $package->points;
                 $user->save();
-                $response = APIHelpers::createApiResponse(false, 200, 'points exchanged successfully', 'تم استبدال النقاط بالمبلغ', null, $request->lang);
+                $data['my_points'] = User::select('points')->where('id', $user->id)->first();
+                $data['packages'] = Points_package::where('deleted', '0')->select('id', 'points', 'price')->orderBy('id', 'desc')->get();
+                $response = APIHelpers::createApiResponse(false, 200, 'points exchanged successfully', 'تم استبدال النقاط بالمبلغ', $data, $request->lang);
                 return response()->json($response, 200);
             } else {
                 $response = APIHelpers::createApiResponse(true, 406, 'There are not enough points',
@@ -242,7 +244,7 @@ class HomeController extends Controller
     // get offer image
     public function getOfferImage(Request $request) {
         $offer_image = Setting::where('id', 1)->select('offer_image')->first()['offer_image'];
-        
+
 
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $offer_image, $request->lang );
         return response()->json($response , 200);
