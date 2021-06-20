@@ -346,9 +346,9 @@ class HallsController extends Controller
         $user = auth()->user();
         Session::put('api_lang',$lang);
         if($lang == 'ar' ){
-            $hall = Hole::select('id','cover','logo','name','about_hole','rate')->find($id);
+            $hall = Hole::select('id','cover','logo','name', 'story', 'about_hole','rate')->find($id);
         }else{
-            $hall = Hole::select('id','cover','logo','name_en as name','about_hole_en as about_hole','rate')->find($id);
+            $hall = Hole::select('id','cover','logo','name_en as name', 'story','about_hole_en as about_hole','rate')->find($id);
         }
         if($hall != null){
             if($user == null){

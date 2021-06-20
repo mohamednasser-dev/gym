@@ -80,7 +80,13 @@
                                         </video>
                                     </a>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <div class="avatar avatar-xl">
+                                        <img class="rounded align-middle" src="{{media_image_cloudinary_url()}}{{ $row->thumbnail }}" />
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-2">
                                     <form action="{{route('media.delete')}}" method="post">
                                         @csrf
                                         <input type="hidden" value="{{$row->id}}" id="txt_media_id" name="media_id">
