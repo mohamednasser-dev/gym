@@ -20,7 +20,7 @@ class FavoriteController extends Controller
             return response()->json($response , 406);
         }
         $validator = Validator::make($request->all() , [
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required',
             'type' => 'required|in:hall,coach,shop,product',
         ]);
         if($validator->fails()) {
