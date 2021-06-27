@@ -92,7 +92,7 @@ class SubscriptionsController extends Controller
                 $subscriptions[$key]['price'] = $row->price;
                 $subscriptions[$key]['expire_date'] = $row->expire_date;
                 $subscriptions[$key]['status'] = $row->status;
-                $rates = Rate::where('user_id',$user_id)->where('order_id',$row->Booking->hole_id)->where('type','coach')->first();
+                $rates = Rate::where('user_id',$user_id)->where('order_id',$row->Booking_coach->coach_id)->where('type','coach')->first();
                 if($rates == null){
                     $subscriptions[$key]['isRated'] = false;
                 }else{
