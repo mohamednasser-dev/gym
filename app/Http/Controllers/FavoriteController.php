@@ -105,13 +105,13 @@ class FavoriteController extends Controller
             $coaches = [];
             foreach ($coach_favorites as $key => $row){
                 $coaches[$key]['id'] = $row->id;
-                $coaches[$key]['product_id'] = $row->product_id;
+                $coaches[$key]['coach_id'] = $row->product_id;
                 if($lang == 'ar'){
-                    $coaches[$key]['title'] = $row->Coach->name;
+                    $coaches[$key]['coachname'] = $row->Coach->name;
                 }else{
-                    $coaches[$key]['title'] = $row->Coach->name_en;
+                    $coaches[$key]['coachname'] = $row->Coach->name_en;
                 }
-                $coaches[$key]['cover'] = $row->Coach->image;
+                $coaches[$key]['image'] = $row->Coach->image;
                 $coaches[$key]['rate'] = $row->Coach->rate ;
                 $coaches[$key]['available'] = $row->Coach->available ;
                 $coaches[$key]['favorite'] = true;
