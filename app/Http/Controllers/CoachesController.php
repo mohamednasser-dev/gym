@@ -247,10 +247,9 @@ class CoachesController extends Controller
             $input['sort'] = 10000;
             if($request->image != null){
                 $image = $request->image;
-                Cloudder::upload("data:image/jpeg;base64,".$image, null);
-                $imagereturned = Cloudder::getResult();
-                $image_id = $imagereturned['public_id'];
-                $image_format = $imagereturned['format'];
+                $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+                $image_id = $imagereturned->getPublicId();
+                $image_format = $imagereturned->getExtension();
                 $image_new_name = $image_id.'.'.$image_format;
                 $input['image'] = $image_new_name;
             }
@@ -315,7 +314,7 @@ class CoachesController extends Controller
         }else {
             if($request->image != null){
                 $image = $request->image;
-                
+
                 $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
                 $image_id = $imagereturned->getPublicId();
                 $image_format = $imagereturned->getExtension();
@@ -348,7 +347,7 @@ class CoachesController extends Controller
                     $formatThumb = $thumbImage->getExtension();
                     $input['thumbnail'] = $publicThumb . '.' . $formatThumb;
                 }
-                
+
             }
             $coach = Coach::where('id',$user->id)->update($input);
             $response = APIHelpers::createApiResponse(false, 200, 'updated', 'تم التعديل بنجاح', (object)[] , $request->lang);
