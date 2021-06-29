@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use JD\Cloudder\Facades\Cloudder;
 use App\Coach_booking_detail;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
@@ -324,17 +323,6 @@ class CoachesController extends Controller
                 unset($input['image']);
             }
             if($request->story != null){
-
-//                ini_set('max_execution_time', 300);
-//                $story = $request->story;
-//                Cloudder::upload("data:video/mp4;base64,".$story, null);
-//                $imagereturned = Cloudder::getResult();
-//                $story_id = $imagereturned['public_id'];
-//                $story_format = $imagereturned['format'];
-//                $story_new_name = $story_id.'.'.$story_format;
-//                $input['story'] = $story_new_name ;
-
-
                 $uploadedFileUrl = $this->uploadFromApi($request->story);
 				//dd($uploadedFileUrl);
                 $image_id2 = $uploadedFileUrl->getPublicId();
@@ -630,12 +618,11 @@ class CoachesController extends Controller
             if($user != null){
                 if($request->image != null && $request->type == 'image' ){
                     $image = $request->image;
-                    Cloudder::upload("data:image/jpeg;base64,".$image, null);
-                    $imagereturned = Cloudder::getResult();
-                    $image_id = $imagereturned['public_id'];
-                    $image_format = $imagereturned['format'];
+                    $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+                    $image_id = $imagereturned->getPublicId();
+                    $image_format = $imagereturned->getExtension();
                     $image_new_name = $image_id.'.'.$image_format;
-                    $input['image'] = $image_new_name ;
+                    $input['image'] = $image_new_name;
                 }else if($request->image != null && $request->type == 'video' ) {
 //                    $uniqueid = uniqid();
 //                    $original_name = $request->file('image')->getClientOriginalName();

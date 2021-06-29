@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Coach;
-use App\Conversation;
-use App\Message;
-use App\Participant;
-use App\User;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
+use App\Conversation;
+use App\Participant;
+use Carbon\Carbon;
+use App\Message;
+use Cloudinary;
+use App\Coach;
+use App\User;
 
 class CoachChatController extends Controller
 {
@@ -103,12 +103,11 @@ class CoachChatController extends Controller
                     $message = Message::create($input);
                 }else if($request->type == 'image'){
                     $image = $request->message;
-                    Cloudder::upload("data:image/jpeg;base64,".$image, null);
-                    $imagereturned = Cloudder::getResult();
-                    $image_id = $imagereturned['public_id'];
-                    $image_format = $imagereturned['format'];
+                    $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+                    $image_id = $imagereturned->getPublicId();
+                    $image_format = $imagereturned->getExtension();
                     $image_new_name = $image_id.'.'.$image_format;
-                    $input['message'] = $image_new_name;
+                    $input['image'] = $image_new_name;
                     $message =Message::create($input);
                 }
                 if($message != null){
