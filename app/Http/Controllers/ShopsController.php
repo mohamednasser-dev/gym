@@ -41,7 +41,7 @@ class ShopsController extends Controller
             return $cat;
         })->toArray();
         $allTitle = "All";
-        if ($request->lang = 'ar') {
+        if ($request->lang == 'ar') {
             $allTitle = "الكل";
         }
         $selected = false;
