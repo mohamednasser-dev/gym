@@ -27,13 +27,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="label-table"> {{ __('messages.video_link') }}</td>
-                            <td>
-                                <a href="{{ $data['product']['video'] }}"
-                                   target="_blank">{{ $data['product']['video'] }}</a>
-                            </td>
-                        </tr>
-                        <tr>
                             <td class="label-table"> {{ __('messages.store') }}</td>
                             <td>
                                 {{ $data['product']->store->name }}
@@ -46,6 +39,12 @@
                                    href="{{ route('categories.details', $data['product']['category']['id']) }}">
                                     {{ App::isLocale('en') ? $data['product']['category']['title_en'] : $data['product']['category']['title_ar'] }}
                                 </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-table"> {{ __('messages.description_ar') }} </td>
+                            <td>
+                                {{ $data['product']['description_ar'] }}
                             </td>
                         </tr>
                         <tr>
@@ -234,7 +233,7 @@
                             @foreach ($data['product']['images'] as $image)
                                 <div style="position : relative" class="col-md-2 product_image">
                                     <img width="100%"
-                                         src="https://res.cloudinary.com/dezsm0sg7/image/upload/w_100,q_100/v1581928924/{{ $image->image }}"/>
+                                         src="{{image_cloudinary_url()}}{{ $image->image }}"/>
                                 </div>
                             @endforeach
                         @endif

@@ -135,6 +135,7 @@ class ShopsController extends Controller
                     }
                     return $data;
                 })->makeHidden('mainImage');
+
         }
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
@@ -207,23 +208,16 @@ class ShopsController extends Controller
             ->select('id','title_'.$lang.' as title','description_'.$lang.' as description','remaining_quantity','final_price','price_before_offer','offer','offer_percentage','category_id')
             ->where('deleted',0)
             ->where('hidden',0)
-            ->find($request->id);
-//        $data->images = $data->images ;
-
-//        $features = Product_feature::where('product_id',$request->id)
-//            ->select('id','type','product_id','target_id','option_id')
-//            ->get();
-
-//        $feature_data = null ;
-//        foreach ($features as $key => $feature) {
-//
-//            $feature_data[$key]['image'] = $feature->Option->image;
-//            if ($feature->type == 'manual') {
-//                $feature_data[$key]['title'] = $feature->Option->title . ' : ' . $feature->target_id;
-//            } else if ($feature->type == 'option') {
-//                $feature_data[$key]['title'] = $feature->Option->title . ' : ' . $feature->Option_value->value;
-//            }
-//        }
+            ->find($request->id)->makeHidden(['store_id', 'store', 'productProperties', 'category_id', 'type']);
+        $options = [];
+        for ($i = 0; $i < count($data->productProperties); $i ++) {
+            $single = [
+                'option' => $data->productProperties[$i]->property['title_en'],
+                'value' => $data->productProperties[$i]->values['value_en']
+            ];
+            array_push($options, $single);
+        }
+        $data['options'] = $options;
         if($user){
             $favorite = Favorite::where('user_id' , $user->id)->where('product_id' , $data->id)->where('type','product')->first();
             if($favorite){
@@ -234,9 +228,7 @@ class ShopsController extends Controller
         }else{
             $data->favorite = false;
         }
-
-
-
+        //for related products
         $related = Product::where('category_id' ,  $data->category_id)
             ->where('id' , '!=' ,  $data->id)
             ->select('id','title_'.$lang.' as title','final_price','price_before_offer','offer','offer_percentage','category_id')
