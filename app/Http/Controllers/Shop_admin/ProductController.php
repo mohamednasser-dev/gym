@@ -92,7 +92,7 @@ class ProductController extends Controller{
             'category_id' => 'required'
         ]);
         $product_post = $request->except(['images', 'option', 'value_en', 'value_ar', 'home_section', 'option_id', 'property_value_id', 'multi_option_id', 'multi_option_value_id', 'total_quatity', 'remaining_quantity', 'final_price', 'total_amount', 'remaining_amount', 'price_after_discount', 'barcodes', 'stored_numbers']);
-        
+
 
         if (isset($request->home_section) && !empty($request->home_section)) {
             $data['Home_sections_ids'] = HomeSection::where('type', 4)->pluck('id')->toArray();
@@ -173,7 +173,7 @@ class ProductController extends Controller{
             }
         }
 
-        
+
         if (isset($request->offer)) {
             $price_before = (double)$request->price_before_offer;
             $discount_value = (double)$request->offer_percentage / 100;
@@ -197,7 +197,7 @@ class ProductController extends Controller{
         $selected_prod_data['remaining_quantity'] = $request->remaining_quantity;
         $selected_prod_data['multi_options'] = 0;
         $product->update($selected_prod_data);
-        
+
 
         return redirect()->route('products.index');
 
@@ -263,7 +263,7 @@ class ProductController extends Controller{
     // fetch category options
     public function fetch_category_options(Category $category) {
         $rows = $category->optionsWithValues;
-        
+
         $data = json_decode(($rows));
 
         return response($data, 200);
@@ -401,7 +401,7 @@ class ProductController extends Controller{
 
         $selected_product = Product::where('id', $createdProduct['id'])->first();
 
-        
+
         if (isset($request->offer)) {
             $price_before = (double)$request->price_before_offer;
             $discount_value = (double)$request->offer_percentage / 100;
@@ -424,7 +424,7 @@ class ProductController extends Controller{
         $selected_prod_data['total_quatity'] = $request->total_quatity;
         $selected_prod_data['remaining_quantity'] = $request->remaining_quantity;
         $selected_product->update($selected_prod_data);
-        
+
 
         return redirect()->route('products.index')
             ->with('success', __('messages.created_successfully'));
@@ -504,7 +504,7 @@ class ProductController extends Controller{
 
     // action free product (add - remove)
     public function actionFreeProduct(Product $product, $status) {
-        
+
         $product->free = $status;
         $product->save();
         $statusText = __('messages.added_to_offer_buy_two_get_one');
@@ -523,6 +523,6 @@ class ProductController extends Controller{
         return view('shop_admin.products.offers', ['data' => $data]);
     }
 
-    
+
 
 }

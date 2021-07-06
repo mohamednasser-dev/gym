@@ -39,7 +39,7 @@ class Product extends Model
 
 
     public function images() {
-        return $this->hasMany('App\ProductImage', 'product_id');
+        return $this->hasMany('App\ProductImage', 'product_id')->select('id','image','main','product_id');
     }
 
     public function mainImage() {
