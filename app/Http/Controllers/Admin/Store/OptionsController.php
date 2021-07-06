@@ -48,6 +48,7 @@ class OptionsController extends AdminController{
             return redirect()->back()->with('fail', __('messages.values_number_should'));
         }
         $post = $request->except(['category_ids', 'property_values_en', 'property_values_ar']);
+        // dd($post);
         $option = Option::create($post);
 
         $option->categories()->sync($request->category_ids);

@@ -17,7 +17,7 @@
     </style>
     <style>
         .bootstrap-tagsinput .tag {
-            color : #3b3f5c
+            color : #3b3f5c !important
         }
         .bootstrap-tagsinput,
         .bootstrap-tagsinput input {
@@ -26,6 +26,7 @@
         .bootstrap-tagsinput {
             min-height : 45px
         }
+        
     </style>
 @endpush
 @push('scripts')

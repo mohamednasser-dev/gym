@@ -124,6 +124,11 @@
 </script>
 {{--------------------------- accordation in settings page -------------------------}}
 <script src="/admin/assets/js/components/ui-accordions.js"></script>
+<script src="/admin/plugins/jquery-step/jquery.steps.min.js"></script>
+<script src="/admin/plugins/jquery-step/custom-jquery.steps.js"></script>
+<script src="/admin/plugins/select2/select2.min.js"></script>
+<script src="/admin/plugins/select2/custom-select2.js"></script>
+<script src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 {{----------------------------------------end -------------------------------------------}}
 
 {{--    create hall scripts--}}
