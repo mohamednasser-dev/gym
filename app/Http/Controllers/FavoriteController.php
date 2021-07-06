@@ -138,6 +138,7 @@ class FavoriteController extends Controller
             }
 
             $shop_favorites = Favorite::select('id','product_id','user_id')
+                ->has('Product')
                 ->with('Product')
                 ->where('type','product')
                 ->where('user_id', $user->id)
