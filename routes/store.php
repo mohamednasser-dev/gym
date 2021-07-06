@@ -19,7 +19,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::get('action/{store}/{status}' , 'ShopController@action')->name('shops.action');
     });
     Route::get('shops_famous' , 'ShopController@famous')->name('shops_famous');
-    
+
     // Shops Route
     Route::group([
         "prefix" => "products"
@@ -29,7 +29,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::post('/offers' , 'ShopController@updateOfferImage')->name('shops.products.update_image');
         Route::get('fetchcategoryproducts/{category}' , 'ProductController@fetch_category_products');
         Route::get('action-offer/{product}/{status}' , 'ShopController@actionFreeProduct')->name('shops.products.action.offer');
-        
+
     });
     // Categories Route
     Route::group([
