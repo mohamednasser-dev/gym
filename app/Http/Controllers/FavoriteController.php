@@ -136,8 +136,31 @@ class FavoriteController extends Controller
                 $shops[$key]['cover'] = $row->Shop->cover;
                 $shops[$key]['favorite'] = true;
             }
-            if( count($halls) > 0 ||  count($coaches) > 0 ) {
-                $response = APIHelpers::createApiResponse(false, 200, '', '', array('halls'=> $halls , 'coaches'=> $coaches, 'shops'=> $shops), $request->lang);
+
+            $shop_favorites = Favorite::select('id','product_id','user_id')
+                ->with('Product')
+                ->where('type','product')
+                ->where('user_id', $user->id)
+                ->orderBy('id','desc')
+                ->get();
+            $products = [];
+            foreach ($shop_favorites as $key => $row){
+                $products[$key]['id'] = $row->id;
+                $products[$key]['product_id'] = $row->product_id;
+                if($lang == 'ar'){
+                    $products[$key]['title'] = $row->Product->title_ar;
+                }else{
+                    $products[$key]['title'] = $row->Product->title_en;
+                }
+                $products[$key]['final_price'] = $row->Product->final_price;
+                $products[$key]['price_before_offer'] = $row->Product->price_before_offer;
+                $products[$key]['offer'] = $row->Product->offer;
+                $products[$key]['offer_percentage'] = $row->Product->offer_percentage;
+                $products[$key]['image'] = $row->Product->mainImage->image;
+                $products[$key]['favorite'] = true;
+            }
+            if( count($halls) > 0 ||  count($coaches) > 0 ||  count($shops) > 0 ||  count($products) > 0 ) {
+                $response = APIHelpers::createApiResponse(false, 200, '', '', array('halls'=> $halls , 'coaches'=> $coaches, 'shops'=> $shops, 'products'=> $products), $request->lang);
             }else{
                 $response = APIHelpers::createApiResponse(false, 200, 'no item favorite to show', 'لا يوجد عناصر للعرض', (object)[], $request->lang);
             }

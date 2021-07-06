@@ -21,4 +21,8 @@ class Favorite extends Model
     public function Shop() {
         return $this->belongsTo('App\Shop', 'product_id');
     }
+
+    public function Product() {
+        return $this->belongsTo('App\Product', 'product_id');
+    }
 }
