@@ -23,6 +23,6 @@ class Favorite extends Model
     }
 
     public function Product() {
-        return $this->belongsTo('App\Product', 'product_id');
+        return $this->belongsTo('App\Product', 'product_id')->where('deleted', 0)->where('hidden', 0);
     }
 }

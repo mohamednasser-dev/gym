@@ -3,8 +3,11 @@ return [
     //new
 
 
-     "add_image" => "اضافة صورة",
-     "add_video" => "اضافة فيديو",
+
+    "show_product" => "أظهار المنتج",
+    "hidden" => "مخفى",
+    "add_video" => "اضافة فيديو",
+    "add_image" => "اضافة صورة",
 
 
     "main_order_number" => "رقم الطلب الرئيسى",

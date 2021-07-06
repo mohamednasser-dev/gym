@@ -26,7 +26,7 @@ class ShopsController extends Controller
     public $personal_data = [];
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['all_shops','details', 'getOfferImage']]);
+        $this->middleware('auth:api' , ['except' => ['all_shops','details', 'getOfferImage','filter_by_cat']]);
 
     }
 
@@ -36,23 +36,30 @@ class ShopsController extends Controller
         $shops = Shop::select('id','name_'.$lang.' as title','logo','cover')
                         ->where('famous', '1')
                         ->where('status', 1)
-                        ->orderBy('sort', 'asc')
-                        ->get()
-                        ->map(function($shops) use($user){
-                            if($user == null){
-                                $shops->favorite = false ;
-                            }else{
-                                $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
-                                if($fav == null){
-                                    $shops->favorite = false ;
-                                }else{
-                                    $shops->favorite = true ;
-                                }
-                            }
-                            return $shops;
-                        });
+                        ->orderBy('sort', 'asc');
+        if ($request->category && $request->category != 0) {
+            $productCategories = Product::where('deleted', 0)
+                                        ->where('hidden', 0)
+                                        ->where('category_id', $request->category)
+                                        ->pluck('store_id');
+            $data['shops'] = $data['shops']->whereIn('id', $productCategories);
+        }
+        $data['shops'] = $data['shops']->get()
+        ->map(function($shops) use($user){
+            if($user == null){
+                $shops->favorite = false ;
+            }else{
+                $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
+                if($fav == null){
+                    $shops->favorite = false ;
+                }else{
+                    $shops->favorite = true ;
+                }
+            }
+            return $shops;
+        });
 
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $shops, $request->lang );
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
     }
 
@@ -60,7 +67,7 @@ class ShopsController extends Controller
         $lang = $request->lang ;
         $user = auth()->user();
         Session::put('api_lang',$lang);
-        $shop = Shop::select('id','cover','logo','name_'.$lang.' as title')->find($id);
+        $shop = Shop::select('id','cover','logo','name_'.$lang.' as title')->find($id)->makeHidden('name');
         if($shop != null){
             if($user == null){
                 $data['favorite'] = false ;
@@ -94,6 +101,65 @@ class ShopsController extends Controller
                 ->where('store_id',$id)
                 ->where('category_id',$first_cat_id->id)
                 ->where('deleted',0)
+                ->where('hidden',0)
+                ->get()->map(function($data) use($user){
+                    $data->image = $data->mainImage->image;
+                    if($user == null){
+                        $data->favorite = false ;
+                    }else{
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $data->id)->where('type','product')->first();
+                        if($fav == null){
+                            $data->favorite = false ;
+                        }else{
+                            $data->favorite = true ;
+                        }
+                    }
+                    return $data;
+                })->makeHidden('mainImage');
+        }
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
+        return response()->json($response , 200);
+    }
+
+    public function filter_by_cat(Request $request,$id) {
+        $lang = $request->lang ;
+        $user = auth()->user();
+        Session::put('api_lang',$lang);
+        $shop = Shop::select('id','cover','logo','name_'.$lang.' as title')->find($id)->makeHidden('name');
+        if($shop != null){
+            if($user == null){
+                $data['favorite'] = false ;
+            }else{
+                $fav = Favorite::where('user_id', $user->id)->where('product_id', $id)->where('type','shop')->first();
+                if($fav == null){
+                    $data['favorite'] = false ;
+                }else{
+                    $data['favorite'] = true ;
+                }
+            }
+            $data['basic'] = $shop;
+            $first_cat_id = Category::select('id','image','title_'.$lang.' as title')
+                ->where('deleted',0)
+                ->orderBy('created_at')
+                ->first();
+            $data['categories'] = Category::select('id','image','title_'.$lang.' as title')
+                ->where('deleted',0)
+                ->orderBy('created_at')
+                ->get()->map(function($data) use($request){
+                    if($data->id == $request->category_id){
+                        $data->selected = true ;
+                    }else{
+                        $data->selected = false ;
+                    }
+                    return $data;
+                });
+
+
+            $data['products'] = Product::select('id','title_'.$lang.' as title','final_price','price_before_offer','offer','offer_percentage','category_id')
+                ->where('store_id',$id)
+                ->where('category_id',$request->category_id)
+                ->where('deleted',0)
+                ->where('hidden',0)
                 ->get()->map(function($data) use($user){
                     $data->image = $data->mainImage->image;
                     if($user == null){
@@ -118,7 +184,10 @@ class ShopsController extends Controller
         $user = auth()->user();
         $lang = $request->lang;
         Session::put('lang',$lang);
-        $data = Product::with('images')->select('id','title_'.$lang.' as title','description_'.$lang.' as description','remaining_quantity','final_price','price_before_offer','offer','offer_percentage','category_id')
+        $data = Product::with('images')
+            ->select('id','title_'.$lang.' as title','description_'.$lang.' as description','remaining_quantity','final_price','price_before_offer','offer','offer_percentage','category_id')
+            ->where('deleted',0)
+            ->where('hidden',0)
             ->find($request->id);
 //        $data->images = $data->images ;
 
@@ -152,6 +221,8 @@ class ShopsController extends Controller
         $related = Product::where('category_id' ,  $data->category_id)
             ->where('id' , '!=' ,  $data->id)
             ->select('id','title_'.$lang.' as title','final_price','price_before_offer','offer','offer_percentage','category_id')
+            ->where('deleted',0)
+            ->where('hidden',0)
             ->limit(4)
             ->get();
         for($i = 0 ; $i < count($related); $i++){
