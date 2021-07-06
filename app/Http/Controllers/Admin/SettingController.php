@@ -27,6 +27,18 @@ class SettingController extends AdminController{
             $logo_new_name = $logo_id.'.'.$logo_format;
             $setting->logo = $logo_new_name;
         }
+        if($request->file('offer_image')){
+            $offer_image = $setting->offer_image;
+            $publicId = substr($offer_image , 0 , strrpos($offer_image , "."));
+            Cloudder::delete($publicId);
+            $logo_name = $request->file('offer_image')->getRealPath();
+            Cloudder::upload($logo_name , null);
+            $logoreturned = Cloudder::getResult();
+            $logo_id = $logoreturned['public_id'];
+            $logo_format = $logoreturned['format'];
+            $logo_new_name = $logo_id.'.'.$logo_format;
+            $setting->offer_image = $logo_new_name;
+        }
         $setting->app_name_en = $request->app_name_en;
         $setting->app_name_ar = $request->app_name_ar;
         $setting->email = $request->email;

@@ -571,6 +571,7 @@ return [
     "closed" => "Closed Order",
     "edit_offer_image" => "Edit Offer Image",
     "show_products" => "Show Products",
-    "video_thumbnail" => "Video Thumbnail"
+    "video_thumbnail" => "Video Thumbnail",
+    "offer_image" => "Offer Store Banner"
 ];
 ?>

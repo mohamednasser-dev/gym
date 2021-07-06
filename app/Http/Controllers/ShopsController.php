@@ -30,26 +30,53 @@ class ShopsController extends Controller
     public function all_shops(Request $request) {
         $lang = $request->lang ;
         $user = auth()->user();
-        $shops = Shop::select('id','name_'.$lang.' as title','logo','cover')
+        $data['categories'] = Category::where('deleted', 0)->select('id', 'title_' . $request->lang . ' as title', 'image')->get()->map(function ($cat) use ($request) {
+            $cat->selected = false;
+            if ($request->category && $request->category != 0 && $request->category == $cat->id) {
+                $cat->selected = true;
+            }
+            return $cat;
+        })->toArray();
+        $allTitle = "All";
+        if ($request->lang = 'ar') {
+            $allTitle = "الكل";
+        }
+        $selected = false;
+        if ($request->category == 0) {
+            $selected = true;
+        }
+        $all = [
+            "id" => 0,
+            "title" => $allTitle,
+            "image" => "",
+            "selected" => $selected
+        ];
+        array_push($data['categories'], $all);
+
+        $data['shops'] = Shop::select('id','name_'.$lang.' as title','logo','cover')
                         ->where('famous', '1')
                         ->where('status', 1)
-                        ->orderBy('sort', 'asc')
-                        ->get()
-                        ->map(function($shops) use($user){
-                            if($user == null){
-                                $shops->favorite = false ;
-                            }else{
-                                $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
-                                if($fav == null){
-                                    $shops->favorite = false ;
-                                }else{
-                                    $shops->favorite = true ;
-                                }
-                            }
-                            return $shops;
-                        });
+                        ->orderBy('sort', 'asc');
+        if ($request->category && $request->category != 0) {
+            $productCategories = Product::where('deleted', 0)->where('hidden', 0)->where('category_id', $request->category)->pluck('store_id');
+            $data['shops'] = $data['shops']->whereIn('id', $productCategories);
+        }
+        $data['shops'] = $data['shops']->get()
+        ->map(function($shops) use($user){
+            if($user == null){
+                $shops->favorite = false ;
+            }else{
+                $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
+                if($fav == null){
+                    $shops->favorite = false ;
+                }else{
+                    $shops->favorite = true ;
+                }
+            }
+            return $shops;
+        });
 
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $shops, $request->lang );
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
     }
 
