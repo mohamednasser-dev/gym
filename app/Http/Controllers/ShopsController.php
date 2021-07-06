@@ -30,45 +30,24 @@ class ShopsController extends Controller
     public function all_shops(Request $request) {
         $lang = $request->lang ;
         $user = auth()->user();
-        if($lang == 'ar'){
-            $shops = Shop::select('id','name_ar as title','logo','cover')
-                            ->where('famous', '1')
-                            ->where('status', 1)
-                            ->orderBy('sort', 'asc')
-                            ->get()
-                            ->map(function($shops) use($user){
-                                if($user == null){
+        $shops = Shop::select('id','name_'.$lang.' as title','logo','cover')
+                        ->where('famous', '1')
+                        ->where('status', 1)
+                        ->orderBy('sort', 'asc')
+                        ->get()
+                        ->map(function($shops) use($user){
+                            if($user == null){
+                                $shops->favorite = false ;
+                            }else{
+                                $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
+                                if($fav == null){
                                     $shops->favorite = false ;
                                 }else{
-                                    $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
-                                    if($fav == null){
-                                        $shops->favorite = false ;
-                                    }else{
-                                        $shops->favorite = true ;
-                                    }
+                                    $shops->favorite = true ;
                                 }
-                                return $shops;
-                            });
-        }else{
-            $shops = Shop::select('id','name_en as title','logo','cover')
-                ->where('famous', '1')
-                ->where('status', 1)
-                ->orderBy('sort', 'asc')
-                ->get()
-                ->map(function($shops) use($user){
-                    if($user == null){
-                        $shops->favorite = false ;
-                    }else{
-                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
-                        if($fav == null){
-                            $shops->favorite = false ;
-                        }else{
-                            $shops->favorite = true ;
-                        }
-                    }
-                    return $shops;
-                });
-        }
+                            }
+                            return $shops;
+                        });
 
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $shops, $request->lang );
         return response()->json($response , 200);

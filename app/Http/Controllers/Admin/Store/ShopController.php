@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Admin\Store;
 
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Hash;
-use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Http\Request;
 use App\Shop;
 use App\Setting;
@@ -41,23 +40,23 @@ class ShopController extends AdminController{
 
         if($request->file('logo')){
             $image_name = $request->file('logo')->getRealPath();
-            Cloudder::upload($image_name, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
+            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image_name);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
             $image_new_name = $image_id.'.'.$image_format;
             $post['logo'] = $image_new_name;
         }
+
         if($request->file('cover')){
             $cover_name = $request->file('cover')->getRealPath();
-            Cloudder::upload($cover_name, null);
-            $coverreturned = Cloudder::getResult();
-            $cover_id = $coverreturned['public_id'];
-            $cover_format = $coverreturned['format'];
-            $cover_new_name = $cover_id.'.'.$cover_format;
-            $post['cover'] = $cover_new_name;
+            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$cover_name);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_name = $image_id.'.'.$image_format;
+            $post['cover'] = $image_new_name;
         }
         $post['password'] = Hash::make($request->password);
+        dd($post);
         Shop::create($post);
         return redirect()->route('shops.show');
     }
@@ -96,27 +95,25 @@ class ShopController extends AdminController{
 
         if($request->file('logo')){
             $logo = $store->logo;
-            $publicId = substr($logo, 0 ,strrpos($logo, "."));
-            Cloudder::delete($publicId);
+//            $publicId = substr($logo, 0 ,strrpos($logo, "."));
+//            Cloudder::delete($publicId);
             $image_name = $request->file('logo')->getRealPath();
-            Cloudder::upload($image_name, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
+            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image_name);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
             $image_new_name = $image_id.'.'.$image_format;
-            $post['logo'] = $image_new_name;
+            $input['logo'] = $image_new_name;
         }
         if($request->file('cover')){
             $cover = $store->cover;
-            $publicId = substr($cover, 0 ,strrpos($cover, "."));
-            Cloudder::delete($publicId);
+//            $publicId = substr($cover, 0 ,strrpos($cover, "."));
+//            Cloudder::delete($publicId);
             $cover_name = $request->file('cover')->getRealPath();
-            Cloudder::upload($cover_name, null);
-            $coverreturned = Cloudder::getResult();
-            $cover_id = $coverreturned['public_id'];
-            $cover_format = $coverreturned['format'];
-            $cover_new_name = $cover_id.'.'.$cover_format;
-            $post['cover'] = $cover_new_name;
+            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$cover_name);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_name = $image_id.'.'.$image_format;
+            $input['cover'] = $image_new_name;
         }
 
         if (isset($request->password) && !empty($request->password)) {
@@ -170,7 +167,7 @@ class ShopController extends AdminController{
 
     // action free product (add - remove)
     public function actionFreeProduct(Product $product, $status) {
-        
+
         $product->free = $status;
         $product->save();
         $statusText = __('messages.added_to_offer_buy_two_get_one');
