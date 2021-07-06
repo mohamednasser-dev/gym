@@ -244,9 +244,11 @@ class HomeController extends Controller
     // get offer image
     public function getOfferImage(Request $request) {
         $offer_image = Setting::where('id', 1)->select('offer_image')->first()['offer_image'];
+        if ($offer_image == null) {
+            $offer_image = "";
+        }
 
-
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $offer_image, $request->lang );
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', 'jj' , $offer_image, $request->lang );
         return response()->json($response , 200);
     }
 }

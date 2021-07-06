@@ -564,6 +564,7 @@ return [
     "closed" => "طلب مغلق",
     "edit_offer_image" => "تعديل صورة العروض",
     "show_products" => "عرض المنتجات",
-    "video_thumbnail" => "صورة مصغرة للفيديو"
+    "video_thumbnail" => "صورة مصغرة للفيديو",
+    "offer_image" => "بانر عروض المتاجر"
 ];
 ?>

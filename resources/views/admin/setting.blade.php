@@ -40,6 +40,15 @@
                                                placeholder="{{ __('messages.logo') }}" value="">
                                     </div>
                                     <div class="form-group mb-4">
+                                        <img
+                                            src="{{image_cloudinary_url()}}{{$data['setting']['offer_image']}}">
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="offer_image">{{ __('messages.offer_image') }}</label>
+                                        <input type="file" name="offer_image" class="form-control" id="offer_image"
+                                               placeholder="{{ __('messages.logo') }}" value="">
+                                    </div>
+                                    <div class="form-group mb-4">
                                         <label for="app_name_ar">{{ __('messages.app_name') }}</label>
                                         <input required type="text" name="app_name_ar" class="form-control"
                                                id="app_name_ar"

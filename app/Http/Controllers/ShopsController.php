@@ -57,27 +57,27 @@ class ShopsController extends Controller
         array_push($data['categories'], $all);
 
         $data['shops'] = Shop::select('id','name_'.$lang.' as title','logo','cover')
-            ->where('famous', '1')
-            ->where('status', 1)
-            ->orderBy('sort', 'asc');
+                        ->where('famous', '1')
+                        ->where('status', 1)
+                        ->orderBy('sort', 'asc');
         if ($request->category && $request->category != 0) {
             $productCategories = Product::where('deleted', 0)->where('hidden', 0)->where('category_id', $request->category)->pluck('store_id');
             $data['shops'] = $data['shops']->whereIn('id', $productCategories);
         }
         $data['shops'] = $data['shops']->get()
-            ->map(function($shops) use($user){
-                if($user == null){
+        ->map(function($shops) use($user){
+            if($user == null){
+                $shops->favorite = false ;
+            }else{
+                $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
+                if($fav == null){
                     $shops->favorite = false ;
                 }else{
-                    $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
-                    if($fav == null){
-                        $shops->favorite = false ;
-                    }else{
-                        $shops->favorite = true ;
-                    }
+                    $shops->favorite = true ;
                 }
-                return $shops;
-            });
+            }
+            return $shops;
+        });
 
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);

@@ -13,6 +13,9 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
         <link href="/admin/rtl/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="/admin/rtl/assets/css/plugins.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="/admin/plugins/bootstrap-select/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="/admin/plugins/select2/select2.min.css">
+        <link href="/admin/rtl/assets/css/plugins.css" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
         <link href="/admin/rtl/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
@@ -55,6 +58,9 @@
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
         <link href="/admin/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/rtl/assets/css/plugins.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="/admin/plugins/bootstrap-select/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="/admin/plugins/select2/select2.min.css">
         <link href="/admin/assets/css/plugins.css" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
@@ -114,4 +120,5 @@
         <link href="/admin/plugins/bootstrap-range-Slider/bootstrap-slider.css" rel="stylesheet" type="text/css">
         <link href="/admin/assets/css/elements/breadcrumb.css" rel="stylesheet" type="text/css" />
 {{--    ---------------------------------------------------------------------------------------------------------------------------------------}}
+<link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
 </head>
