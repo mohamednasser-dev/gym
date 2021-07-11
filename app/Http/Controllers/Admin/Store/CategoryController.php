@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use JD\Cloudder\Facades\Cloudder;
 use Illuminate\Http\Request;
 use App\Category;
+use Cloudinary;
 
 class CategoryController extends AdminController{
     // type : get -> to add new
