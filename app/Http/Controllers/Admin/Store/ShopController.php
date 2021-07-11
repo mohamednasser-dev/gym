@@ -39,24 +39,24 @@ class ShopController extends AdminController{
         ]);
 
         if($request->file('logo')){
-            $image_name = $request->file('logo')->getRealPath();
-            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image_name);
+            $logo = $request->file('logo')->getRealPath();
+            $imagereturned = Cloudinary::upload($logo);
             $image_id = $imagereturned->getPublicId();
             $image_format = $imagereturned->getExtension();
-            $image_new_name = $image_id.'.'.$image_format;
-            $post['logo'] = $image_new_name;
+            $image_new_logo = $image_id . '.' . $image_format;
+            $post['logo'] = $image_new_logo;
         }
 
         if($request->file('cover')){
-            $cover_name = $request->file('cover')->getRealPath();
-            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$cover_name);
+            $cover = $request->file('cover')->getRealPath();
+            $imagereturned = Cloudinary::upload($cover);
             $image_id = $imagereturned->getPublicId();
             $image_format = $imagereturned->getExtension();
-            $image_new_name = $image_id.'.'.$image_format;
-            $post['cover'] = $image_new_name;
+            $new_cover = $image_id . '.' . $image_format;
+            $post['cover'] = $new_cover;
         }
         $post['password'] = Hash::make($request->password);
-        dd($post);
+
         Shop::create($post);
         return redirect()->route('shops.show');
     }
@@ -94,26 +94,20 @@ class ShopController extends AdminController{
         ]);
 
         if($request->file('logo')){
-            $logo = $store->logo;
-//            $publicId = substr($logo, 0 ,strrpos($logo, "."));
-//            Cloudder::delete($publicId);
-            $image_name = $request->file('logo')->getRealPath();
-            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image_name);
+            $logo = $request->file('logo')->getRealPath();
+            $imagereturned = Cloudinary::upload($logo);
             $image_id = $imagereturned->getPublicId();
             $image_format = $imagereturned->getExtension();
-            $image_new_name = $image_id.'.'.$image_format;
-            $input['logo'] = $image_new_name;
+            $image_new_logo = $image_id . '.' . $image_format;
+            $input['logo'] = $image_new_logo;
         }
         if($request->file('cover')){
-            $cover = $store->cover;
-//            $publicId = substr($cover, 0 ,strrpos($cover, "."));
-//            Cloudder::delete($publicId);
-            $cover_name = $request->file('cover')->getRealPath();
-            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$cover_name);
+            $logo = $request->file('cover')->getRealPath();
+            $imagereturned = Cloudinary::upload($logo);
             $image_id = $imagereturned->getPublicId();
             $image_format = $imagereturned->getExtension();
-            $image_new_name = $image_id.'.'.$image_format;
-            $input['cover'] = $image_new_name;
+            $image_new_cover = $image_id . '.' . $image_format;
+            $input['cover'] = $image_new_cover;
         }
 
         if (isset($request->password) && !empty($request->password)) {

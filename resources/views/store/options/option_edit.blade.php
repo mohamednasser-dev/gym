@@ -3,7 +3,7 @@
 @push('styles')
     <style>
         .bootstrap-tagsinput .tag {
-            color: #3b3f5c
+            color: #3b3f5c  !important
         }
 
         .bootstrap-tagsinput,
