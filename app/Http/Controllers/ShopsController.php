@@ -204,7 +204,7 @@ class ShopsController extends Controller
         $user = auth()->user();
         $lang = $request->lang;
         Session::put('lang',$lang);
-        $data = Product::with('images')
+        $data = Product::with('images')->with('category_name')
             ->select('id','title_'.$lang.' as title','description_'.$lang.' as description','remaining_quantity','final_price','price_before_offer','offer','offer_percentage','category_id')
             ->where('deleted',0)
             ->where('hidden',0)
