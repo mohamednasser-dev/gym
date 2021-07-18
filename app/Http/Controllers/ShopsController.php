@@ -229,7 +229,7 @@ class ShopsController extends Controller
             $data->favorite = false;
         }
         //for related products
-        $related = Product::where('category_id' ,  $data->category_id)
+        $related = Product::with('mainImage')->where('category_id' ,  $data->category_id)
             ->where('id' , '!=' ,  $data->id)
             ->select('id','title_'.$lang.' as title','final_price','price_before_offer','offer','offer_percentage','category_id')
             ->where('deleted',0)

@@ -43,7 +43,7 @@ class Product extends Model
     }
 
     public function mainImage() {
-        return $this->hasOne('App\ProductImage')->where('main', 1);
+        return $this->hasOne('App\ProductImage')->where('main', 1)->select('id','image','main','product_id');
     }
 
     public function category() {
