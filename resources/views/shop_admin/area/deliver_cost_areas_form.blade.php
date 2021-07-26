@@ -1,4 +1,4 @@
-@extends('store.app')
+@extends('shop_admin.app')
 @php
     $areaName = App::isLocale('en') ? $data['area']->title_en : $data['area']->title_ar;
 @endphp
@@ -22,21 +22,17 @@
                     <table id="without-print" class="table table-hover non-hover" style="width:100%">
                         <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>{{ __('messages.store') }}</th>
                             <th>{{ __('messages.delivery_cost') . " ( " . __('messages.dinar') . " )" }}</th>
                             <th>{{ __('messages.estimated_arrival_time') . " ( " . __('messages.minutes') . " ) " }}</th>
-                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php $i = 1; ?>
                         @foreach ($data['stores'] as $store)
-                            <tr>
-                                <td><?=$i;?></td>
-                                <td>{{ $store->name }}  </td>
+                            @if( $store->id == Auth::guard('shop')->user()->id)
+                                <tr>
                                 <td colspan="3">
-                                    <form method="post">
+                                    <form method="post" action="{{route('shop.areas.make.byArea.delivercost',$data['area_id'])}}">
                                         @csrf
                                         <div class="row">
                                             <input type="hidden" name="store_id" value="{{ $store->id }}"/><input
@@ -61,17 +57,9 @@
                                         </div>
                                     </form>
                                 </td>
-                                <td>
-
-                                </td>
-
-                                <td class="text-center blue-color">
-
-                                </td>
-
                                 <?php $i++; ?>
-
                             </tr>
+                            @endif
                         @endforeach
                         </tbody>
                     </table>

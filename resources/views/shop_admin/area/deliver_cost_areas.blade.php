@@ -1,4 +1,4 @@
-@extends('store.app')
+@extends('shop_admin.app')
 
 @section('title' , __('messages.add_by_areas'))
 
@@ -22,11 +22,9 @@
                         <tr>
                             <th>Id</th>
                             <th>{{ __('messages.area') }}</th>
-                            @if(Auth::user()->add_data)
-                                <th class="text-center">
-                                    {{ __('messages.add') }}
-                                </th>
-                            @endif
+                            <th class="text-center">
+                                {{ __('messages.add') }}
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -35,11 +33,9 @@
                             <tr>
                                 <td><?=$i;?></td>
                                 <td>{{ App::isLocale('en') ? $area->title_en : $area->title_ar }}</td>
-                                @if(Auth::user()->add_data)
-                                    <td class="text-center blue-color"><a
-                                            href="{{ route('areas.add.byArea.delivercost', $area->id) }}"
-                                            target="_blank"><i class="far fa-eye"></i></a></td>
-                                @endif
+                                <td class="text-center blue-color"><a
+                                        href="{{ route('shop.areas.add.byArea.delivercost', $area->id) }}"
+                                        target="_blank"><i class="far fa-eye"></i></a></td>
                                 <?php $i++; ?>
                             </tr>
                         @endforeach

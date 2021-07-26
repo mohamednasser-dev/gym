@@ -26,7 +26,6 @@
                             <th>{{ __('messages.store') }}</th>
                             <th>{{ __('messages.delivery_cost') . " ( " . __('messages.dinar') . " )" }}</th>
                             <th>{{ __('messages.estimated_arrival_time') . " ( " . __('messages.minutes') . " ) " }}</th>
-                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -61,14 +60,6 @@
                                         </div>
                                     </form>
                                 </td>
-                                <td>
-
-                                </td>
-
-                                <td class="text-center blue-color">
-
-                                </td>
-
                                 <?php $i++; ?>
 
                             </tr>

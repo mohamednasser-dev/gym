@@ -1,4 +1,4 @@
-@extends('store.app')
+@extends('shop_admin.app')
 
 @section('title' , __('messages.add_by_governorates'))
 
@@ -22,11 +22,9 @@
                         <tr>
                             <th>Id</th>
                             <th>{{ __('messages.governorate') }}</th>
-                            @if(Auth::user()->add_data)
-                                <th class="text-center">
-                                    {{ __('messages.add') }}
-                                </th>
-                            @endif
+                            <th class="text-center">
+                                {{ __('messages.add') }}
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -35,11 +33,9 @@
                             <tr>
                                 <td><?=$i;?></td>
                                 <td>{{ App::isLocale('en') ? $governorate->title_en : $governorate->title_ar }}</td>
-                                @if(Auth::user()->add_data)
-                                    <td class="text-center blue-color"><a
-                                            href="{{ route('areas.adddelivery.deliveryCostByGovernorate', $governorate->id) }}"
-                                            target="_blank"><i class="far fa-eye"></i></a></td>
-                                @endif
+                                <td class="text-center blue-color"><a
+                                        href="{{ route('shop.areas.adddelivery.deliveryCostByGovernorate', $governorate->id) }}"
+                                        target="_blank"><i class="far fa-eye"></i></a></td>
                                 <?php $i++; ?>
                             </tr>
                         @endforeach

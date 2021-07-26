@@ -1,4 +1,4 @@
-@extends('store.app')
+@extends('shop_admin.app')
 @php
     $page_title = App::isLocale('en') ? __('messages.show_delivery_costs') . $data['area']['title_en'] : __('messages.show_delivery_costs') . $data['area']['title_ar'];
 @endphp

@@ -96,7 +96,7 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
 });
 
 // admin  Routes
-Route::group(['middleware'=>'language','prefix' => "shop-panel",'namespace' => "Shop_admin"] , function($router){
+Route::group(['middleware'=>['language','shop'],'prefix' => "shop-panel",'namespace' => "Shop_admin"] , function($router){
 
     Route::get('shop/home' , 'HomeController@home')->name('shop.home');
 
@@ -177,6 +177,23 @@ Route::group(['middleware'=>'language','prefix' => "shop-panel",'namespace' => "
         Route::get('fetchbysubnumber' , 'OrderController@fetch_order_by_sub_order_number')->name('orders.fetchbysubnumber');
         Route::get('invoice/{order}' , 'OrderController@getInvoice')->name('orders.invoice');
         Route::get('size/details/{item}' , 'OrderController@order_size_details')->name('orders.size.details');
+    });
+
+    // Areas Route
+    Route::group([
+        "prefix" => "deliver-cost"
+    ], function($router){
+        Route::get('show/deliverycost/{area}' , 'AreasController@show_delivery_costs')->name('areas.show.delivercost');
+        Route::get('shop/deliverycost' , 'AreasController@deliver_cost_areas')->name('shop.areas.byArea.delivercost');
+        Route::get('shop/add/deliverycost/{area}' , 'AreasController@getAddDeliveryByArea')->name('shop.areas.add.byArea.delivercost');
+        Route::post('shop/add/deliverycost/{area}' , 'AreasController@add_deliver_cost_post')->name('shop.areas.make.byArea.delivercost');;
+        Route::get('edit/deliverycost/{area}/{cost}' , 'AreasController@edit_delivery_cost_get')->name('edit_delivery_cost_get');
+        Route::post('edit/deliverycost/{area}/{cost}' , 'AreasController@edit_delivery_cost_post');
+        Route::get('delete/deliverycost/{cost}' , 'AreasController@deleteDeliveryCost')->name('delete_delivery_cost_get');
+        Route::get('fetch-stores-by-area/{area}' , 'AreasController@fetchStoresByArea');
+        Route::get('shop/add-by-governorate' , 'AreasController@addDeliveryCostByGovernorate')->name('shop.areas.add.deliveryCostByGovernorate');
+        Route::get('shop/adddelivery-by-governorate/{governorate}' , 'AreasController@getAddDeliveryByGovernorate')->name('shop.areas.adddelivery.deliveryCostByGovernorate');
+        Route::post('shop/adddelivery-by-governorate/{governorate}' , 'AreasController@add_deliver_cost_post_by_governorate');
     });
 
 

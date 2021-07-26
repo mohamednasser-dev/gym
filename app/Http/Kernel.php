@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'language' => \App\Http\Middleware\LanguageSwitcher::class,
         'hole' => \App\Http\Middleware\hole::class,
+        'shop' => \App\Http\Middleware\shop::class,
         'hole_and_admin' => \App\Http\Middleware\hole_and_admin::class,
     ];
 

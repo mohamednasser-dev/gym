@@ -39,6 +39,7 @@ return [
     "sub_total" => "الإجمالى",
     "floor" => "الطابق",
     "apartment" => "شقة",
+    "saved_successfully" => "تم الحفظ بنجاح",
 
 
 

@@ -1,4 +1,4 @@
-@extends('store.app')
+@extends('shop_admin.app')
 @php
     $governorateName = App::isLocale('en') ? $data['governorate']->title_en : $data['governorate']->title_ar;
 @endphp
@@ -32,19 +32,15 @@
                     <table id="without-print" class="table table-hover non-hover" style="width:100%">
                         <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>{{ __('messages.store') }}</th>
                             <th>{{ __('messages.delivery_cost') . " ( " . __('messages.dinar') . " )" }}</th>
                             <th>{{ __('messages.estimated_arrival_time') . " ( " . __('messages.minutes') . " ) " }}</th>
-                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php $i = 1; ?>
                         @foreach ($data['stores'] as $store)
+                            @if( $store->id == Auth::guard('shop')->user()->id)
                             <tr>
-                                <td><?=$i;?></td>
-                                <td>{{ $store->name }}  </td>
                                 <td colspan="3">
                                     <form method="post">
                                         @csrf
@@ -65,23 +61,15 @@
                                                        value="">
                                             </div>
                                             <div class="form-group  col-sm-4 mb-4">
-                                                <input type="submit" value="{{ __('messages.submit') }}"
+                                                <input type="submit" value="{{ __('messages.save') }}"
                                                        class="btn btn-primary">
                                             </div>
                                         </div>
                                     </form>
                                 </td>
-                                <td>
-
-                                </td>
-
-                                <td class="text-center blue-color">
-
-                                </td>
-
                                 <?php $i++; ?>
-
                             </tr>
+                            @endif
                         @endforeach
                         </tbody>
                     </table>

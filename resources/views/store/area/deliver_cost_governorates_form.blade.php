@@ -36,7 +36,6 @@
                             <th>{{ __('messages.store') }}</th>
                             <th>{{ __('messages.delivery_cost') . " ( " . __('messages.dinar') . " )" }}</th>
                             <th>{{ __('messages.estimated_arrival_time') . " ( " . __('messages.minutes') . " ) " }}</th>
-                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -65,20 +64,12 @@
                                                        value="">
                                             </div>
                                             <div class="form-group  col-sm-4 mb-4">
-                                                <input type="submit" value="{{ __('messages.submit') }}"
+                                                <input type="submit" value="{{ __('messages.save') }}"
                                                        class="btn btn-primary">
                                             </div>
                                         </div>
                                     </form>
                                 </td>
-                                <td>
-
-                                </td>
-
-                                <td class="text-center blue-color">
-
-                                </td>
-
                                 <?php $i++; ?>
 
                             </tr>
