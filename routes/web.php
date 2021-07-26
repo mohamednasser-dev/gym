@@ -307,4 +307,5 @@ Route::group([
     Route::get('orders-report-pdfview-admin','WebViewController@getSalesReportAdmin')->name('webview.salesReport');
     Route::get('delivery-report-pdfview-admin','WebViewController@getDeliveryReport')->name('webview.deliveryReport');
     Route::get('sales-report-pdfview-admin','WebViewController@getSalesReport2Admin')->name('webview.salesReport2');
+    Route::get('pdfview/{order}','WebViewController@getStoreInvoice')->name('webview.store.invoice');
 });

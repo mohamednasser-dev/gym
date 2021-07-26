@@ -18,6 +18,7 @@ use PDF;
 class OrderController extends Controller{
     // get all orders
     public function show(Request $request){
+
         $data['store_id'] = auth()->guard('shop')->user()->id;
         $data['area_id'] = "";
         $data['from'] = "";
@@ -64,9 +65,9 @@ class OrderController extends Controller{
         $data['sum_price'] = $data['orders']->sum('subtotal_price');
         $data['sum_delivery'] = $data['orders']->sum('delivery_cost');
         $data['sum_total'] = $data['orders']->sum('total_price');
-        
+
         $data['orders'] = $data['orders']->select('orders.*')->orderBy('id', 'desc')->simplePaginate(16);
-        
+
         for ($i = 0; $i < count($data['orders']); $i ++) {
             if (in_array($data['orders'][$i]['status'], [1, 2, 5])) {
                 $data['orders'][$i]['status'] = 1;
@@ -74,7 +75,7 @@ class OrderController extends Controller{
             if (in_array($data['orders'][$i]['status'], [3, 4, 6, 7, 8, 9])) {
                 $data['orders'][$i]['status'] = 2;
             }
-            $data['orders'][$i]['date'] = $data['orders'][$i]['created_at']->format('Y-m-d'); 
+            $data['orders'][$i]['date'] = $data['orders'][$i]['created_at']->format('Y-m-d');
             $data['orders'][$i]['time'] = $data['orders'][$i]['created_at']->format('g:i A');
         }
 
@@ -249,10 +250,11 @@ class OrderController extends Controller{
 
 
     // details
-    public function details(MainOrder $order) {
+    public function order_details($id ) {
+
+        $order = MainOrder::find($id);
         $data['order'] = $order;
         $data['m_option'] = MultiOption::find(8);
-
         return view('shop_admin.orders.order_details', ['data' => $data]);
     }
 

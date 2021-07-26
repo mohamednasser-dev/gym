@@ -55,6 +55,44 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::post('edit/{option}' , 'OptionsController@EditPost');
         Route::get('delete/{option}' , 'OptionsController@delete')->name('options.delete');
     });
+
+    // Areas Route
+    Route::group([
+        "prefix" => "areas"
+    ], function($router){
+        Route::get('show' , 'AreasController@show')->name('areas.index');
+        Route::get('show-governorates' , 'AreasController@getGovernorates')->name('areas.governorates.index');
+        Route::get('add' , 'AreasController@AddGet')->name('areas.add');
+        Route::post('add' , 'AreasController@AddPost');
+        Route::get('add-governorates' , 'AreasController@getAddGovernorate')->name('areas.governorates.add');
+        Route::post('add-governorates' , 'AreasController@postAddGovernorate');
+        Route::get('edit/{area}' , 'AreasController@EditGet')->name('areas.edit');
+        Route::post('edit/{area}' , 'AreasController@EditPost');
+        Route::get('edit-governorates/{governorate}' , 'AreasController@getEditGovernorate')->name('areas.governorates.edit');
+        Route::post('edit-governorates/{governorate}' , 'AreasController@postEditGovernorate');
+        Route::get('delete/{area}' , 'AreasController@delete')->name('areas.delete');
+        Route::get('delete-governorates/{governorate}' , 'AreasController@getDeleteGovernorate')->name('areas.governorates.delete');
+        Route::get('details/{area}' , 'AreasController@details')->name('areas.details');
+        Route::get('delete-delivery-area/{cost}' , 'AreasController@deleteDeliveryArea')->name('areas.delivery.delete');
+        Route::get('details-governorates/{governorate}' , 'AreasController@getGovernorateDetails')->name('areas.governorates.details');
+    });
+
+    // Areas Route
+    Route::group([
+        "prefix" => "deliver-cost"
+    ], function($router){
+        Route::get('show/deliverycost/{area}' , 'AreasController@show_delivery_costs')->name('areas.show.delivercost');
+        Route::get('deliverycost' , 'AreasController@deliver_cost_areas')->name('areas.byArea.delivercost');
+        Route::get('add/deliverycost/{area}' , 'AreasController@getAddDeliveryByArea')->name('areas.add.byArea.delivercost');
+        Route::post('add/deliverycost/{area}' , 'AreasController@add_deliver_cost_post');
+        Route::get('edit/deliverycost/{area}/{cost}' , 'AreasController@edit_delivery_cost_get')->name('edit_delivery_cost_get');
+        Route::post('edit/deliverycost/{area}/{cost}' , 'AreasController@edit_delivery_cost_post');
+        Route::get('delete/deliverycost/{cost}' , 'AreasController@deleteDeliveryCost')->name('delete_delivery_cost_get');
+        Route::get('fetch-stores-by-area/{area}' , 'AreasController@fetchStoresByArea');
+        Route::get('add-by-governorate' , 'AreasController@addDeliveryCostByGovernorate')->name('areas.add.deliveryCostByGovernorate');
+        Route::get('adddelivery-by-governorate/{governorate}' , 'AreasController@getAddDeliveryByGovernorate')->name('areas.adddelivery.deliveryCostByGovernorate');
+        Route::post('adddelivery-by-governorate/{governorate}' , 'AreasController@add_deliver_cost_post_by_governorate');
+    });
 });
 
 // admin  Routes
@@ -130,7 +168,7 @@ Route::group(['middleware'=>'language','prefix' => "shop-panel",'namespace' => "
         Route::get('action/sub/{order}' , 'OrderController@action_sub_order')->name('orders.sub.action');
         Route::get('action/{order}/{status}' , 'OrderController@action_order')->name('orders.action');
         Route::get('cancel/{type}/{orderId}' , 'OrderController@cancelOrder')->name('orders.cancel');
-        Route::get('details/{order}' , 'OrderController@details')->name('orders.details');
+        Route::get('details/current/now/{id}' , 'OrderController@order_details')->name('current.orders.details.now');
         Route::get('details-sub-order/{order}' , 'OrderController@subOrdersDetails')->name('orders.sub_order.details');
         Route::get('filter/{status}' , 'OrderController@filter_orders')->name('orders.filter');
         Route::get('fetchbyarea' , 'OrderController@fetch_orders_by_area')->name('orders.fetchbyarea');

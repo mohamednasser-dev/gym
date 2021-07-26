@@ -30,7 +30,7 @@
                         <tr>
                             <td class="label-table" > {{ __('messages.main_order_number') }}</td>
                             <td>
-                                <a target="_blank" href="{{ route('orders.details', $data['order']->main_id) }}">
+                                <a target="_blank" href="{{ route('current.orders.details.now', $data['order']->main_id) }}">
                                     {{ $data['order']->main->main_order_number }}
                                 </a>
                             </td>

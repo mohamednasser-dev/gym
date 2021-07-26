@@ -1,15 +1,47 @@
 <?php
 return [
     //new
-
-
-
     "show_product" => "أظهار المنتج",
     "description_ar" => "الوصف باللغه العربية",
     "description_en" => "الوصف باللغه بالانجليزية",
     "hidden" => "مخفى",
     "add_video" => "اضافة فيديو",
     "add_image" => "اضافة صورة",
+    "areas_governorates" => "المناطق والمحافظات",
+    "add_area" => "إضافة منطقة",
+    "add_governorate" => "إضافة محافظة",
+    "governorate" => "المحافظة",
+    "added_successfully" => "تم الإضافة بنجاح",
+    "show_governorates" => "عرض المحافظات",
+    "updated_successfully" => "تم تحديث البيانات بنجاح",
+    "add_new_governorate" => "إضافة محافظة جديدة",
+    "edit_governorate" => "تعديل المحافظة",
+    "deleted_successfully" => "تم الحذف بنجاح",
+    "governorate_details" => "تفاصيل المحافظة",
+    "add_by_areas" => "إضافة بالمناطق",
+    "add_by_governorates" => "إضافة بالمحافظات",
+    "delivery_costs" => "تكاليف التوصيل",
+    "show_areas" => "عرض المناطق",
+    "area_title" => "عنوان المنطقة",
+    "areas" => "المناطق",
+    "add_new_area" => "إضافة منطقة جديدة",
+    "governorate_has_areas" => "المحافظة بها مناطق .. عفواً لا يمكن حذفها",
+    "area_delivery_added" => "المنطقة مضاف لها قيمة توصيل .. عفواً لا يمكن حذفها",
+    "area_details" => "تفاصيل المنطقة",
+    "estimated_arrival_time" => "الحد الأقصى للوصول",
+    "minutes" => "دقائق",
+    "save" => "حفظ",
+    "on_submit" => "بمجرد تحديد تكلفة التوصيل و الحد الأقصى للوصول سيتم تطبيقهم على جميع مناطق المحافظة المختارة لهذا المتجر",
+    "customer_data" => "بيانات العميل",
+    "additional_details" => "تفاصيل إضافية",
+    "items" => "السلع",
+    "quantity" => "الكمية",
+    "sub_total" => "الإجمالى",
+    "floor" => "الطابق",
+    "apartment" => "شقة",
+
+
+
 
 
     "main_order_number" => "رقم الطلب الرئيسى",

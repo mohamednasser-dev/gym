@@ -12,11 +12,11 @@
 
     }else if(isset($data['method'])) {
         if($data['method'] == 1) {
-            $title = __('messages.show_orders') . " ( " . __('messages.key_net') . " )";
+            $title = __('messages.show_orders') ;
         }elseif ($data['method'] == 2) {
-            $title = __('messages.show_orders') . " ( " . __('messages.cash') . " )";
+            $title = __('messages.show_orders');
         }else {
-            $title = __('messages.show_orders') . " ( " . __('messages.wallet') . " )";
+            $title = __('messages.show_orders') ;
         }
     }
 @endphp
@@ -250,8 +250,8 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                                 <td>{{ $order->delivery_cost . " " . __('messages.dinar') }}</td>
                                 <td>{{ $order->total_price . " " . __('messages.dinar') }}</td>
 
-                                <td class="text-center blue-color hide_col"><a href="#" ><i class="far fa-eye"></i></a></td>
-                                <td class="text-center blue-color hide_col"><a target="_blank" href="#" ><i class="far fa-eye"></i></a></td>
+                                <td class="text-center blue-color hide_col"><a href="{{ route('current.orders.details.now', $order->main_id) }}" ><i class="far fa-eye"></i></a></td>
+                                <td class="text-center blue-color hide_col"><a target="_blank" href="{{ route('webview.store.invoice', $order->id) }}" ><i class="far fa-eye"></i></a></td>
                             </tr>
                             <?php $i ++ ?>
                         @endforeach

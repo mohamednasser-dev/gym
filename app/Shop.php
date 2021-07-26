@@ -44,4 +44,22 @@ class Shop extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Product', 'store_id');
     }
 
+    public function categories() {
+        return $this->belongsToMany('App\Category', 'stores_categories', 'store_id', 'category_id');
+    }
+
+    public function seller() {
+        return $this->belongsTo('App\Seller', 'seller_id');
+    }
+
+    public function areas() {
+        return $this->hasMany('App\DeliveryArea', 'store_id');
+    }
+
+    public function deliveryByarea($area) {
+        $data = $this->hasOne('App\DeliveryArea', 'store_id')->where('area_id', $area)->first();
+
+        return $this->hasOne('App\DeliveryArea', 'store_id')->where('area_id', $area)->first();
+    }
+
 }

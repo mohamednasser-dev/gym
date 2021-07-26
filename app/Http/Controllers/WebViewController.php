@@ -227,4 +227,13 @@ class WebViewController extends Controller
 
         return $pdf->stream('download.pdf');
     }
+
+    // get store invoice
+    public function getStoreInvoice(Request $request, Order $order) {
+        $data['order'] = $order;
+        $data['setting'] = Setting::where('id', 1)->first();
+        $pdf = PDF::loadView('shop_admin.orders.invoice_store_pdf', ['data' => $data]);
+
+        return $pdf->stream('download.pdf');
+    }
 }

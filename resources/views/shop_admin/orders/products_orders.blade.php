@@ -251,12 +251,12 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                             <tr>
                                 <td><?=$i;?></td>
                                 <td>
-                                    <a target="_blank" href="{{ route('orders.details', $order->order->main_id) }}">
+                                    <a target="_blank" href="{{ route('current.orders.details.now', $order->order->main_id) }}">
                                         {{ $order->order ? $order->order->main->main_order_number : '' }}
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="{{ route('orders.details', $order->order_id) }}" >
+                                    <a href="{{ route('current.orders.details.now', $order->order_id) }}" >
                                         {{ $order->order ? $order->order->order_number : '' }}
                                     </a>
                                 </td>
@@ -265,7 +265,7 @@ $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                                         {{ $order->product ? $order->product->title_ar : '' }}
                                     </a>
                                 </td>
-                                <td><img src="https://res.cloudinary.com/dezsm0sg7/image/upload/w_50,q_50/v1581928924/{{ isset($order->product->mainImage->image) ? $order->product->mainImage->image : '' }}"  /></td>
+                                <td><img src="{{image_cloudinary_url()}}{{ isset($order->product->mainImage->image) ? $order->product->mainImage->image : '' }}"  /></td>
                                 <td>{{ $order->count }}</td>
                                 <td>{{ $order->final_price . " " . __('messages.dinar') }}</td>
                                 <td>{{ $order->final_price * $order->count }} {{ __('messages.dinar') }}</td>
