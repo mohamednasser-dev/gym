@@ -43,7 +43,7 @@
                             <th>{{ __('messages.sold_quantity') }}</th>
                             <th>{{ __('messages.price_before_discount') }}</th>
                             <th>{{ __('messages.price_after_discount') }}</th>
-                            <th></th>
+                            <th>{{ __('messages.delete_product_offers') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,7 +64,7 @@
                                     {{ $product->final_price . " " . __('messages.dinar') }}
                                 </td>
                                 <td class="text-center blue-color">
-                                    
+
                                     <a href="{{route('products.action.offer',[$product->id, 0])}}"
                                         class="btn btn-danger  mb-2 mr-2 rounded-circle" title=""
                                         data-original-title="Tooltip using BUTTON tag">

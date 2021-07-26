@@ -140,7 +140,7 @@
                         @endforeach
                     </select>
                 </div>
-                
+
             </div>
             @if($data['expire'] == 'no')
             <a class="btn btn-primary" href="/admin-panel/products/show?expire=soon">{{ __('messages.expired_soon') }}</a>
@@ -241,9 +241,9 @@
                                           <a class="dropdown-item" href="{{ route('products.details', $product->id) }}">{{ __('messages.details') }}</a>
                                             <a class="dropdown-item" href="{{ route('products.edit', $product->id) }}">{{ __('messages.edit') }}</a>
                                             @if($product->free == 0)
-                                            <a class="dropdown-item" href="{{ route('shops.products.action.offer', [$product->id, 1]) }}">{{ __('messages.add_to_offer') }}</a>
+                                            <a class="dropdown-item" href="{{ route('products.action.offer', [$product->id, 1]) }}">{{ __('messages.add_to_offer') }}</a>
                                             @else
-                                            <a class="dropdown-item" href="{{ route('shops.products.action.offer', [$product->id, 0]) }}">{{ __('messages.remove_from_offer') }}</a>
+                                            <a class="dropdown-item" href="{{ route('products.action.offer', [$product->id, 0]) }}">{{ __('messages.remove_from_offer') }}</a>
                                             @endif
                                             @if($product->reviewed == 0)
                                             <a class="dropdown-item" onclick='return confirm("{{ __('messages.are_you_sure') }}");' href="{{ route('products.review', [$product->id, 1]) }}">{{ __('messages.publish') }}</a>

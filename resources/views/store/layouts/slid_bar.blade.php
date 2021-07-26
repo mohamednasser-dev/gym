@@ -208,47 +208,6 @@
 
                     </ul>
                 </li>
-                @if(in_array(13 , Auth::user()->custom['admin_permission']))
-                    <li class="menu areas">
-                        <a href="#areas" data-active="true" data-toggle="collapse" aria-expanded="true"
-                           class="dropdown-toggle first-link">
-                            <div class="">
-                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                                     fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                                <span>{{ __('messages.areas_governorates') }}</span>
-                            </div>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-chevron-right">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                            </div>
-                        </a>
-                        <ul class="collapse submenu list-unstyled show" id="areas" data-parent="#accordionExample">
-                            @if(Auth::user()->add_data)
-                                <li class="active add-governorates">
-                                    <a href="{{ route('areas.governorates.add') }}"> {{ __('messages.add_governorate') }} </a>
-                                </li>
-                            @endif
-                            <li class="show-governorates">
-                                <a href="{{ route('areas.governorates.index') }}"> {{ __('messages.show_governorates') }} </a>
-                            </li>
-                            @if(Auth::user()->add_data)
-                                <li class="active add">
-                                    <a href="{{ route('areas.add') }}"> {{ __('messages.add_area') }} </a>
-                                </li>
-                            @endif
-                            <li class="show">
-                                <a href="{{ route('areas.index') }}"> {{ __('messages.show_areas') }} </a>
-                            </li>
-
-                        </ul>
-                    </li>
-                @endif
                 <li class="menu deliver-cost">
                     <a href="#deliver-cost" data-active="true" data-toggle="collapse" aria-expanded="true"
                        class="dropdown-toggle first-link">

@@ -1,6 +1,22 @@
 <?php
 return [
     //new
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     "show_product" => "أظهار المنتج",
     "description_ar" => "الوصف باللغه العربية",
     "description_en" => "الوصف باللغه بالانجليزية",
@@ -40,11 +56,7 @@ return [
     "floor" => "الطابق",
     "apartment" => "شقة",
     "saved_successfully" => "تم الحفظ بنجاح",
-
-
-
-
-
+    "delete_product_offers" => "حذف المنتج من العروض",
     "main_order_number" => "رقم الطلب الرئيسى",
     "main_orders_count" => "عدد الطلبات الرئيسية",
     "main_orders" => "الطلبات الرئيسية",
