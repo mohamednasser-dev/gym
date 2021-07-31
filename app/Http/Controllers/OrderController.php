@@ -5,21 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\UserAddress;
-use App\Area;
 use App\Visitor;
 use App\Product;
-use App\ProductImage;
 use App\Cart;
 use App\Order;
 use App\OrderItem;
 use App\DeliveryArea;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\APIHelpers;
 use App\Shop;
 use App\ProductMultiOption;
 use App\MainOrder;
-use App\SizeDetail;
 use App\Setting;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -28,9 +24,9 @@ class OrderController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['']]);
+        $this->middleware('auth:api' , ['except' => ['excute_pay']]);
     }
-    
+
     public function create(Request $request){
         $validator = Validator::make($request->all(), [
             'unique_id' => 'required',
@@ -52,7 +48,7 @@ class OrderController extends Controller
         $user_id_unique_id = $visitor->user_id;
         $visitor_id = $visitor->id;
         $cart = Cart::where('visitor_id' , $visitor_id)->get();
-        
+
 		//dd(count($cart));
         if(count($cart) == 0){
             $response = APIHelpers::createApiResponse(true , 406 , 'Missing Required Fields' , 'بعض الحقول مفقودة'  , null , $request->lang);
@@ -61,7 +57,7 @@ class OrderController extends Controller
         $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $main_order_number = substr(str_shuffle(uniqid() . $str) , -9);
         $address = UserAddress::where('id', auth()->user()->main_address_id)->first();
-        
+
         $stores = Shop::join('products', 'products.store_id', '=', 'shops.id')
             ->where('carts.visitor_id', $visitor_id)
             ->leftjoin('carts', function($join) {
@@ -72,9 +68,14 @@ class OrderController extends Controller
         $unrepeated_stores1 = array_unique($stores);
         $unrepeated_stores = [];
         foreach ($unrepeated_stores1 as $key => $value) {
-			array_push($unrepeated_stores, $value); 
+			array_push($unrepeated_stores, $value);
 		}
-        //dd($unrepeated_stores);
+        for ($n = 0; $n < count($cart); $n ++) {
+            if($cart[$n]->product->remaining_quantity < $cart[$n]['count']){
+                $response = APIHelpers::createApiResponse(true , 406 , 'The remaining amount of the product is not enough' , 'الكميه المتبقيه من المنتج غير كافيه'  , null , $request->lang);
+                return response()->json($response , 406);
+            }
+        }
         if($request->payment_method == 2){
             $main_order = MainOrder::create([
                 'user_id' => auth()->user()->id,
@@ -83,11 +84,11 @@ class OrderController extends Controller
                 'main_order_number' => $main_order_number
             ]);
             if (count($stores) > 0) {
-				
+
                 for ($i = 0; $i < count($unrepeated_stores); $i ++) {
                     $store_products = Cart::where('store_id', $unrepeated_stores[$i])->where('visitor_id', $visitor_id)->get();
-                    
-                    $pluck_products = Cart::where('store_id', $unrepeated_stores[$i])->pluck('product_id')->toArray();
+
+                    $pluck_products = Cart::where('store_id', $unrepeated_stores[$i])->where('visitor_id', $visitor_id)->pluck('product_id')->toArray();
                     if (count($store_products) > 0) {
                         $subtotal_price = 0;
                         for ($n = 0; $n < count($store_products); $n ++) {
@@ -100,19 +101,19 @@ class OrderController extends Controller
                             $single_product = Product::select('id', 'remaining_quantity')->where('id', $store_products[$n]['product_id'])->first();
                             $single_product->remaining_quantity = $single_product->remaining_quantity - $store_products[$n]['count'];
                             $single_product->save();
-                            
+
                             $subtotal_price = $subtotal_price + ($store_products[$n]->product->final_price * $store_products[$n]['count']);
-                            
+
                         }
                     }
-    
+
                     $delivery = DeliveryArea::select('delivery_cost', 'arrival_to', 'arrival_from')->where('area_id', $address['area_id'])->where('store_id', $unrepeated_stores[$i])->first();
-                    
+
                     if (!isset($delivery['delivery_cost'])) {
                         $delivery = Setting::find(1);
                     }
                     $total_cost = $delivery['delivery_cost'] + $subtotal_price;
-                    
+
                     $order = Order::create([
                         'user_id' => auth()->user()->id,
                         'address_id' => $request->address_id,
@@ -127,10 +128,9 @@ class OrderController extends Controller
                         'arrival_to' => $delivery['arrival_to'],
                         'main_id' => $main_order['id']
                         ]);
-                        
+
                         for($k = 0; $k < count($store_products); $k++){
                             $product_data = Product::select('final_price', 'price_before_offer')->where('id', $store_products[$k]['product_id'])->first();
-                            
                             $order_item =  OrderItem::create([
                                 'order_id' => $order->id,
                                 'product_id' => $store_products[$k]['product_id'],
@@ -138,7 +138,8 @@ class OrderController extends Controller
                                 'final_price' => $product_data['final_price'],
                                 'count' => $store_products[$k]['count']
                             ]);
-                                              
+                            // empty cart
+                            Cart::where('product_id',$store_products[$k]['product_id'])->where('visitor_id',$visitor_id)->delete();
                         }
                 }
             }
@@ -153,18 +154,18 @@ class OrderController extends Controller
             $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , $request->lang);
             return response()->json($response , 200);
         }else {
-            
+
             if (count($stores) > 0) {
                 $total_price = 0;
                 for ($i = 0; $i < count($unrepeated_stores); $i ++) {
-                    $store_products = Cart::where('store_id', $unrepeated_stores[$i])->get();
-                    
-                    $pluck_products = Cart::where('store_id', $unrepeated_stores[$i])->pluck('product_id')->toArray();
+                    $store_products = Cart::where('visitor_id',$visitor_id)->where('store_id', $unrepeated_stores[$i])->get();
+
+                    $pluck_products = Cart::where('visitor_id',$visitor_id)->where('store_id', $unrepeated_stores[$i])->pluck('product_id')->toArray();
                     if (count($store_products) > 0) {
                         $subtotal_price = 0;
                         for ($n = 0; $n < count($store_products); $n ++) {
                             if($store_products[$n]->product->remaining_quantity < $store_products[$n]['count']){
-                                
+
                                 $response = APIHelpers::createApiResponse(true , 406 , 'The remaining amount of the product is not enough' , 'الكميه المتبقيه من المنتج غير كافيه'  , null , $request->lang);
                                 return response()->json($response , 406);
                             }
@@ -180,7 +181,7 @@ class OrderController extends Controller
                             }
                         }
                     }
-    
+
                     $max_period = Product::join('carts', 'carts.product_id', '=', 'products.id')
                     ->whereIn('products.id', $pluck_products)
                     ->where('carts.visitor_id', $visitor_id)
@@ -189,7 +190,7 @@ class OrderController extends Controller
                     ->groupBy('carts.count')
                     ->orderBy('max_period', 'desc')
                     ->first();
-    
+
                     $min_period = Product::join('carts', 'carts.product_id', '=', 'products.id')
                     ->whereIn('products.id', $pluck_products)
                     ->where('carts.visitor_id', $visitor_id)
@@ -198,7 +199,7 @@ class OrderController extends Controller
                     ->groupBy('carts.count')
                     ->orderBy('min_period', 'asc')
                     ->first();
-    
+
                     $today = Carbon::now();
                     $current_day = Carbon::now();
                     $max_total_period = $max_period['count'] * $max_period['max_period'];
@@ -219,14 +220,14 @@ class OrderController extends Controller
                         $delivery = Setting::find(1);
                     }
                     $total_cost = $delivery['delivery_cost'] + $subtotal_price;
-    
+
                     $total_price = $total_price + $total_cost;
                 }
             }
-            
+
             $root_url = $request->root();
         	$user = auth()->user();
-    		
+
             $path='https://apitest.myfatoorah.com/v2/SendPayment';
 			$token="bearer rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";
 
@@ -235,7 +236,7 @@ class OrderController extends Controller
             'Content-Type:application/json'
         );
             $price = $total_price;
-            $call_back_url = $root_url."/api/excute_pay?user_id=".$user->id."&unique_id=".$request->unique_id."&address_id=".$request->address_id."&payment_method=".$request->payment_method;
+            $call_back_url = $root_url."/api/order/excute_pay?user_id=".$user->id."&unique_id=".$request->unique_id."&address_id=".$request->address_id."&payment_method=".$request->payment_method;
             $error_url = $root_url."/api/pay/error";
             $fields =array(
 				"CustomerName" => $user->name,
@@ -245,8 +246,8 @@ class OrderController extends Controller
 				"ErrorUrl" => $error_url,
 				"Language" => "AR",
 				"CustomerEmail" => $user->email
-        	); 
-    
+        	);
+
             $payload =json_encode($fields);
             $curl_session =curl_init();
             curl_setopt($curl_session,CURLOPT_URL, $path);
@@ -256,18 +257,18 @@ class OrderController extends Controller
             curl_setopt($curl_session,CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl_session,CURLOPT_IPRESOLVE, CURLOPT_IPRESOLVE);
             curl_setopt($curl_session,CURLOPT_POSTFIELDS, $payload);
-			
+
             $result=curl_exec($curl_session);
 			//dd($result);
             curl_close($curl_session);
             $result = json_decode($result);
             // dd($result);
             $data['url'] = $result->Data->InvoiceURL;
-            
+
             $response = APIHelpers::createApiResponse(false , 200 ,  '' , '' , $data , $request->lang );
-            return response()->json($response , 200); 
+            return response()->json($response , 200);
         }
-        
+
     }
 
     public function excute_pay(Request $request){
@@ -291,10 +292,10 @@ class OrderController extends Controller
         $unrepeated_stores1 = array_unique($stores);
         $unrepeated_stores = [];
         foreach ($unrepeated_stores1 as $key => $value) {
-			array_push($unrepeated_stores, $value); 
+			array_push($unrepeated_stores, $value);
 		}
         $main_order = MainOrder::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => $request->user_id,
             'address_id' => $request->address_id,
             'payment_method' => $request->payment_method,
             'main_order_number' => $main_order_number
@@ -302,7 +303,7 @@ class OrderController extends Controller
         if (count($stores) > 0) {
             for ($i = 0; $i < count($unrepeated_stores); $i ++) {
                 $store_products = Cart::where('store_id', $unrepeated_stores[$i])->where('visitor_id', $visitor_id)->get();
-                
+
                 $pluck_products = Cart::where('store_id', $unrepeated_stores[$i])->pluck('product_id')->toArray();
                 if (count($store_products) > 0) {
                     $subtotal_price = 0;
@@ -364,55 +365,33 @@ class OrderController extends Controller
                     $delivery = Setting::find(1);
                 }
                 $total_cost = $delivery['delivery_cost'] + $subtotal_price;
-                
+
                 $order = Order::create([
-                    'user_id' => auth()->user()->id,
+                    'user_id' => $request->user_id,
                     'address_id' => $request->address_id,
+                    'status' => 1,
                     'payment_method' => $request->payment_method,
                     'subtotal_price' => $subtotal_price,
                     'delivery_cost' => $delivery['delivery_cost'],
                     'total_price' => $total_cost,
                     'order_number' => substr(str_shuffle(uniqid() . $str) , -9),
                     'store_id' => $unrepeated_stores[$i],
-                    'from_deliver_date' => $from_deliver_date,
-                    'to_deliver_date' => $to_deliver_date,
+                    'arrival_from' => $delivery['arrival_from'],
+                    'arrival_to' => $delivery['arrival_to'],
                     'main_id' => $main_order['id']
-                    ]);
+                ]);
 
                     for($k = 0; $k < count($store_products); $k++){
-                        $option_en = "";
-                        $option_ar = "";
-                        $val_en = "";
-                        $val_ar = "";
-                        if ($store_products[$k]['option_id'] != 0) {
-                            $product_data = ProductMultiOption::where('id', $store_products[$k]['option_id'])->first();
-                            $option_en = $product_data['option_en'];
-                            $option_ar = $product_data['option_ar'];
-                            $val_en = $product_data['val_en'];
-                            $val_ar = $product_data['val_ar'];
-                        }else {
-                            $product_data = Product::select('final_price', 'price_before_offer')->where('id', $store_products[$k]['product_id'])->first();
-                        }
+                        $product_data = Product::select('final_price', 'price_before_offer')->where('id', $store_products[$k]['product_id'])->first();
                         $order_item =  OrderItem::create([
                             'order_id' => $order->id,
                             'product_id' => $store_products[$k]['product_id'],
-                            'option_id' => $store_products[$k]['option_id'],
-                            'option_en' => $option_en,
-                            'option_ar' => $option_ar,
-                            'val_en' => $val_en,
-                            'val_ar' => $val_ar,
                             'price_before_offer' => $product_data['price_before_offer'],
                             'final_price' => $product_data['final_price'],
                             'count' => $store_products[$k]['count']
                         ]);
-                        $size_details = SizeDetail::where('cart_id', $store_products[$k]['id'])->where('product_id', $store_products[$k]['product_id'])->first();
-                            if($size_details) {
-                                $size_details->update(['order_id' => $order_item['id']]);
-                                $cartItem = Cart::find($store_products[$k]['id']);
-                                $cartItem->delete();
-                            }
-                        
-                                               
+                        // empty cart
+                        Cart::where('product_id',$store_products[$k]['product_id'])->where('visitor_id',$visitor_id)->delete();
                     }
             }
         }
@@ -422,11 +401,7 @@ class OrderController extends Controller
             'delivery_cost' => $main_order->orders->sum('delivery_cost'),
             'total_price' => $main_order->orders->sum('total_price')
         ]);
-
-
-
-
-        return redirect('api/pay/success'); 
+        return redirect('api/pay/success');
     }
 
     public function getorders(Request $request){
@@ -436,17 +411,17 @@ class OrderController extends Controller
         for ($k = 0; $k < count($orderDates); $k ++) {
             $ordersDays[$k] = date_format(date_create($orderDates[$k]) , "d-m-Y");
         }
-		
+
         $unrepeated_days1 = array_unique($ordersDays);
 		$unrepeated_days = [];
         foreach ($unrepeated_days1 as $key => $value) {
-			array_push($unrepeated_days, $value); 
+			array_push($unrepeated_days, $value);
         }
         $data = [];
-        
+
         for ($n = 0; $n < count($unrepeated_days); $n ++) {
             $dayOrders = [];
-            
+
             for($i = 0; $i < count($orders); $i++){
                 if ($unrepeated_days[$n] == date_format(date_create($orders[$i]['date']), "d-m-Y")) {
                     $items = OrderItem::join('orders','orders.id', '=','order_items.order_id')
@@ -458,7 +433,7 @@ class OrderController extends Controller
                     ->groupBy('order_items.count')
                     ->groupBy('order_items.product_id')
                     ->get();
-                    
+
                     $orders[$i]['count'] = $items->sum('cnt');
                     $date = date_create($orders[$i]['date']);
 
@@ -474,7 +449,7 @@ class OrderController extends Controller
 
                     array_push($dayOrders, $dayOrder);
                 }
-                 
+
             }
             $data[$n]['day'] = $unrepeated_days[$n];
             if ($unrepeated_days[$n] == Carbon::today()->format('d-m-Y')) {
@@ -484,10 +459,10 @@ class OrderController extends Controller
                 }
                 $data[$n]['day'] = $today;
             }
-            
+
             $data[$n]['orders'] = $dayOrders;
         }
-        
+
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , $request->lang);
         return response()->json($response , 200);
     }
@@ -499,7 +474,7 @@ class OrderController extends Controller
     public function pay_error(){
         return "Please wait ...";
     }
-    
+
     public function orderdetails(Request $request){
         $order_id = $request->id;
         $order = MainOrder::select('id', 'payment_method', 'subtotal_price', 'delivery_cost', 'total_price', 'status', 'main_order_number', 'address_id', 'created_at')->where('id', $order_id)->first()->makeHidden(['address_id', 'orders_with_select', 'created_at']);
@@ -510,19 +485,18 @@ class OrderController extends Controller
         $stores = $order->orders_with_select->makeHidden(['store', 'oItems', 'from_deliver_date', 'to_deliver_date', 'main_id', 'created_at']);
         if (count($stores) > 0) {
             for ($i = 0; $i < count($stores); $i ++) {
-                
+
                 $stores[$i]['shipment_number'] = $i + 1;
 				$orderDate = date_create($stores[$i]['created_at']);
-                // $stores[$i]['date'] = date_format($orderDate , "d-m-Y");
-                // dd($stores[$i]);
-                $details = (object)[
-                    "subtotal_price" => $stores[$i]['subtotal_price'],
-                    "delivery_cost" => $stores[$i]['delivery_cost'],
-                    "total_price" => $stores[$i]['total_price'],
-                    "order_number" => $stores[$i]['order_number'],
-                    "id" => $stores[$i]['id']
-                ];
+//                $details = (object)[
+//                    "subtotal_price" => $stores[$i]['subtotal_price'],
+//                    "delivery_cost" => $stores[$i]['delivery_cost'],
+//                    "total_price" => $stores[$i]['total_price'],
+//                    "order_number" => $stores[$i]['order_number'],
+//                    "id" => $stores[$i]['id']
+//                ];
                 $products = [];
+
                 if (count($stores[$i]->oItems) > 0) {
                     for ($n = 0; $n < count($stores[$i]->oItems); $n ++) {
                         $stores[$i]->oItems[$n]['product'] = $stores[$i]->oItems[$n]->product_with_select->makeHidden(['mainImage', 'multi_options']);
@@ -533,8 +507,9 @@ class OrderController extends Controller
                         array_push($products, $stores[$i]->oItems[$n]->product_with_select);
                     }
                 }
-                array_unshift($products, $details);
-                
+//                , $details
+                array_unshift($products);
+
                 $stores[$i]['products'] = $products;
                 // array_push($stores[$i]['products'], $details);
                 // dd($stores[$i]['products']);
@@ -542,14 +517,14 @@ class OrderController extends Controller
         }
 
         $data['stores'] = $stores;
-        
+
         if($address){
             $address['area'] = $address->area_with_select['title'];
             $data['address'] = $address;
         }else{
             $data['address'] = new \stdClass();
         }
-        
+
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , $request->lang);
         return response()->json($response , 200);
 

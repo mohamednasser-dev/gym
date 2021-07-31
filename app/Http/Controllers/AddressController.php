@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Governorate;
 use Illuminate\Http\Request;
 use App\User;
 use App\UserAddress;
@@ -50,7 +51,7 @@ class AddressController extends Controller
             'apartment_number' => 'required',
             'street' => 'required',
             'phone' => 'required',
-            'piece' => 'required',            
+            'piece' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -86,7 +87,7 @@ class AddressController extends Controller
 
     public function removeaddress(Request $request){
         $validator = Validator::make($request->all(), [
-            'address_id' => 'required',           
+            'address_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -116,7 +117,7 @@ class AddressController extends Controller
 
     public function setmain(Request $request){
         $validator = Validator::make($request->all(), [
-            'address_id' => 'required',           
+            'address_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -124,12 +125,12 @@ class AddressController extends Controller
             return response()->json($response , 406);
         }
         $user = auth()->user();
-        
+
         $main_address = UserAddress::where('user_id' , $user->id)->where('id' ,$request->address_id)->first();
 
         if(!$main_address){
             $response = APIHelpers::createApiResponse(true , 406 , 'You do not have the authority for this address' , 'ليس لديك الصلاحيه لهذا العنوان'  , null , $request->lang);
-            return response()->json($response , 406);            
+            return response()->json($response , 406);
         }
         $user->main_address_id = $request->address_id;
         $user->save();
@@ -150,20 +151,21 @@ class AddressController extends Controller
 
     }
 
-    public function getareas(Request $request){
-        if($request->lang == 'en'){
-            $areas = Area::where('deleted' , 0)->select('id', 'title_en as title')->get();
-        }else{
-            $areas = Area::where('deleted' , 0)->select('id' , 'title_ar as title')->get();
-        }
-        
-        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $areas , $request->lang);
+    public function getgovernment(Request $request){
+        $data = Governorate::where('deleted' , 0)->select('id', 'title_'.$request->lang.' as title')->get();
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , $request->lang);
+        return response()->json($response , 200);
+    }
+
+    public function getareas(Request $request,$id){
+        $data = Area::where('governorate_id',$id)->where('deleted' , 0)->select('id', 'title_'.$request->lang.' as title')->get();
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $data , $request->lang);
         return response()->json($response , 200);
     }
 
     public function getdeliveryprice(Request $request){
         $validator = Validator::make($request->all(), [
-            'address_id' => 'required',           
+            'address_id' => 'required',
         ]);
 
         if ($validator->fails()) {

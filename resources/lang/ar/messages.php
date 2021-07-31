@@ -16,7 +16,7 @@ return [
 
 
 
-    
+
     "show_product" => "أظهار المنتج",
     "description_ar" => "الوصف باللغه العربية",
     "description_en" => "الوصف باللغه بالانجليزية",

@@ -59,7 +59,8 @@ use Illuminate\Http\Request;
         Route::post('/{lang}/{v}' , 'AddressController@addaddress');
         Route::delete('/{lang}/{v}' , 'AddressController@removeaddress');
         Route::post('/setdefault/{lang}/{v}' , 'AddressController@setmain');
-        Route::get('/areas/{lang}/{v}' , 'AddressController@getareas')->middleware('checkguest');
+        Route::get('/getgovernment/{lang}/{v}' , 'AddressController@getgovernment')->middleware('checkguest');
+        Route::get('/getareas/{id}/{lang}/{v}' , 'AddressController@getareas')->middleware('checkguest');
         Route::get('/details/{id}/{lang}/{v}' , 'AddressController@getdetails');
     });
 
@@ -102,6 +103,7 @@ use Illuminate\Http\Request;
     });
 
     Route::get('/excute_pay' , 'PlanController@excute_pay');
+    Route::get('/order/excute_pay' , 'OrderController@excute_pay');
     Route::get('/pay/success' , 'PlanController@pay_sucess');
     Route::get('/pay/error' , 'PlanController@pay_error');
 
