@@ -131,7 +131,7 @@ class VisitorController extends Controller
         if($visitor){
             $visitor_id =  $visitor['id'];
             $cart = Cart::where('visitor_id' , $visitor_id)->select('product_id as id' , 'count')->get();
-            $data['subtotal_price'] = 0;
+            $data['subtotal_price'] = "0";
             for($i = 0; $i < count($cart); $i++){
                 if($request->lang == 'en'){
                     $product = Product::with('store')->select('title_en as title' , 'final_price' , 'price_before_offer', 'id', 'free', 'store_id', 'offer', 'offer_percentage')->where('id', $cart[$i]['id'])->first();
