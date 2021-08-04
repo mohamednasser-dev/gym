@@ -408,6 +408,7 @@ class OrderController extends Controller
         $user_id = auth()->user()->id;
         $orders = MainOrder::where('user_id' , $user_id)->select('id' , 'total_price' , 'main_order_number' , 'created_at as date')->orderBy('id' , 'desc')->get();
         $orderDates = MainOrder::where('user_id' , $user_id)->pluck('created_at')->toArray();
+        $ordersDays = [];
         for ($k = 0; $k < count($orderDates); $k ++) {
             $ordersDays[$k] = date_format(date_create($orderDates[$k]) , "d-m-Y");
         }

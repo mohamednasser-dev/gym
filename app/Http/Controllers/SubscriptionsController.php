@@ -132,7 +132,7 @@ class SubscriptionsController extends Controller
                 }
                 return $reserv;
             });
-
+        $subscriptions = [];
         foreach ($data as $key => $row) {
             $subscriptions[$key]['id'] = $row->id;
             $subscriptions[$key]['name'] = $row->name;
