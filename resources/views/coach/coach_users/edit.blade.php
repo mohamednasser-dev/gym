@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-group mb-4">
                     <label for="name">{{ __('messages.exp_years') }}</label>
-                    <input required type="number" min="0" name="exp" value="{{$ata->exp}}" class="form-control"
+                    <input required type="number" min="0" name="exp" value="{{$data->exp}}" class="form-control"
                            id="name">
                 </div>
                 <div class="form-group mb-4">
