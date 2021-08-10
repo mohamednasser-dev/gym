@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Coach;
+use App\Hole;
+use App\Shop;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use JD\Cloudder\Facades\Cloudder;
@@ -28,64 +31,7 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['get_special_ads','republish_ad','third_step_excute_pay','save_third_step_with_money','update_ad','select_ad_data','delete_my_ad','save_third_step','save_second_step','save_first_step','getdetails' , 'getoffers' , 'getproducts'  , 'getsearch', 'getFeatureOffers']]);
-        //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
-        $expired = Product::where('status',1)->whereDate('expiry_date', '<', Carbon::now())->get();
-            foreach ($expired as $row){
-                $product = Product::find($row->id);
-                $product->status = 2;
-                $product->re_post = '0';
-                $product->save();
-            }
-
-            $not_special = Product::where('status',1)->where('is_special','1')->whereDate('expire_special_date', '<', Carbon::now())->get();
-            foreach ($not_special as $row){
-                $product_special = Product::find($row->id);
-                $product_special->is_special = '0';
-                $product_special->save();
-            }
-            $mytime = Carbon::now();
-            $today =  Carbon::parse($mytime->toDateTimeString())->format('Y-m-d H:i');
-            $re_post_ad = Product::where('status',1)->where('re_post','1')->whereDate('re_post_date', '<', Carbon::now())->get();
-            foreach ($re_post_ad as $row){
-
-                $product_re_post = Product::find($row->id);
-                $product_re_post->created_at = Carbon::now();
-                // to generate new next repost date ...
-                $re_post = Plan_details::where('plan_id',$row->plan_id)->where('type','re_post')->first();
-                $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-                $final_expire_re_post_date = $final_pin_date->addDays($re_post->expire_days);
-
-                $product_re_post->re_post_date = $final_expire_re_post_date;
-                $product_re_post->save();
-            }
-
-            $pin_ad = Product::where('status',1)->where('pin','1')->whereDate('expire_pin_date', '<', Carbon::now())->get();
-            foreach ($pin_ad as $row){
-                $product_pined = Product::find($row->id);
-                $product_pined->pin = '0';
-                $product_pined->save();
-            }
-
-            $pin_ad = Setting::where('id',1)->whereDate('free_loop_date', '<', Carbon::now())->first();
-            if ($pin_ad != null) {
-                if($pin_ad->is_loop_free_balance == 'y') {
-                    $all_users = User::where('active', 1)->get();
-                    foreach ($all_users as $row) {
-                        $user = User::find($row->id);
-                        $user->my_wallet = $user->my_wallet + $pin_ad->free_loop_balance;
-                        $user->free_balance = $user->free_balance + $pin_ad->free_loop_balance;
-                        $user->save();
-                    }
-                    $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-                    $final_free_loop_date = $final_pin_date->addDays($pin_ad->free_loop_period);
-                    $pin_ad->free_loop_date = $final_free_loop_date ;
-                    $pin_ad->save();
-                }
-            }
-    //        --------------------------------------------- end scheduled functions --------------------------------------------------------
-
-
+        $this->middleware('auth:api' , ['except' => ['search_all','get_special_ads','republish_ad','third_step_excute_pay','save_third_step_with_money','update_ad','select_ad_data','delete_my_ad','save_third_step','save_second_step','save_first_step','getdetails' , 'getoffers' , 'getproducts'  , 'getsearch', 'getFeatureOffers']]);
     }
 
     public function create(Request $request){
@@ -375,6 +321,117 @@ class ProductController extends Controller
             }
         }
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $products, $request->lang );
+        return response()->json($response , 200);
+
+    }
+    public function search_all(Request $request,$text){
+
+        $lang = $request->lang;
+        $user = auth()->user();
+        $data['shops'] = Shop::select('id','name_'.$lang.' as title','logo','cover')
+            ->where('famous', '1')
+            ->where('status', 1)
+            ->Where('name_ar', 'like', '%' . $text . '%')
+            ->OrWhere('name_en', 'like', '%' . $text . '%')
+            ->orderBy('sort', 'asc')
+            ->get()
+            ->map(function($shops) use($user){
+                if($user == null){
+                    $shops->favorite = false ;
+                }else{
+                    $fav = Favorite::where('user_id', $user->id)->where('product_id', $shops->id)->where('type','shop')->first();
+                    if($fav == null){
+                        $shops->favorite = false ;
+                    }else{
+                        $shops->favorite = true ;
+                    }
+                }
+                return $shops;
+            });
+        if($lang == 'ar') {
+            $data['halls'] = Hole::select('id', 'cover', 'logo', 'name', 'rate', 'cover')
+                ->where('deleted', '0')
+                ->where('status', 'active')
+                ->Where('name', 'like', '%' . $text . '%')
+                ->OrWhere('name_en', 'like', '%' . $text . '%')
+                ->orderBy('sort', 'asc')
+                ->get()
+                ->map(function ($halls) use ($user) {
+                    if ($user == null) {
+                        $halls->favorite = false;
+                    } else {
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $halls->id)->where('type', 'hall')->first();
+                        if ($fav == null) {
+                            $halls->favorite = false;
+                        } else {
+                            $halls->favorite = true;
+                        }
+                    }
+                    return $halls;
+                });
+            $data['coaches'] = Coach::select('id','name','rate','image')
+                ->where('deleted','0')
+                ->where('status','active')
+                ->where('is_confirm','accepted')
+                ->Where('name', 'like', '%' . $text . '%')
+                ->OrWhere('name_en', 'like', '%' . $text . '%')
+                ->get()
+                ->map(function($coaches) use($user){
+                    if($user == null){
+                        $coaches->favorite = false ;
+                    }else{
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type','coach')->first();
+                        if($fav == null){
+                            $coaches->favorite = false ;
+                        }else{
+                            $coaches->favorite = true ;
+                        }
+                    }
+                    return $coaches;
+                });
+        }else{
+            $data['halls'] = Hole::select('id', 'cover', 'logo', 'name_en as name', 'rate', 'cover')
+                ->where('deleted', '0')
+                ->where('status', 'active')
+                ->Where('name', 'like', '%' . $text . '%')
+                ->OrWhere('name_en', 'like', '%' . $text . '%')
+                ->orderBy('sort', 'asc')
+                ->get()
+                ->map(function ($halls) use ($user) {
+                    if ($user == null) {
+                        $halls->favorite = false;
+                    } else {
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $halls->id)->where('type', 'hall')->first();
+                        if ($fav == null) {
+                            $halls->favorite = false;
+                        } else {
+                            $halls->favorite = true;
+                        }
+                    }
+                    return $halls;
+                });
+            $data['coaches'] = Coach::select('id','name_en as name','rate','image')
+                ->where('deleted','0')
+                ->where('status','active')
+                ->where('is_confirm','accepted')
+                ->Where('name', 'like', '%' . $text . '%')
+                ->OrWhere('name_en', 'like', '%' . $text . '%')
+                ->get()
+                ->map(function($coaches) use($user){
+                    if($user == null){
+                        $coaches->favorite = false ;
+                    }else{
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type','coach')->first();
+                        if($fav == null){
+                            $coaches->favorite = false ;
+                        }else{
+                            $coaches->favorite = true ;
+                        }
+                    }
+                    return $coaches;
+                });
+        }
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
 
     }

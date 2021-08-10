@@ -92,6 +92,7 @@ use Illuminate\Http\Request;
 
     Route::get('products/{lang}/{v}' , 'ProductController@getproducts')->middleware('checkguest');
     Route::get('products/search/{lang}/{v}' , 'ProductController@getsearch')->middleware('checkguest');
+    Route::get('search_all/{text}/{lang}/{v}' , 'ProductController@search_all')->middleware('checkguest');
 
     //  plans apis
     Route::group([
