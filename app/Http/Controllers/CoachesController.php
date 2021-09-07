@@ -25,7 +25,7 @@ class CoachesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['update_time','delete_time','store_time','times','subscribers','make_common','delete_media','media','store_media','store_plan_detail','select_plan_data','all_coaches','details','login','delete_plan','update_plan','update_coach_data','delete_plan_detail','my_data','my_plans','plan_details','store_plan']]);
+        $this->middleware('auth:api' , ['except' => ['register','update_time','delete_time','store_time','times','subscribers','make_common','delete_media','media','store_media','store_plan_detail','select_plan_data','all_coaches','details','login','delete_plan','update_plan','update_coach_data','delete_plan_detail','my_data','my_plans','plan_details','store_plan']]);
 
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
         $expired = Reservation::where('status','start')->whereDate('expire_date', '<', Carbon::now())->get();
