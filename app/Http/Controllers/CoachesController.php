@@ -261,9 +261,11 @@ class CoachesController extends Controller
                 $data['caoch_id'] = $coach->id;
                 User_caoch_ask::create($data);
             }
+            $coach = Coach::find($coach->id);
+
         }
 
-        $response = APIHelpers::createApiResponse(false , 200  , 'Registered success wait admin to accept your account', 'تم انشاء الحساب ويرجى الانتظار لموافقه الادارة' , null, $request->lang );
+        $response = APIHelpers::createApiResponse(false , 200  , 'Registered success wait admin to accept your account', 'تم انشاء الحساب ويرجى الانتظار لموافقه الادارة' , $coach, $request->lang );
         return response()->json($response , 200);
     }
     protected function respondWithToken($token)
