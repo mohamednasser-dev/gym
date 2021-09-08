@@ -12,6 +12,10 @@ class Reservation_option extends Model
         return $this->belongsTo('App\Reservation_type', 'type_id');
     }
 
+    public function Type_data() {
+        return $this->belongsTo('App\Reservation_type', 'type_id')->select('id','title_'.session('lang').' as title');
+    }
+
     public function Goal() {
         return $this->belongsTo('App\Reservation_goal', 'goal_id');
     }

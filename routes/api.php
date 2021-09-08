@@ -72,7 +72,7 @@ use Illuminate\Http\Request;
         'prefix' => 'user'
     ], function($router) {
         Route::get('profile/{lang}/{v}' , 'UserController@getprofile');
-        Route::put('profile/{lang}/{v}' , 'UserController@updateprofile');
+        Route::post('profile/{lang}/{v}' , 'UserController@updateprofile');
         Route::put('resetpassword/{lang}/{v}' , 'UserController@resetpassword');
         Route::put('resetforgettenpassword/{lang}/{v}' , 'UserController@resetforgettenpassword')->middleware('checkguest');
         Route::post('checkphoneexistance/{lang}/{v}' , 'UserController@checkphoneexistance')->middleware('checkguest');
@@ -317,6 +317,9 @@ use Illuminate\Http\Request;
 
     //subscribers
     Route::get('coach/{type}/subscribers/{lang}/{v}' , 'CoachesController@subscribers');
+    Route::get('coach/subscriber/bill/{id}/{lang}/{v}' , 'CoachesController@subscriber_bill');
+    Route::get('coach/subscriber/user_info/{id}/{lang}/{v}' , 'CoachesController@subscriber_user_info');
+
 
     //chat for coach
     Route::get('/coach/chat/test_exists_conversation/{id}/{lang}/{v}' , 'CoachChatController@test_exists_conversation');

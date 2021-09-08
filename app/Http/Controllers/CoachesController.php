@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Reservation_goal;
+use App\Reservation_option;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -25,11 +27,11 @@ class CoachesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['register','update_time','delete_time','store_time','times','subscribers','make_common','delete_media','media','store_media','store_plan_detail','select_plan_data','all_coaches','details','login','delete_plan','update_plan','update_coach_data','delete_plan_detail','my_data','my_plans','plan_details','store_plan']]);
+        $this->middleware('auth:api', ['except' => ['subscriber_user_info', 'subscriber_bill', 'register', 'update_time', 'delete_time', 'store_time', 'times', 'subscribers', 'make_common', 'delete_media', 'media', 'store_media', 'store_plan_detail', 'select_plan_data', 'all_coaches', 'details', 'login', 'delete_plan', 'update_plan', 'update_coach_data', 'delete_plan_detail', 'my_data', 'my_plans', 'plan_details', 'store_plan']]);
 
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
-        $expired = Reservation::where('status','start')->whereDate('expire_date', '<', Carbon::now())->get();
-        foreach ($expired as $row){
+        $expired = Reservation::where('status', 'start')->whereDate('expire_date', '<', Carbon::now())->get();
+        foreach ($expired as $row) {
             $product = Reservation::find($row->id);
             $product->status = 'ended';
             $product->save();
@@ -37,43 +39,45 @@ class CoachesController extends Controller
         //        --------------------------------------------- end scheduled functions --------------------------------------------------------
 
     }
-    public function all_coaches(Request $request) {
-        $lang = $request->lang ;
+
+    public function all_coaches(Request $request)
+    {
+        $lang = $request->lang;
         $user = auth()->user();
-        if($lang == 'ar'){
-            $coaches = Coach::select('id','name','rate','image')
-                ->where('deleted','0')
-                ->where('status','active')
-                ->where('is_confirm','accepted')
+        if ($lang == 'ar') {
+            $coaches = Coach::select('id', 'name', 'rate', 'image')
+                ->where('deleted', '0')
+                ->where('status', 'active')
+                ->where('is_confirm', 'accepted')
                 ->get()
-                ->map(function($coaches) use($user){
-                    if($user == null){
-                        $coaches->favorite = false ;
-                    }else{
-                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type','coach')->first();
-                        if($fav == null){
-                            $coaches->favorite = false ;
-                        }else{
-                            $coaches->favorite = true ;
+                ->map(function ($coaches) use ($user) {
+                    if ($user == null) {
+                        $coaches->favorite = false;
+                    } else {
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type', 'coach')->first();
+                        if ($fav == null) {
+                            $coaches->favorite = false;
+                        } else {
+                            $coaches->favorite = true;
                         }
                     }
                     return $coaches;
                 });
-        }else{
-            $coaches = Coach::select('id','name_en as name','rate','image')
-                ->where('deleted','0')
-                ->where('status','active')
-                ->where('is_confirm','accepted')
+        } else {
+            $coaches = Coach::select('id', 'name_en as name', 'rate', 'image')
+                ->where('deleted', '0')
+                ->where('status', 'active')
+                ->where('is_confirm', 'accepted')
                 ->get()
-                ->map(function($coaches) use($user){
-                    if($user == null){
-                        $coaches->favorite = false ;
-                    }else{
-                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type','coach')->first();
-                        if($fav == null){
-                            $coaches->favorite = false ;
-                        }else{
-                            $coaches->favorite = true ;
+                ->map(function ($coaches) use ($user) {
+                    if ($user == null) {
+                        $coaches->favorite = false;
+                    } else {
+                        $fav = Favorite::where('user_id', $user->id)->where('product_id', $coaches->id)->where('type', 'coach')->first();
+                        if ($fav == null) {
+                            $coaches->favorite = false;
+                        } else {
+                            $coaches->favorite = true;
                         }
                     }
                     return $coaches;
@@ -81,28 +85,30 @@ class CoachesController extends Controller
         }
 
         //expict favorite and plans num ...
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $coaches, $request->lang );
-        return response()->json($response , 200);
+        $response = APIHelpers::createApiResponse(false, 200, '', '', $coaches, $request->lang);
+        return response()->json($response, 200);
     }
-    public function details(Request $request,$id) {
-        $lang = $request->lang ;
-        Session::put('api_lang',$lang);
+
+    public function details(Request $request, $id)
+    {
+        $lang = $request->lang;
+        Session::put('api_lang', $lang);
         $user = auth()->user();
-        if($lang == 'ar'){
-            $coach = Coach::select('id','image', 'thumbnail', 'name','about_coach', 'story', 'rate')->find($id);
-        }else{
-            $coach = Coach::select('id','image','name_en', 'thumbnail', 'story', 'about_coach_en as about_coach','rate')->find($id);
+        if ($lang == 'ar') {
+            $coach = Coach::select('id', 'image', 'thumbnail', 'name', 'about_coach', 'story', 'rate')->find($id);
+        } else {
+            $coach = Coach::select('id', 'image', 'name_en', 'thumbnail', 'story', 'about_coach_en as about_coach', 'rate')->find($id);
         }
-        if($coach != null) {
+        if ($coach != null) {
             if ($user == null) {
                 $data['favorite'] = false;
                 $data['free_ask'] = false;
                 $data['payed_ask'] = false;
-                $booking_num = Coach_booking::where('coach_id',$id)
-                                            ->where('deleted','0')
-                                            ->orderBy('common','desc')
-                                            ->get()
-                                            ->count();
+                $booking_num = Coach_booking::where('coach_id', $id)
+                    ->where('deleted', '0')
+                    ->orderBy('common', 'desc')
+                    ->get()
+                    ->count();
                 $data['plans_num'] = $booking_num;
             } else {
                 $fav = Favorite::where('user_id', $user->id)->where('product_id', $id)->where('type', 'coach')->first();
@@ -118,12 +124,12 @@ class CoachesController extends Controller
                 } else {
                     $data['free_ask'] = false;
                 }
-                $booking_ids = Coach_booking::where('coach_id',$id)->select('id')->get()->toArray();
+                $booking_ids = Coach_booking::where('coach_id', $id)->select('id')->get()->toArray();
                 $pay_ask = Reservation::where('user_id', $user->id)
-                                        ->whereIn('booking_id', $booking_ids)
-                                        ->where('type','coach')
-                                        ->where('status','start')
-                                        ->get();
+                    ->whereIn('booking_id', $booking_ids)
+                    ->where('type', 'coach')
+                    ->where('status', 'start')
+                    ->get();
                 if (count($pay_ask) > 0) {
                     $data['payed_ask'] = true;
                 } else {
@@ -131,19 +137,19 @@ class CoachesController extends Controller
                 }
             }
             $data['basic'] = $coach;
-            $data['work_times'] = Coach_time_work::select('id','time_from','time_to')
-                ->where('coach_id',$id)
+            $data['work_times'] = Coach_time_work::select('id', 'time_from', 'time_to')
+                ->where('coach_id', $id)
                 ->get();
-            $data['media'] = Coach_media::select('id','image','type')
-                ->where('coach_id',$id)
+            $data['media'] = Coach_media::select('id', 'image', 'type')
+                ->where('coach_id', $id)
                 ->get()
-            ->map(function($media){
-                if($media->type == 'video'){
-                    $media->image = env('APP_URL') . '/public/uploads/coach_media'. $media->image ;
-                }
-                return $media;
+                ->map(function ($media) {
+                    if ($media->type == 'video') {
+                        $media->image = env('APP_URL') . '/public/uploads/coach_media' . $media->image;
+                    }
+                    return $media;
 
-            });
+                });
             $rates_one = Rate::where('type', 'coach')->where('admin_approval', 1)->where('order_id', $id)->where('rate', 1)->get()->count();
             $rates_tow = Rate::where('type', 'coach')->where('admin_approval', 1)->where('order_id', $id)->where('rate', 2)->get()->count();
             $rates_three = Rate::where('type', 'coach')->where('admin_approval', 1)->where('order_id', $id)->where('rate', 3)->get()->count();
@@ -166,59 +172,62 @@ class CoachesController extends Controller
                 });
             $data['rates_count'] = count($data['all_rates']);
 
-        if($lang == 'ar'){
-            $data['reservations'] = Coach_booking::with('Details')
-                ->select('id','name_ar as name','title_ar as description','price','is_discount','discount','discount_price','common')
-                ->where('coach_id',$id)
-                ->where('deleted','0')
-                ->orderBy('common','desc')
-                ->get();
-        }else{
-            $data['reservations'] = Coach_booking::with('Details')
-                ->select('id','name_en as name','title_en as description','price','is_discount','discount','discount_price','common')
-                ->where('coach_id',$id)
-                ->where('deleted','0')
-                ->orderBy('common','desc')
-                ->get();
+            if ($lang == 'ar') {
+                $data['reservations'] = Coach_booking::with('Details')
+                    ->select('id', 'name_ar as name', 'title_ar as description', 'price', 'is_discount', 'discount', 'discount_price', 'common')
+                    ->where('coach_id', $id)
+                    ->where('deleted', '0')
+                    ->orderBy('common', 'desc')
+                    ->get();
+            } else {
+                $data['reservations'] = Coach_booking::with('Details')
+                    ->select('id', 'name_en as name', 'title_en as description', 'price', 'is_discount', 'discount', 'discount_price', 'common')
+                    ->where('coach_id', $id)
+                    ->where('deleted', '0')
+                    ->orderBy('common', 'desc')
+                    ->get();
+            }
         }
-        }
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
-        return response()->json($response , 200);
+        $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+        return response()->json($response, 200);
     }
+
 //    coach-panel ------------------------------------------------------------------
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credentials = request(['phone', 'password']);
         $input = $request->all();
-        $validate = Validator::make($input , [
-            'phone'=>'required',
-            'password'=>'required',
+        $validate = Validator::make($input, [
+            'phone' => 'required',
+            'password' => 'required',
         ]);
-        if (!is_array($validate))
-        {
-           if( Auth::guard('coach')->attempt($credentials)){
-               $user = auth()->guard('coach')->user();
-               $user->fcm_token = $request->fcm_token;
-               $user->save();
+        if (!is_array($validate)) {
+            if (Auth::guard('coach')->attempt($credentials)) {
+                $user = auth()->guard('coach')->user();
+                $user->fcm_token = $request->fcm_token;
+                $user->save();
 
-               if($user->is_confirm == 'new'){
-                   $response = APIHelpers::createApiResponse(true , 406 , 'please wait confirmation your account' , 'يرجى انتظار موافقه الادارة' , null , $request->lang);
-                   return response()->json($response , 406);
-               }
-               if($user->is_confirm == 'rejected'){
-                   $response = APIHelpers::createApiResponse(true , 406 , 'your account rejected' , 'قد تم رفض حسابك' , null , $request->lang);
-                   return response()->json($response , 406);
-               }
-               $token = auth()->login($user);
-               $user->token = $this->respondWithToken($token);
-               $response = APIHelpers::createApiResponse(false , 200 , 'login successfully' , 'تم تسجيل الدخول' , $user , $request->lang);
-               return response()->json($response , 200);
+                if ($user->is_confirm == 'new') {
+                    $response = APIHelpers::createApiResponse(true, 406, 'please wait confirmation your account', 'يرجى انتظار موافقه الادارة', null, $request->lang);
+                    return response()->json($response, 406);
+                }
+                if ($user->is_confirm == 'rejected') {
+                    $response = APIHelpers::createApiResponse(true, 406, 'your account rejected', 'قد تم رفض حسابك', null, $request->lang);
+                    return response()->json($response, 406);
+                }
+                $token = auth()->login($user);
+                $user->token = $this->respondWithToken($token);
+                $response = APIHelpers::createApiResponse(false, 200, 'login successfully', 'تم تسجيل الدخول', $user, $request->lang);
+                return response()->json($response, 200);
             } else {
-                   $response = APIHelpers::createApiResponse(true , 406 , 'Missing Required Fields' , 'بعض الحقول مفقودة' , null , $request->lang);
-                   return response()->json($response , 406);
+                $response = APIHelpers::createApiResponse(true, 406, 'Missing Required Fields', 'بعض الحقول مفقودة', null, $request->lang);
+                return response()->json($response, 406);
             }
         }
     }
-    public function register(Request $request){
+
+    public function register(Request $request)
+    {
         $input = $request->all();
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -237,26 +246,26 @@ class CoachesController extends Controller
             "unique_id" => "required",
         ]);
         if ($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 ,$validator->errors()->first()  , $validator->errors()->first()  , null, $request->lang);
-            return response()->json($response , 406);
+            $response = APIHelpers::createApiResponse(true, 406, $validator->errors()->first(), $validator->errors()->first(), null, $request->lang);
+            return response()->json($response, 406);
         }
-        if($request->password != null){
+        if ($request->password != null) {
             $input['password'] = Hash::make($request->password);
             $input['is_confirm'] = 'new';
             $input['sort'] = 10000;
-            if($request->image != null){
+            if ($request->image != null) {
                 $image = $request->image;
-                $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+                $imagereturned = Cloudinary::upload("data:image/jpeg;base64," . $image);
                 $image_id = $imagereturned->getPublicId();
                 $image_format = $imagereturned->getExtension();
-                $image_new_name = $image_id.'.'.$image_format;
+                $image_new_name = $image_id . '.' . $image_format;
                 $input['image'] = $image_new_name;
             }
             $coach = Coach::create($input);
 
             // add free coach ask to every user
             $users = User::all();
-            foreach ($users as $row){
+            foreach ($users as $row) {
                 $data['user_id'] = $row->id;
                 $data['caoch_id'] = $coach->id;
                 User_caoch_ask::create($data);
@@ -265,9 +274,10 @@ class CoachesController extends Controller
 
         }
 
-        $response = APIHelpers::createApiResponse(false , 200  , 'Registered success wait admin to accept your account', 'تم انشاء الحساب ويرجى الانتظار لموافقه الادارة' , $coach, $request->lang );
-        return response()->json($response , 200);
+        $response = APIHelpers::createApiResponse(false, 200, 'Registered success wait admin to accept your account', 'تم انشاء الحساب ويرجى الانتظار لموافقه الادارة', $coach, $request->lang);
+        return response()->json($response, 200);
     }
+
     protected function respondWithToken($token)
     {
         return [
@@ -278,27 +288,30 @@ class CoachesController extends Controller
     }
 
     //update my profile ------------------------
-    public function my_data(Request $request){
+    public function my_data(Request $request)
+    {
         $user = auth()->guard('coach')->user();
         $lang = $request->lang;
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            $data = Coach::select('id','name','name_en','image','story','about_coach','about_coach_en','age','exp','phone')->where('id',$user->id)->first();
-            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,$data, $request->lang );
-            return response()->json($response , 200);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $data = Coach::select('id', 'name', 'name_en', 'image', 'story', 'about_coach', 'about_coach_en', 'age', 'exp', 'phone')->where('id', $user->id)->first();
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            return response()->json($response, 200);
         }
     }
-    public function update_coach_data(Request $request) {
-        $lang = $request->lang ;
+
+    public function update_coach_data(Request $request)
+    {
+        $lang = $request->lang;
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
         }
         $input = $request->all();
-        $validator = Validator::make($input , [
+        $validator = Validator::make($input, [
             'name' => 'required',
             'name_en' => 'required',
             'about_coach' => '',
@@ -309,28 +322,28 @@ class CoachesController extends Controller
             'exp' => 'required',
             'story' => ''
         ]);
-        if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first(), null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            if($request->image != null){
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($request->image != null) {
                 $image = $request->image;
 
-                $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+                $imagereturned = Cloudinary::upload("data:image/jpeg;base64," . $image);
                 $image_id = $imagereturned->getPublicId();
                 $image_format = $imagereturned->getExtension();
-                $image_new_name = $image_id.'.'.$image_format;
+                $image_new_name = $image_id . '.' . $image_format;
                 $input['image'] = $image_new_name;
-            }else{
+            } else {
                 unset($input['image']);
             }
-            if($request->story != null){
+            if ($request->story != null) {
                 $uploadedFileUrl = $this->uploadFromApi($request->story);
-				//dd($uploadedFileUrl);
+                //dd($uploadedFileUrl);
                 $image_id2 = $uploadedFileUrl->getPublicId();
                 $image_format2 = $uploadedFileUrl->getExtension();
-                $image_new_story = $image_id2.'.'.$image_format2;
-                $input['story'] = $image_new_story ;
+                $image_new_story = $image_id2 . '.' . $image_format2;
+                $input['story'] = $image_new_story;
                 if ($request->thumbnail) {
                     $thumbImage = Cloudinary::upload("data:image/jpeg;base64," . $request->thumbnail);
                     $publicThumb = $thumbImage->getPublicId();
@@ -339,105 +352,115 @@ class CoachesController extends Controller
                 }
 
             }
-            $coach = Coach::where('id',$user->id)->update($input);
-            $response = APIHelpers::createApiResponse(false, 200, 'updated', 'تم التعديل بنجاح', (object)[] , $request->lang);
+            $coach = Coach::where('id', $user->id)->update($input);
+            $response = APIHelpers::createApiResponse(false, 200, 'updated', 'تم التعديل بنجاح', (object)[], $request->lang);
             return response()->json($response, 200);
         }
     }
 
     // plans
-    public function my_plans(Request $request){
+    public function my_plans(Request $request)
+    {
         $user = auth()->guard('coach')->user();
         $lang = $request->lang;
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            if($lang == 'ar'){
-                $data = Coach_booking::select('id','name_ar as name','title_ar as title','price','discount','discount_price','months_num','common')->where('coach_id',$user->id)->where('deleted','0')->get();
-            }else{
-                $data = Coach_booking::select('id','name_en as name','title_en as title','price','discount','discount_price','months_num','common')->where('coach_id',$user->id)->where('deleted','0')->get();
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($lang == 'ar') {
+                $data = Coach_booking::select('id', 'name_ar as name', 'title_ar as title', 'price', 'discount', 'discount_price', 'months_num', 'common')->where('coach_id', $user->id)->where('deleted', '0')->get();
+            } else {
+                $data = Coach_booking::select('id', 'name_en as name', 'title_en as title', 'price', 'discount', 'discount_price', 'months_num', 'common')->where('coach_id', $user->id)->where('deleted', '0')->get();
             }
-            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,$data, $request->lang );
-            return response()->json($response , 200);
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            return response()->json($response, 200);
         }
     }
 
 
-    public function plan_details(Request $request,$id){
+    public function plan_details(Request $request, $id)
+    {
         $user = auth()->guard('coach')->user();
         $lang = $request->lang;
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            if($lang == 'ar'){
-                $data = Coach_booking_detail::select('id','name_ar as name')->where('booking_id',$id)->get();
-            }else{
-                $data = Coach_booking_detail::select('id','name_en as name')->where('booking_id',$id)->get();
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($lang == 'ar') {
+                $data = Coach_booking_detail::select('id', 'name_ar as name')->where('booking_id', $id)->get();
+            } else {
+                $data = Coach_booking_detail::select('id', 'name_en as name')->where('booking_id', $id)->get();
             }
-            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,$data, $request->lang );
-            return response()->json($response , 200);
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            return response()->json($response, 200);
         }
     }
-    public function select_plan_data(Request $request,$id){
+
+    public function select_plan_data(Request $request, $id)
+    {
         $user = auth()->guard('coach')->user();
         $lang = $request->lang;
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            $data = Coach_booking::select('id','name_ar','name_en','title_ar','title_en','price','is_discount','discount','discount_price','months_num')->find($id);
-            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,$data, $request->lang );
-            return response()->json($response , 200);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $data = Coach_booking::select('id', 'name_ar', 'name_en', 'title_ar', 'title_en', 'price', 'is_discount', 'discount', 'discount_price', 'months_num')->find($id);
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            return response()->json($response, 200);
         }
     }
-    public function delete_plan_detail(Request $request){
+
+    public function delete_plan_detail(Request $request)
+    {
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            $validator = Validator::make($request->all() , [
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $validator = Validator::make($request->all(), [
                 'id' => 'required|exists:coach_booking_details,id'
             ]);
-            if($validator->fails()) {
-                $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first(), null, $request->lang );
-                return response()->json($response , 406);
+            if ($validator->fails()) {
+                $response = APIHelpers::createApiResponse(true, 406, $validator->errors()->first(), $validator->errors()->first(), null, $request->lang);
+                return response()->json($response, 406);
             }
-            Coach_booking_detail::where('id',$request->id)->delete();
-            $response = APIHelpers::createApiResponse(false , 200 ,  'Deteted', 'تم الحذف' , null, $request->lang);
-            return response()->json($response , 200);
+            Coach_booking_detail::where('id', $request->id)->delete();
+            $response = APIHelpers::createApiResponse(false, 200, 'Deteted', 'تم الحذف', null, $request->lang);
+            return response()->json($response, 200);
         }
     }
-    public function delete_plan(Request $request){
+
+    public function delete_plan(Request $request)
+    {
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            $validator = Validator::make($request->all() , [
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $validator = Validator::make($request->all(), [
                 'id' => 'required|exists:coach_bookings,id'
             ]);
-            if($validator->fails()) {
-                $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first(), null, $request->lang );
-                return response()->json($response , 406);
+            if ($validator->fails()) {
+                $response = APIHelpers::createApiResponse(true, 406, $validator->errors()->first(), $validator->errors()->first(), null, $request->lang);
+                return response()->json($response, 406);
             }
-            $data['deleted']='1';
-            Coach_booking::where('id',$request->id)->update($data);
-            $response = APIHelpers::createApiResponse(false , 200 ,  'Deteted', 'تم الحذف' , null, $request->lang);
-            return response()->json($response , 200);
+            $data['deleted'] = '1';
+            Coach_booking::where('id', $request->id)->update($data);
+            $response = APIHelpers::createApiResponse(false, 200, 'Deteted', 'تم الحذف', null, $request->lang);
+            return response()->json($response, 200);
         }
     }
+
     //make new plan
-    public function store_plan(Request $request){
+    public function store_plan(Request $request)
+    {
         $input = $request->all();
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
         }
-        $validator = Validator::make($input , [
+        $validator = Validator::make($input, [
             'name_ar' => 'required',
             'name_en' => 'required',
             'title_ar' => 'required',
@@ -448,43 +471,45 @@ class CoachesController extends Controller
             'discount_price' => '',
             'details' => 'required',
         ]);
-        if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first() , $validator->messages()->first() , $request->lang);
-            return response()->json($response , 406);
-        }else{
-            if($user != null){
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), $validator->messages()->first(), $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($user != null) {
                 unset($input['details']);
-                if($request->is_discount == 1 ){
+                if ($request->is_discount == 1) {
                     $input['is_discount'] = $request->is_discount;
                     $input['discount'] = $request->discount;
                     $input['discount_price'] = $request->discount_price;
                 }
                 $input['coach_id'] = $user->id;
                 $booking = Coach_booking::create($input);
-                if($booking != null){
-                    foreach ($request->details as $row){
-                        $data['booking_id'] = $booking->id ;
-                        $data['name_ar'] = $row['name_ar'] ;
-                        $data['name_en'] = $row['name_en'] ;
+                if ($booking != null) {
+                    foreach ($request->details as $row) {
+                        $data['booking_id'] = $booking->id;
+                        $data['name_ar'] = $row['name_ar'];
+                        $data['name_en'] = $row['name_en'];
                         Coach_booking_detail::create($data);
                     }
                 }
-                $response = APIHelpers::createApiResponse(false , 200 ,  'plan added successfully','تم اضافة الخطة بنجاح' , null, $request->lang);
-                return response()->json($response , 200);
-            }else{
-                $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
-                return response()->json($response , 406);
+                $response = APIHelpers::createApiResponse(false, 200, 'plan added successfully', 'تم اضافة الخطة بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
             }
         }
     }
-    public function update_plan(Request $request,$id){
+
+    public function update_plan(Request $request, $id)
+    {
         $input = $request->all();
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
         }
-        $validator = Validator::make($input , [
+        $validator = Validator::make($input, [
             'name_ar' => 'required',
             'name_en' => 'required',
             'title_ar' => 'required',
@@ -495,137 +520,145 @@ class CoachesController extends Controller
             'discount' => '',
             'discount_price' => '',
         ]);
-        if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first() , $validator->messages()->first() , $request->lang);
-            return response()->json($response , 406);
-        }else{
-            if($user != null){
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), $validator->messages()->first(), $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($user != null) {
                 $input['is_discount'] = $request->is_discount;
                 $input['discount'] = $request->discount;
                 $input['discount_price'] = $request->discount_price;
-                $booking = Coach_booking::where('id',$id)->update($input);
-                $response = APIHelpers::createApiResponse(false , 200 ,  'plan updated successfully','تم تعديل الخطة بنجاح' , null, $request->lang);
-                return response()->json($response , 200);
-            }else{
-                $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
-                return response()->json($response , 406);
+                $booking = Coach_booking::where('id', $id)->update($input);
+                $response = APIHelpers::createApiResponse(false, 200, 'plan updated successfully', 'تم تعديل الخطة بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
             }
         }
     }
 
-    public function store_plan_detail( Request $request){
+    public function store_plan_detail(Request $request)
+    {
         $input = $request->all();
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
         }
-        $validator = Validator::make($input , [
+        $validator = Validator::make($input, [
             'booking_id' => 'required',
             'name_ar' => 'required',
             'name_en' => 'required',
         ]);
-        if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first() , $validator->messages()->first() , $request->lang);
-            return response()->json($response , 406);
-        }else{
-            if($user != null){
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), $validator->messages()->first(), $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($user != null) {
                 $booking = Coach_booking_detail::create($input);
-                $response = APIHelpers::createApiResponse(false , 200 ,  'plan detail added successfully','تم اضافة تفصيل الخطة بنجاح' , null, $request->lang);
-                return response()->json($response , 200);
-            }else{
-                $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
-                return response()->json($response , 406);
+                $response = APIHelpers::createApiResponse(false, 200, 'plan detail added successfully', 'تم اضافة تفصيل الخطة بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
             }
         }
     }
-    public function make_common( Request $request,$id){
-        $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }
-        if($user != null){
-            $data['common'] = 0;
-            Coach_booking::where('coach_id',$user->id)->update($data);
 
-            $booking = Coach_booking::where('id',$id)->first();
+    public function make_common(Request $request, $id)
+    {
+        $user = auth()->guard('coach')->user();
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        }
+        if ($user != null) {
+            $data['common'] = 0;
+            Coach_booking::where('coach_id', $user->id)->update($data);
+
+            $booking = Coach_booking::where('id', $id)->first();
             $booking->common = 1;
             $booking->save();
-            $response = APIHelpers::createApiResponse(false , 200 ,  'plan common successfully','تم جعل الخطة شائعه بنجاح' , null, $request->lang);
-            return response()->json($response , 200);
-        }else{
-            $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
-            return response()->json($response , 406);
+            $response = APIHelpers::createApiResponse(false, 200, 'plan common successfully', 'تم جعل الخطة شائعه بنجاح', null, $request->lang);
+            return response()->json($response, 200);
+        } else {
+            $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+            return response()->json($response, 406);
         }
 
     }
 
     //media
-    public function media(Request $request,$id){
+    public function media(Request $request, $id)
+    {
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            $data = Coach_media::select('id','image','type')
-                                ->where('coach_id',$user->id)
-                                ->get()
-                                ->map(function($media){
-                                if($media->type == 'video'){
-                                    $media->image = env('APP_URL') . '/public/uploads/hall_media'. $media->image ;
-                                }
-                                return $media;
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $data = Coach_media::select('id', 'image', 'type')
+                ->where('coach_id', $user->id)
+                ->get()
+                ->map(function ($media) {
+                    if ($media->type == 'video') {
+                        $media->image = env('APP_URL') . '/public/uploads/hall_media' . $media->image;
+                    }
+                    return $media;
 
-                            });
-            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,$data, $request->lang );
-            return response()->json($response , 200);
+                });
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            return response()->json($response, 200);
         }
     }
-    public function delete_media(Request $request){
+
+    public function delete_media(Request $request)
+    {
         $user = auth()->guard('coach')->user();
         $input = $request->all();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            $validator = Validator::make($input , [
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $validator = Validator::make($input, [
                 'id' => 'required|exists:coach_media,id'
             ]);
-            if($validator->fails()) {
-                $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first() , $validator->messages()->first() , $request->lang);
-                return response()->json($response , 406);
+            if ($validator->fails()) {
+                $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), $validator->messages()->first(), $request->lang);
+                return response()->json($response, 406);
             }
 
-            $data = Coach_media::where('id',$request->id)->delete();
-            $response = APIHelpers::createApiResponse(false , 200 ,  'deleted', 'تم الحذف' ,null, $request->lang );
-            return response()->json($response , 200);
+            $data = Coach_media::where('id', $request->id)->delete();
+            $response = APIHelpers::createApiResponse(false, 200, 'deleted', 'تم الحذف', null, $request->lang);
+            return response()->json($response, 200);
         }
     }
-    public function store_media( Request $request){
+
+    public function store_media(Request $request)
+    {
         $input = $request->all();
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
         }
-        $validator = Validator::make($input , [
+        $validator = Validator::make($input, [
             'image' => 'required',
             'type' => 'required|in:image,video'
         ]);
-        if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first() , $validator->messages()->first() , $request->lang);
-            return response()->json($response , 406);
-        }else{
-            if($user != null){
-                if($request->image != null && $request->type == 'image' ){
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), $validator->messages()->first(), $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($user != null) {
+                if ($request->image != null && $request->type == 'image') {
                     $image = $request->image;
-                    $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+                    $imagereturned = Cloudinary::upload("data:image/jpeg;base64," . $image);
                     $image_id = $imagereturned->getPublicId();
                     $image_format = $imagereturned->getExtension();
-                    $image_new_name = $image_id.'.'.$image_format;
+                    $image_new_name = $image_id . '.' . $image_format;
                     $input['image'] = $image_new_name;
-                }else if($request->image != null && $request->type == 'video' ) {
+                } else if ($request->image != null && $request->type == 'video') {
 //                    $uniqueid = uniqid();
 //                    $original_name = $request->file('image')->getClientOriginalName();
 //                    $size = $request->file('image')->getSize();
@@ -641,153 +674,246 @@ class CoachesController extends Controller
                     $uploadedFileUrl = $this->upload($request->file('image'));
                     $image_id2 = $uploadedFileUrl->getPublicId();
                     $image_format2 = $uploadedFileUrl->getExtension();
-                    $image_new_story = $image_id2.'.'.$image_format2;
-                    $input['image'] = $image_new_story ;
+                    $image_new_story = $image_id2 . '.' . $image_format2;
+                    $input['image'] = $image_new_story;
                 }
 
-                $input['coach_id'] = $user->id ;
+                $input['coach_id'] = $user->id;
                 Coach_media::create($input);
-                $response = APIHelpers::createApiResponse(false , 200 ,  'coach media added successfully','تم اضافة الوسائط بنجاح' , null, $request->lang);
-                return response()->json($response , 200);
-            }else{
-                $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
-                return response()->json($response , 406);
+                $response = APIHelpers::createApiResponse(false, 200, 'coach media added successfully', 'تم اضافة الوسائط بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
             }
         }
     }
+
 //    for time works
-    public function times(Request $request){
+    public function times(Request $request)
+    {
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            $data = Coach_time_work::select('id','time_from','time_to')
-                ->where('coach_id',$user->id)
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $data = Coach_time_work::select('id', 'time_from', 'time_to')
+                ->where('coach_id', $user->id)
                 ->get();
-            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,$data, $request->lang );
-            return response()->json($response , 200);
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            return response()->json($response, 200);
         }
     }
-    public function store_time( Request $request){
+
+    public function store_time(Request $request)
+    {
         $input = $request->all();
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
         }
-        $validator = Validator::make($input , [
+        $validator = Validator::make($input, [
             'time_from' => 'required',
             'time_to' => 'required'
         ]);
-        if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first() , $validator->messages()->first() , $request->lang);
-            return response()->json($response , 406);
-        }else{
-            if($user != null){
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), $validator->messages()->first(), $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($user != null) {
 
-                $input['coach_id'] = $user->id ;
-                $input['time_from'] = $request->time_from ;
-                $input['time_to'] = $request->time_to ;
+                $input['coach_id'] = $user->id;
+                $input['time_from'] = $request->time_from;
+                $input['time_to'] = $request->time_to;
                 Coach_time_work::create($input);
-                $response = APIHelpers::createApiResponse(false , 200 ,  'coach time work added successfully','تم اضافة موعد العمل بنجاح' , null, $request->lang);
-                return response()->json($response , 200);
-            }else{
-                $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
-                return response()->json($response , 406);
+                $response = APIHelpers::createApiResponse(false, 200, 'coach time work added successfully', 'تم اضافة موعد العمل بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
             }
         }
     }
-    public function update_time( Request $request,$id){
+
+    public function update_time(Request $request, $id)
+    {
         $input = $request->all();
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
         }
-        $validator = Validator::make($input , [
+        $validator = Validator::make($input, [
             'time_from' => 'required',
             'time_to' => 'required'
         ]);
-        if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first() , $validator->messages()->first() , $request->lang);
-            return response()->json($response , 406);
-        }else{
-            if($user != null){
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), $validator->messages()->first(), $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($user != null) {
 
-                $input['time_from'] = $request->time_from ;
-                $input['time_to'] = $request->time_to ;
-                Coach_time_work::where('id',$id)->update($input);
-                $response = APIHelpers::createApiResponse(false , 200 ,  'coach time work updated successfully','تم تعديل موعد العمل بنجاح' , null, $request->lang);
-                return response()->json($response , 200);
-            }else{
-                $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
-                return response()->json($response , 406);
+                $input['time_from'] = $request->time_from;
+                $input['time_to'] = $request->time_to;
+                Coach_time_work::where('id', $id)->update($input);
+                $response = APIHelpers::createApiResponse(false, 200, 'coach time work updated successfully', 'تم تعديل موعد العمل بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
             }
         }
     }
-    public function delete_time( Request $request){
+
+    public function delete_time(Request $request)
+    {
         $input = $request->all();
         $user = auth()->guard('coach')->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
         }
-        $validator = Validator::make($input , [
+        $validator = Validator::make($input, [
             'time_id' => 'required||exists:coach_time_works,id'
         ]);
-        if($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() ,$validator->messages()->first() , $validator->messages()->first() , $request->lang);
-            return response()->json($response , 406);
-        }else{
-            if($user != null){
-                Coach_time_work::where('id',$request->time_id)->delete();
-                $response = APIHelpers::createApiResponse(false , 200 ,  'deleted successfully','تم الحذف بنجاح' , null, $request->lang);
-                return response()->json($response , 200);
-            }else{
-                $response = APIHelpers::createApiResponse(true , 406 , '' ,'يجب تسجيل الدخول اولا' , null , $request->lang);
-                return response()->json($response , 406);
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), $validator->messages()->first(), $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if ($user != null) {
+                Coach_time_work::where('id', $request->time_id)->delete();
+                $response = APIHelpers::createApiResponse(false, 200, 'deleted successfully', 'تم الحذف بنجاح', null, $request->lang);
+                return response()->json($response, 200);
+            } else {
+                $response = APIHelpers::createApiResponse(true, 406, '', 'يجب تسجيل الدخول اولا', null, $request->lang);
+                return response()->json($response, 406);
             }
         }
     }
 
     //subscribers controllers
-    public function subscribers(Request $request,$type){
+    public function subscribers(Request $request, $type)
+    {
         $user = auth()->guard('coach')->user();
         $lang = $request->lang;
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true , 406 , 'you should login' ,'يجب تسجيل الدخول', null , $request->lang);
-            return response()->json($response , 406);
-        }else {
-            $booking_ids = Coach_booking::where('coach_id',$user->id)->select('id')->get()->toArray();
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $booking_ids = Coach_booking::where('coach_id', $user->id)->select('id')->get()->toArray();
             $data = Reservation::with('User')->with('Booking_coach')
-                ->whereIn('booking_id',$booking_ids)
-                ->where('type','coach')
-                ->where('status',$type)
+                ->whereIn('booking_id', $booking_ids)
+                ->where('type', 'coach')
+                ->where('status', $type)
                 ->get()
-                ->map(function($reserv) use ($lang){
+                ->map(function ($reserv) use ($lang) {
                     $reserv->coach_name = $reserv->Booking_coach->Coach->name;
                     $reserv->coach_logo = $reserv->Booking_coach->Coach->image;
-                    if($lang == 'ar'){
+                    if ($lang == 'ar') {
+                        if ($reserv->status == 'ended') {
+                            $reserv->status = 'منتهي';
+                        } else {
+                            $reserv->status = 'ساري';
+
+                        }
                         $reserv->reserve_name = $reserv->Booking_coach->name_ar;
-                    }else{
+                    } else {
                         $reserv->reserve_name = $reserv->Booking_coach->name_en;
                     }
                     return $reserv;
                 });
             $subscriptions = null;
-            foreach ($data as $key => $row){
+            foreach ($data as $key => $row) {
                 $subscriptions[$key]['id'] = $row->id;
                 $subscriptions[$key]['booking_id'] = $row->booking_id;
                 $subscriptions[$key]['user_id'] = $row->user_id;
                 $subscriptions[$key]['user_logo'] = $row->User->image;
                 $subscriptions[$key]['user_name'] = $row->User->name;
                 $subscriptions[$key]['reserve_name'] = $row->reserve_name;
-                $subscriptions[$key]['price'] = $row->price;
-                $subscriptions[$key]['expire_date'] = $row->expire_date;
+                $subscriptions[$key]['price'] = number_format((float)($row->price), 3);
+                $subscriptions[$key]['status'] = $row->status;
+                $subscriptions[$key]['payment'] = $row->payment;
+                $subscriptions[$key]['created_at'] = $row->created_at->format('Y-m-d');
+                $subscriptions[$key]['expire_date'] = date('Y-m-d', strtotime($row->expire_date));
             }
-            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,$subscriptions, $request->lang );
-            return response()->json($response , 200);
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $subscriptions, $request->lang);
+            return response()->json($response, 200);
+        }
+    }
+
+    public function subscriber_bill(Request $request, $id)
+    {
+        $user = auth()->guard('coach')->user();
+        $lang = $request->lang;
+        Session::put('lang', $lang);
+        $lang = $request->lang;
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $data = Reservation::select('id', 'price', 'expire_date', 'user_id', 'created_at', 'payment', 'status', 'booking_id')
+                ->with('User_info')->with('Plan_details')
+                ->where('id', $id)
+                ->get()
+                ->map(function ($reserv) use ($lang) {
+                    if ($lang == 'ar') {
+                        if ($reserv->status == 'ended') {
+                            $reserv->status = 'منتهي';
+                        } else {
+                            $reserv->status = 'ساري';
+                        }
+                    }
+                    $reserv->price = number_format((float)($reserv->price), 3);
+
+                    $reserv->created_at = $reserv->created_at->format('Y-m-d');
+                    $reserv->expire_date = date('Y-m-d', strtotime($reserv->expire_date));
+                    return $reserv;
+                });
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            return response()->json($response, 200);
+        }
+    }
+
+    public function subscriber_user_info(Request $request, $id)
+    {
+        $user = auth()->guard('coach')->user();
+        $lang = $request->lang;
+        Session::put('lang', $lang);
+        $lang = $request->lang;
+        if ($user == null) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            $data = Reservation_option::select('id', 'type_id', 'goal_id', 'reservation_id')->with('Type_data')
+                ->where('reservation_id', $id)
+                ->get()
+                ->map(function ($reserv) use ($lang) {
+
+                    $exists_goals = Reservation_goal::where('type_id', $reserv->type_id)->get();
+                    if ($exists_goals) {
+
+                        $goal = Reservation_goal::where('id', $reserv->goal_id)->first();
+                        if($goal){
+                            if ($lang == 'ar') {
+                                $reserv->goal_id = $goal->title_ar;
+                            } else {
+                                $reserv->goal_id = $goal->title_en;
+                            }
+                        }
+
+                    }
+                    return $reserv;
+                });
+
+            $subscriptions = null;
+            foreach ($data as $key => $row) {
+                $subscriptions[$key]['id'] = $row->id;
+                $subscriptions[$key]['name'] = $row->type_data->title;
+                $subscriptions[$key]['value'] = $row->goal_id;
+            }
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $subscriptions, $request->lang);
+            return response()->json($response, 200);
         }
     }
 

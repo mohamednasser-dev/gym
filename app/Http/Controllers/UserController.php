@@ -16,6 +16,7 @@ use App\Category;
 use App\Product;
 use App\Setting;
 use App\User;
+use Cloudinary;
 
 
 
@@ -24,7 +25,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => ['checkphoneexistanceandroid','pay_sucess','pay_error','excute_pay','my_account','my_balance','resetforgettenpassword' , 'checkphoneexistance' , 'getownerprofile']]);
+        $this->middleware('auth:api' , ['except' => ['updateprofile','checkphoneexistanceandroid','pay_sucess','pay_error','excute_pay','my_account','my_balance','resetforgettenpassword' , 'checkphoneexistance' , 'getownerprofile']]);
     }
 
     public function getprofile(Request $request){
@@ -38,18 +39,25 @@ class UserController extends Controller
     }
 
     public function updateprofile(Request $request){
+        $data = $request->all();
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'phone' => 'required',
             "email" => 'required',
+            'image' => '',
         ]);
 
         if ($validator->fails()) {
-            $response = APIHelpers::createApiResponse(true , 406 ,  'بعض الحقول مفقودة', '' , null, $request->lang );
+            $response = APIHelpers::createApiResponse(true , 406 ,  $validator->errors()->first(), $validator->errors()->first(), null, $request->lang );
             return response()->json($response , 406);
         }
 
         $currentuser = auth()->user();
+        if($currentuser == null){
+            $response = APIHelpers::createApiResponse(true , 406 ,  'you should login first','يجب تسجيل الدخول اولاْ' , null, $request->lang );
+            return response()->json($response , 406);
+        }
         $user_by_phone = User::where('phone' , '!=' , $currentuser->phone )->where('phone', $request->phone)->first();
         if($user_by_phone){
             $response = APIHelpers::createApiResponse(true , 409 ,  'رقم الهاتف موجود من قبل', '' , null, $request->lang );
@@ -61,11 +69,18 @@ class UserController extends Controller
             $response = APIHelpers::createApiResponse(true , 409 , 'البريد الإلكتروني موجود من قبل', '' , null, $request->lang );
             return response()->json($response , 409);
         }
+        if($request->image != null){
+            $image = $request->image;
+            $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_name = $image_id.'.'.$image_format;
+            $data['image'] = $image_new_name;
+        }else{
+            unset($data['image']);
+        }
 
-        User::where('id' , $currentuser->id)->update([
-            'name' => $request->name ,
-            'phone' => $request->phone ,
-            'email' => $request->email  ]);
+        User::where('id' , $currentuser->id)->update($data);
 
         $newuser = User::find($currentuser->id);
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $newuser, $request->lang );
