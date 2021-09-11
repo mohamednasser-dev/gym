@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Admin\categories;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
+use Cloudinary;
 use App\Category;
 
 class CategoryController extends AdminController{
@@ -13,11 +13,10 @@ class CategoryController extends AdminController{
     // type : post -> add new category
     public function AddPost(Request $request){
         $image_name = $request->file('image')->getRealPath();
-        Cloudder::upload($image_name, null);
-        $imagereturned = Cloudder::getResult();
-        $image_id = $imagereturned['public_id'];
-        $image_format = $imagereturned['format'];
-        $image_new_name = $image_id.'.'.$image_format;
+        $imagereturned = Cloudinary::upload($image_name);
+        $image_id = $imagereturned->getPublicId();
+        $image_format = $imagereturned->getExtension();
+        $image_new_name = $image_id . '.' . $image_format;
 
         $category = new Category();
         $category->title_en = $request->title_en;
@@ -42,17 +41,11 @@ class CategoryController extends AdminController{
     public function EditPost(Request $request){
         $category = Category::find($request->id);
         if($request->file('image')){
-            $image = $category->image;
-            $publicId = substr($image, 0 ,strrpos($image, "."));
-            if($publicId != null ){
-                Cloudder::delete($publicId);
-            }
             $image_name = $request->file('image')->getRealPath();
-            Cloudder::upload($image_name, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_name = $image_id.'.'.$image_format;
+            $imagereturned = Cloudinary::upload($image_name);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_name = $image_id . '.' . $image_format;
             $category->image = $image_new_name;
         }
         $category->title_en = $request->title_en;

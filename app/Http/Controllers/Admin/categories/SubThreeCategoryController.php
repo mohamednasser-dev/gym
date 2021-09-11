@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin\categories;
 use App\Http\Controllers\Admin\AdminController;
-use JD\Cloudder\Facades\Cloudder;
+use Cloudinary;
 use Illuminate\Http\Request;
 use App\SubThreeCategory;
 
@@ -27,11 +27,10 @@ class SubThreeCategoryController extends AdminController
                 'image' => 'required'
             ]);
         $image_name = $request->file('image')->getRealPath();
-        Cloudder::upload($image_name, null);
-        $imagereturned = Cloudder::getResult();
-        $image_id = $imagereturned['public_id'];
-        $image_format = $imagereturned['format'];
-        $image_new_name = $image_id.'.'.$image_format;
+        $imagereturned = Cloudinary::upload($image_name);
+        $image_id = $imagereturned->getPublicId();
+        $image_format = $imagereturned->getExtension();
+        $image_new_name = $image_id . '.' . $image_format;
         $data['image'] = $image_new_name;
         SubThreeCategory::create($data);
         session()->flash('success', trans('messages.added_s'));
@@ -56,17 +55,11 @@ class SubThreeCategoryController extends AdminController
                 'title_en' => 'required'
             ]);
         if($request->file('image')){
-            $image = $model->image;
-            $publicId = substr($image, 0 ,strrpos($image, "."));
-            if($publicId != null ){
-                Cloudder::delete($publicId);
-            }
             $image_name = $request->file('image')->getRealPath();
-            Cloudder::upload($image_name, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_name = $image_id.'.'.$image_format;
+            $imagereturned = Cloudinary::upload($image_name);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_name = $image_id . '.' . $image_format;
             $data['image'] = $image_new_name;
         }
         SubThreeCategory::where('id',$id)->update($data);

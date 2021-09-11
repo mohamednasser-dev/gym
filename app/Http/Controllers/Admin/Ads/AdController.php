@@ -4,7 +4,7 @@ use App\Coach;
 use App\Hole;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
+use Cloudinary;
 use App\Ad;
 use App\User;
 use App\Product;
@@ -21,12 +21,14 @@ class AdController extends AdminController{
 
     // type post
     public function AddPost(Request $request){
+        ini_set('max_execution_time', 700);
         $image_name = $request->file('image')->getRealPath();
-        Cloudder::upload($image_name, null, array("timeout" => 600000000));
-        $imagereturned = Cloudder::getResult();
-        $image_id = $imagereturned['public_id'];
-        $image_format = $imagereturned['format'];
-        $image_new_name = $image_id.'.'.$image_format;
+
+        $imagereturned = Cloudinary::upload($image_name);
+        $image_id = $imagereturned->getPublicId();
+        $image_format = $imagereturned->getExtension();
+        $image_new_name = $image_id . '.' . $image_format;
+
         $ad = new Ad();
         $ad->image = $image_new_name;
         $ad->title_ar = $request->title_ar;
@@ -67,17 +69,14 @@ class AdController extends AdminController{
 
     // post edit ad
     public function EditPost(Request $request){
+        ini_set('max_execution_time', 700);
         $ad = Ad::find($request->id);
         if($request->file('image')){
-            $image = $ad->image;
-            $publicId = substr($image, 0 ,strrpos($image, "."));
-            // Cloudder::delete($publicId);
             $image_name = $request->file('image')->getRealPath();
-            Cloudder::upload($image_name, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_name = $image_id.'.'.$image_format;
+            $imagereturned = Cloudinary::upload($image_name);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_name = $image_id . '.' . $image_format;
             $ad->image = $image_new_name;
         }
         $ad->title_ar = $request->title_ar;

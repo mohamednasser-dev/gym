@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Ads;
 use App\Http\Controllers\Admin\AdminController;
-use JD\Cloudder\Facades\Cloudder;
+use Cloudinary;
 use Illuminate\Http\Request;
 use App\Main_ad;
 use App\Product;
@@ -47,11 +47,10 @@ class MainAdsController extends AdminController
                 'image' => 'required',
             ]);
         $image_name = $request->file('image')->getRealPath();
-        Cloudder::upload($image_name, null);
-        $imagereturned = Cloudder::getResult();
-        $image_id = $imagereturned['public_id'];
-        $image_format = $imagereturned['format'];
-        $image_new_name = $image_id.'.'.$image_format;
+        $imagereturned = Cloudinary::upload($image_name);
+        $image_id = $imagereturned->getPublicId();
+        $image_format = $imagereturned->getExtension();
+        $image_new_name = $image_id . '.' . $image_format;
         $data['image'] = $image_new_name ;
         if ($request->type == 1) {
             $data['type'] = "link";

@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Admin\categories;
 use App\Category_option;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
+use Cloudinary;
 
 class CategoryOptionsController extends AdminController{
     public function index()
@@ -32,11 +32,10 @@ class CategoryOptionsController extends AdminController{
             ]);
 
         $image_name = $request->file('image')->getRealPath();
-        Cloudder::upload($image_name, null);
-        $imagereturned = Cloudder::getResult();
-        $image_id = $imagereturned['public_id'];
-        $image_format = $imagereturned['format'];
-        $image_new_name = $image_id.'.'.$image_format;
+        $imagereturned = Cloudinary::upload($image_name);
+        $image_id = $imagereturned->getPublicId();
+        $image_format = $imagereturned->getExtension();
+        $image_new_name = $image_id . '.' . $image_format;
         $data['image'] = $image_new_name ;
         Category_option::create($data);
         session()->flash('success', trans('messages.added_s'));
