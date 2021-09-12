@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Hole;
 use App\Reservation_goal;
 use App\Reservation_option;
 use Illuminate\Support\Facades\Validator;
@@ -27,7 +28,7 @@ class CoachesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['subscriber_user_info', 'subscriber_bill', 'register', 'update_time', 'delete_time', 'store_time', 'times', 'subscribers', 'make_common', 'delete_media', 'media', 'store_media', 'store_plan_detail', 'select_plan_data', 'all_coaches', 'details', 'login', 'delete_plan', 'update_plan', 'update_coach_data', 'delete_plan_detail', 'my_data', 'my_plans', 'plan_details', 'store_plan']]);
+        $this->middleware('auth:api', ['except' => ['rates','subscriber_user_info', 'subscriber_bill', 'register', 'update_time', 'delete_time', 'store_time', 'times', 'subscribers', 'make_common', 'delete_media', 'media', 'store_media', 'store_plan_detail', 'select_plan_data', 'all_coaches', 'details', 'login', 'delete_plan', 'update_plan', 'update_coach_data', 'delete_plan_detail', 'my_data', 'my_plans', 'plan_details', 'store_plan']]);
 
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
         $expired = Reservation::where('status', 'start')->whereDate('expire_date', '<', Carbon::now())->get();
@@ -163,7 +164,7 @@ class CoachesController extends Controller
             $data['all_rates'] = Rate::select('text', 'rate', 'user_id as user_name', 'created_at')->where('type', 'coach')
                 ->where('order_id', $id)
                 ->where('admin_approval', 1)
-                ->get()
+                ->take(5)->get()
                 ->map(function ($rate) use ($lang) {
                     $user = User::where('id', $rate->user_name)->first();
                     $rate->user = $user->name;
@@ -225,7 +226,39 @@ class CoachesController extends Controller
             }
         }
     }
+    public function rates(Request $request) {
+        $lang = $request->lang ;
+        $id = auth()->guard('coach')->user()->id ;
+        $rates = Rate::select('text','rate','user_id as user_name','created_at')->where('type','coach')
+            ->where('order_id',$id)
+            ->where('admin_approval',1)
+            ->get()
+            ->map(function($rate) use ($lang){
+                $user = User::where('id',$rate->user_name)->first();
+                $rate->user = $user->name;
+//                $rate->created_at = APIHelpers::get_month_year($rate->created_at, $lang);
+                return $rate;
+            });
+        $rates_count = count($rates);
+        $rate = Coach::whereId($id)->first()->rate;
 
+
+
+        $rates_one = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',1)->get()->count();
+        $rates_tow = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',2)->get()->count();
+        $rates_three = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',3)->get()->count();
+        $rates_four = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',4)->get()->count();
+        $rates_five = Rate::where('type','hall')->where('admin_approval',1)->where('order_id',$id)->where('rate',5)->get()->count();
+
+        $stars_count['one'] = $rates_one;
+        $stars_count['tow'] = $rates_tow;
+        $stars_count['three'] = $rates_three;
+        $stars_count['four'] = $rates_four;
+        $stars_count['five'] = $rates_five;
+
+        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' ,array('rate'=>$rate,'stars_count'=>$stars_count,'rates_count'=>$rates_count,'rates'=>$rates), $request->lang );
+        return response()->json($response , 200);
+    }
     public function register(Request $request)
     {
         $input = $request->all();
@@ -330,7 +363,7 @@ class CoachesController extends Controller
                 $data['all_rates'] = Rate::select('text', 'rate', 'user_id as user_name', 'created_at')->where('type', 'coach')
                     ->where('order_id', $id)
                     ->where('admin_approval', 1)
-                    ->get()
+                    ->take(5)->get()
                     ->map(function ($rate) use ($lang) {
                         $user = User::where('id', $rate->user_name)->first();
                         $rate->user = $user->name;

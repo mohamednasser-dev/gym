@@ -292,6 +292,7 @@ use Illuminate\Http\Request;
     Route::post('coach/register/{lang}/{v}' , 'CoachesController@register')->middleware('checkguest');
     Route::get('coach/my_data/{lang}/{v}' , 'CoachesController@my_data');
     Route::post('coach/update/ny_data/{lang}/{v}' , 'CoachesController@update_coach_data');
+    Route::get('coach/rates/{lang}/{v}' , 'CoachesController@rates');
 
     //for plans
     Route::get('coach/my_plans/{lang}/{v}' , 'CoachesController@my_plans');
