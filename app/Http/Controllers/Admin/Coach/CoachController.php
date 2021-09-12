@@ -10,9 +10,10 @@ use App\User;
 use App\User_caoch_ask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use JD\Cloudder\Facades\Cloudder;
+use Cloudinary;
 
-class CoachController extends AdminController
+class
+CoachController extends AdminController
 {
     /**
      * Display a listing of the resource.
@@ -84,12 +85,11 @@ class CoachController extends AdminController
         $data['verified'] = 1;
         if($request->image != null){
             $logo = $request->file('image')->getRealPath();
-            Cloudder::upload($logo, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_logo = $image_id.'.'.$image_format;
-            $data['image'] = $image_new_logo ;
+            $imagereturned = Cloudinary::upload($logo);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_name = $image_id . '.' . $image_format;
+            $data['image'] = $image_new_name ;
         }
         $coach = Coach::create($data);
 
@@ -170,12 +170,11 @@ class CoachController extends AdminController
         }
         if($request->image != null){
             $logo = $request->file('image')->getRealPath();
-            Cloudder::upload($logo, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_logo = $image_id.'.'.$image_format;
-            $data['image'] = $image_new_logo ;
+            $imagereturned = Cloudinary::upload($logo);
+            $image_id = $imagereturned->getPublicId();
+            $image_format = $imagereturned->getExtension();
+            $image_new_name = $image_id . '.' . $image_format;
+            $data['image'] = $image_new_name ;
         }
         Coach::where('id',$id)->update($data);
         session()->flash('success', trans('messages.updated_s'));

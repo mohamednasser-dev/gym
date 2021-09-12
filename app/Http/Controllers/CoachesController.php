@@ -291,13 +291,70 @@ class CoachesController extends Controller
     public function my_data(Request $request)
     {
         $user = auth()->guard('coach')->user();
+        $id = $user->id;
         $lang = $request->lang;
         if ($user == null) {
             $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
             return response()->json($response, 406);
         } else {
-            $data = Coach::select('id', 'name', 'name_en', 'image', 'story', 'about_coach', 'about_coach_en', 'age', 'exp', 'phone')->where('id', $user->id)->first();
-            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            if ($lang == 'ar') {
+                $coach = Coach::select('id', 'image', 'thumbnail', 'name', 'about_coach', 'story', 'rate')->find($id);
+            } else {
+                $coach = Coach::select('id', 'image', 'name_en', 'thumbnail', 'story', 'about_coach_en as about_coach', 'rate')->find($id);
+            }
+            if ($coach != null) {
+                $data['basic'] = $coach;
+                $data['work_times'] = Coach_time_work::select('id', 'time_from', 'time_to')
+                    ->where('coach_id', $id)
+                    ->get();
+                $data['media'] = Coach_media::select('id', 'image', 'type')
+                    ->where('coach_id', $id)
+                    ->get()
+                    ->map(function ($media) {
+                        if ($media->type == 'video') {
+                            $media->image = env('APP_URL') . '/public/uploads/coach_media' . $media->image;
+                        }
+                        return $media;
+
+                    });
+                $rates_one = Rate::where('type', 'coach')->where('admin_approval', 1)->where('order_id', $id)->where('rate', 1)->get()->count();
+                $rates_tow = Rate::where('type', 'coach')->where('admin_approval', 1)->where('order_id', $id)->where('rate', 2)->get()->count();
+                $rates_three = Rate::where('type', 'coach')->where('admin_approval', 1)->where('order_id', $id)->where('rate', 3)->get()->count();
+                $rates_four = Rate::where('type', 'coach')->where('admin_approval', 1)->where('order_id', $id)->where('rate', 4)->get()->count();
+                $rates_five = Rate::where('type', 'coach')->where('admin_approval', 1)->where('order_id', $id)->where('rate', 5)->get()->count();
+                $data['stars_count']['one'] = $rates_one;
+                $data['stars_count']['tow'] = $rates_tow;
+                $data['stars_count']['three'] = $rates_three;
+                $data['stars_count']['four'] = $rates_four;
+                $data['stars_count']['five'] = $rates_five;
+                $data['all_rates'] = Rate::select('text', 'rate', 'user_id as user_name', 'created_at')->where('type', 'coach')
+                    ->where('order_id', $id)
+                    ->where('admin_approval', 1)
+                    ->get()
+                    ->map(function ($rate) use ($lang) {
+                        $user = User::where('id', $rate->user_name)->first();
+                        $rate->user = $user->name;
+//                $rate->created_at = APIHelpers::get_month_year($rate->created_at, $lang);
+                        return $rate;
+                    });
+                $data['rates_count'] = count($data['all_rates']);
+
+                if ($lang == 'ar') {
+                    $data['reservations'] = Coach_booking::with('Details')
+                        ->select('id', 'name_ar as name', 'title_ar as description', 'price', 'is_discount', 'discount', 'discount_price', 'common')
+                        ->where('coach_id', $id)
+                        ->where('deleted', '0')
+                        ->orderBy('common', 'desc')
+                        ->get();
+                } else {
+                    $data['reservations'] = Coach_booking::with('Details')
+                        ->select('id', 'name_en as name', 'title_en as description', 'price', 'is_discount', 'discount', 'discount_price', 'common')
+                        ->where('coach_id', $id)
+                        ->where('deleted', '0')
+                        ->orderBy('common', 'desc')
+                        ->get();
+                }
+            }            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
             return response()->json($response, 200);
         }
     }
@@ -885,8 +942,6 @@ class CoachesController extends Controller
             $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
             return response()->json($response, 406);
         } else {
-            $Reservation_data = Reservation::where('id',$id)->with('User_info')->first();
-            $user_data = $Reservation_data->User_info;
             $data = Reservation_option::select('id', 'type_id', 'goal_id', 'reservation_id')->with('Type_data')
                 ->where('reservation_id', $id)
                 ->get()
@@ -914,7 +969,7 @@ class CoachesController extends Controller
                 $subscriptions[$key]['name'] = $row->type_data->title;
                 $subscriptions[$key]['value'] = $row->goal_id;
             }
-            $response = APIHelpers::createApiResponse(false, 200, '', '', array('user_data'=>$user_data,'data'=>$subscriptions), $request->lang);
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $subscriptions, $request->lang);
             return response()->json($response, 200);
         }
     }
