@@ -427,42 +427,23 @@ class CoachesController extends Controller
             } else {
                 unset($input['image']);
             }
-//            if ($request->story != null) {
-//                $uploadedFileUrl = $this->uploadFromApi($request->story);
-//
-//                $image_id2 = $uploadedFileUrl->getPublicId();
-//                $image_format2 = $uploadedFileUrl->getExtension();
-//                $image_new_story = $image_id2 . '.' . $image_format2;
-//                $input['story'] = $image_new_story;
-//                if ($request->thumbnail) {
-//                    $thumbImage = Cloudinary::upload("data:image/jpeg;base64," . $request->thumbnail);
-//                    $publicThumb = $thumbImage->getPublicId();
-//                    $formatThumb = $thumbImage->getExtension();
-//                    $input['thumbnail'] = $publicThumb . '.' . $formatThumb;
-//                }
-
-//                $image = $request->story ;
-//                $extension = $image->getClientOriginalExtension();
-//
-//                $list_video_ext = array('flv', 'mp4', 'm3u8', 'ts', '3gp', 'mov', 'avi', 'wmv');
-//                if (in_array($extension, $list_video_ext)) {
-//                    $story = $image->getRealPath();
-//                    if ($image->getSize()) {
-//                        $uploadedFileUrl = $this->upload($image);
-//                        $image_id2 = $uploadedFileUrl->getPublicId();
-//                        $image_format2 = $uploadedFileUrl->getExtension();
-//                        $image_new_story = $image_id2 . '.' . $image_format2;
-//                        $input['logo'] = $image_new_story;
-//                        if (count($request->thumbnail) > 0) {
-//                            $thumbImage = Cloudinary::upload($request->thumbnail[$i]->getRealPath());
-//                            $publicThumb = $thumbImage->getPublicId();
-//                            $formatThumb = $thumbImage->getExtension();
-//                            $data_image['thumbnail'] = $publicThumb . '.' . $formatThumb;
-//                        }
-//                    }
-//                }
-//            }
-            $coach = Coach::where('id', $user->id)->update($input);
+            if ($request->story != null) {
+                $story = $request->story ;
+                $extension = $story->getClientOriginalExtension();
+                $list_video_ext = array('flv', 'mp4', 'm3u8', 'ts', '3gp', 'mov', 'avi', 'wmv');
+                if (in_array($extension, $list_video_ext)) {
+                    if ($story->getSize()) {
+                        $uploadedFileUrl = $this->upload($story);
+                        $image_id2 = $uploadedFileUrl->getPublicId();
+                        $image_format2 = $uploadedFileUrl->getExtension();
+                        $image_new_story = $image_id2 . '.' . $image_format2;
+                        $input['logo'] = $image_new_story;
+                    }
+                }
+            }else{
+                unset($input['logo']);
+            }
+            Coach::where('id', $user->id)->update($input);
             $response = APIHelpers::createApiResponse(false, 200, 'updated', 'تم التعديل بنجاح', (object)[], $request->lang);
             return response()->json($response, 200);
         }
