@@ -396,6 +396,7 @@ class CoachesController extends Controller
     {
         $lang = $request->lang;
         $user = auth()->guard('coach')->user();
+
         if ($user == null) {
             $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
             return response()->json($response, 406);
@@ -418,30 +419,49 @@ class CoachesController extends Controller
         } else {
             if ($request->image != null) {
                 $image = $request->image;
-
-                $imagereturned = Cloudinary::upload("data:image/jpeg;base64," . $image);
+                $imagereturned = Cloudinary::upload("data:image/jpeg;base64,".$image);
                 $image_id = $imagereturned->getPublicId();
                 $image_format = $imagereturned->getExtension();
-                $image_new_name = $image_id . '.' . $image_format;
+                $image_new_name = $image_id.'.'.$image_format;
                 $input['image'] = $image_new_name;
             } else {
                 unset($input['image']);
             }
-            if ($request->story != null) {
-                $uploadedFileUrl = $this->uploadFromApi($request->story);
-                //dd($uploadedFileUrl);
-                $image_id2 = $uploadedFileUrl->getPublicId();
-                $image_format2 = $uploadedFileUrl->getExtension();
-                $image_new_story = $image_id2 . '.' . $image_format2;
-                $input['story'] = $image_new_story;
-                if ($request->thumbnail) {
-                    $thumbImage = Cloudinary::upload("data:image/jpeg;base64," . $request->thumbnail);
-                    $publicThumb = $thumbImage->getPublicId();
-                    $formatThumb = $thumbImage->getExtension();
-                    $input['thumbnail'] = $publicThumb . '.' . $formatThumb;
-                }
+//            if ($request->story != null) {
+//                $uploadedFileUrl = $this->uploadFromApi($request->story);
+//
+//                $image_id2 = $uploadedFileUrl->getPublicId();
+//                $image_format2 = $uploadedFileUrl->getExtension();
+//                $image_new_story = $image_id2 . '.' . $image_format2;
+//                $input['story'] = $image_new_story;
+//                if ($request->thumbnail) {
+//                    $thumbImage = Cloudinary::upload("data:image/jpeg;base64," . $request->thumbnail);
+//                    $publicThumb = $thumbImage->getPublicId();
+//                    $formatThumb = $thumbImage->getExtension();
+//                    $input['thumbnail'] = $publicThumb . '.' . $formatThumb;
+//                }
 
-            }
+//                $image = $request->story ;
+//                $extension = $image->getClientOriginalExtension();
+//
+//                $list_video_ext = array('flv', 'mp4', 'm3u8', 'ts', '3gp', 'mov', 'avi', 'wmv');
+//                if (in_array($extension, $list_video_ext)) {
+//                    $story = $image->getRealPath();
+//                    if ($image->getSize()) {
+//                        $uploadedFileUrl = $this->upload($image);
+//                        $image_id2 = $uploadedFileUrl->getPublicId();
+//                        $image_format2 = $uploadedFileUrl->getExtension();
+//                        $image_new_story = $image_id2 . '.' . $image_format2;
+//                        $input['logo'] = $image_new_story;
+//                        if (count($request->thumbnail) > 0) {
+//                            $thumbImage = Cloudinary::upload($request->thumbnail[$i]->getRealPath());
+//                            $publicThumb = $thumbImage->getPublicId();
+//                            $formatThumb = $thumbImage->getExtension();
+//                            $data_image['thumbnail'] = $publicThumb . '.' . $formatThumb;
+//                        }
+//                    }
+//                }
+//            }
             $coach = Coach::where('id', $user->id)->update($input);
             $response = APIHelpers::createApiResponse(false, 200, 'updated', 'تم التعديل بنجاح', (object)[], $request->lang);
             return response()->json($response, 200);

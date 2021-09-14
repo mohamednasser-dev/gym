@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Hole_admin;
 use App\Hole_media;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
-use Cloudinary as Clou;
+use Cloudinary;
 
 class MediaController extends Controller
 {
@@ -43,23 +42,18 @@ class MediaController extends Controller
                     $data_image['image'] = $image_new_story;
                     $data_image['type'] = 'video';
                     if (count($request->thumbnail) > 0) {
-                        $thumbImage = Clou::upload($request->thumbnail[$i]->getRealPath());
+                        $thumbImage = Cloudinary::upload($request->thumbnail[$i]->getRealPath());
                         $publicThumb = $thumbImage->getPublicId();
                         $formatThumb = $thumbImage->getExtension();
                         $data_image['thumbnail'] = $publicThumb . '.' . $formatThumb;
                     }
-                    
-
                 }
             } else {
                 $image_name = $image->getRealPath();
-                $imagereturned = Cloudder::getResult();
-                $image_id = $imagereturned['public_id'];
-                $image_format = $imagereturned['format'];
-                $image_new_name = $image_id . '.' . $image_format;
-                $data_image['image'] = $image_new_name;
-                
-
+                $thumbImage = Cloudinary::upload($image_name);
+                $publicThumb = $thumbImage->getPublicId();
+                $formatThumb = $thumbImage->getExtension();
+                $data_image['image'] = $publicThumb . '.' . $formatThumb;
             }
             Hole_media::create($data_image);
             $i ++;
