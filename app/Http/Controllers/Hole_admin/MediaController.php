@@ -35,7 +35,7 @@ class MediaController extends Controller
             if (in_array($extension, $list_video_ext)) {
                 $story = $image->getRealPath();
                 if ($image->getSize()) {
-                    $uploadedFileUrl = $this->upload($image);
+                    $uploadedFileUrl = $this->uploadFromApi($image);
                     $image_id2 = $uploadedFileUrl->getPublicId();
                     $image_format2 = $uploadedFileUrl->getExtension();
                     $image_new_story = $image_id2 . '.' . $image_format2;

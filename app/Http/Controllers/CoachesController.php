@@ -433,7 +433,8 @@ class CoachesController extends Controller
 //                $list_video_ext = array('flv', 'mp4', 'm3u8', 'ts', '3gp', 'mov', 'avi', 'wmv');
 //                if (in_array($extension, $list_video_ext)) {
 //                    if ($story->getSize()) {
-                        $uploadedFileUrl = $this->upload("data:video/mp4;base64,".$story);
+                        $uploadedFileUrl = $this->uploadFromApi("data:video/mp4;base64,".$story);
+                        dd($uploadedFileUrl);
                         $image_id2 = $uploadedFileUrl->getPublicId();
                         $image_format2 = $uploadedFileUrl->getExtension();
                         $image_new_story = $image_id2 . '.' . $image_format2;
