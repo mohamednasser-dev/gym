@@ -434,7 +434,7 @@ class CoachesController extends Controller
 //                if (in_array($extension, $list_video_ext)) {
 //                    if ($story->getSize()) {
                         $uploadedFileUrl = $this->uploadFromApi("data:video/mp4;base64,".$story);
-                        dd($uploadedFileUrl);
+              
                         $image_id2 = $uploadedFileUrl->getPublicId();
                         $image_format2 = $uploadedFileUrl->getExtension();
                         $image_new_story = $image_id2 . '.' . $image_format2;
