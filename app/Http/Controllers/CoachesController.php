@@ -897,18 +897,18 @@ class CoachesController extends Controller
             $data = Reservation::with('User')->with('Booking_coach')
                 ->whereIn('booking_id', $booking_ids)
                 ->where('type', 'coach')
-            
+
                 ->get()
                 ->map(function ($reserv) use ($lang) {
                     $reserv->coach_name = $reserv->Booking_coach->Coach->name;
                     $reserv->coach_logo = $reserv->Booking_coach->Coach->image;
                     if ($lang == 'ar') {
-                        if ($reserv->status == 'ended') {
-                            $reserv->status = 'منتهي';
-                        } else {
-                            $reserv->status = 'ساري';
-
-                        }
+//                        if ($reserv->status == 'ended') {
+//                            $reserv->status = 'منتهي';
+//                        } else {
+//                            $reserv->status = 'ساري';
+//
+//                        }
                         $reserv->reserve_name = $reserv->Booking_coach->name_ar;
                     } else {
                         $reserv->reserve_name = $reserv->Booking_coach->name_en;
