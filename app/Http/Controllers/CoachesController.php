@@ -434,7 +434,7 @@ class CoachesController extends Controller
 //                if (in_array($extension, $list_video_ext)) {
 //                    if ($story->getSize()) {
                         $uploadedFileUrl = $this->uploadFromApi("data:video/mp4;base64,".$story);
-              
+
                         $image_id2 = $uploadedFileUrl->getPublicId();
                         $image_format2 = $uploadedFileUrl->getExtension();
                         $image_new_story = $image_id2 . '.' . $image_format2;
@@ -897,7 +897,7 @@ class CoachesController extends Controller
             $data = Reservation::with('User')->with('Booking_coach')
                 ->whereIn('booking_id', $booking_ids)
                 ->where('type', 'coach')
-                ->where('status', $type)
+            
                 ->get()
                 ->map(function ($reserv) use ($lang) {
                     $reserv->coach_name = $reserv->Booking_coach->Coach->name;
