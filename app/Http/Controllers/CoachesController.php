@@ -998,13 +998,13 @@ class CoachesController extends Controller
                     return $reserv;
                 });
 
-            $subscriptions = null;
-            foreach ($data as $key => $row) {
-                $subscriptions[$key]['id'] = $row->id;
-                $subscriptions[$key]['name'] = $row->type_data->title;
-                $subscriptions[$key]['value'] = $row->goal_id;
-            }
-            $response = APIHelpers::createApiResponse(false, 200, '', '', $subscriptions, $request->lang);
+//            $subscriptions = null;
+//            foreach ($data as $key => $row) {
+//                $subscriptions[$key]['id'] = $row->id;
+//                $subscriptions[$key]['name'] = $row->type_data->title;
+//                $subscriptions[$key]['value'] = $row->goal_id;
+//            }
+            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
             return response()->json($response, 200);
         }
     }
