@@ -947,21 +947,24 @@ class CoachesController extends Controller
             $data = Reservation::select('id', 'price', 'expire_date', 'user_id', 'created_at', 'payment', 'status', 'booking_id')
                 ->with('User_info')->with('Plan_details')
                 ->where('id', $id)
-                ->get()
-                ->map(function ($reserv) use ($lang) {
-                    if ($lang == 'ar') {
-                        if ($reserv->status == 'ended') {
-                            $reserv->status = 'منتهي';
-                        } else {
-                            $reserv->status = 'ساري';
-                        }
-                    }
-                    $reserv->price = number_format((float)($reserv->price), 3);
-
-                    $reserv->created_at = $reserv->created_at->format('Y-m-d');
-                    $reserv->expire_date = date('Y-m-d', strtotime($reserv->expire_date));
-                    return $reserv;
-                });
+                ->first();
+            $data->price = number_format((float)($data->price), 3);
+            $data->created_at = $data->created_at->format('Y-m-d');
+            $data->expire_date = date('Y-m-d', strtotime($data->expire_date));
+//                ->map(function ($reserv) use ($lang) {
+//                    if ($lang == 'ar') {
+//                        if ($reserv->status == 'ended') {
+//                            $reserv->status = 'منتهي';
+//                        } else {
+//                            $reserv->status = 'ساري';
+//                        }
+//                    }
+//                    $reserv->price = number_format((float)($reserv->price), 3);
+//
+//                    $reserv->created_at = $reserv->created_at->format('Y-m-d');
+//                    $reserv->expire_date = date('Y-m-d', strtotime($reserv->expire_date));
+//                    return $reserv;
+//                });
             $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
             return response()->json($response, 200);
         }
