@@ -977,6 +977,7 @@ class CoachesController extends Controller
             $response = APIHelpers::createApiResponse(true, 406, 'you should login', 'يجب تسجيل الدخول', null, $request->lang);
             return response()->json($response, 406);
         } else {
+            $user_data =  Reservation::with('User')->where('id',$id)->first()->User_info;
             $data = Reservation_option::select('id', 'type_id', 'goal_id', 'reservation_id')->with('Type_data')
                 ->where('reservation_id', $id)
                 ->get()
@@ -998,13 +999,13 @@ class CoachesController extends Controller
                     return $reserv;
                 });
 
-//            $subscriptions = null;
-//            foreach ($data as $key => $row) {
-//                $subscriptions[$key]['id'] = $row->id;
-//                $subscriptions[$key]['name'] = $row->type_data->title;
-//                $subscriptions[$key]['value'] = $row->goal_id;
-//            }
-            $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+            $subscriptions = null;
+            foreach ($data as $key => $row) {
+                $subscriptions[$key]['id'] = $row->id;
+                $subscriptions[$key]['name'] = $row->type_data->title;
+                $subscriptions[$key]['value'] = $row->goal_id;
+            }
+            $response = APIHelpers::createApiResponse(false, 200, '', '',array( 'user_data' => $user_data,'subscriptions' => $subscriptions ) , $request->lang);
             return response()->json($response, 200);
         }
     }
